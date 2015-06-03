@@ -1,0 +1,6 @@
+*~
+*.p[cod]
+*.log
+*.pyc
+.idea/
+__pycache__/
