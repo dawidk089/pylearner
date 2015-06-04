@@ -61,13 +61,5 @@ class MainWindow(QtGui.QWidget):
         for key in slots:
             self.button[key].clicked.connect(slots[key])
             print(">checkpoint: slots plugging for key: ", key, 'in class: ', self.__class__.__name__)
-        #self.button["close"].clicked.connect(QtCore.QCoreApplication.instance().quit)
-        #self.button["learn"].clicked.connect(self.learn)
-        #print(">checkpoint 1")
-        #self.impt_butt[1][1].clicked.connect(self.file_dialog)
-        #self.add_butt[1][1].clicked.connect(self.add_word)
 
-    #def learn(self):
-        #print(">checkpoint 2")
-        #pool = PoolWindow()
 
