@@ -3,12 +3,18 @@ __author__ = 'mcmushroom'
 from PyQt4 import QtCore, QtGui
 from view.main_view import MainWindow
 from view.word_pool import PoolWindow
+from view.base_view import BaseWindow
+from model.data_storage import DataStorage
 
 
 class Main(QtGui.QMainWindow):
 
     def __init__(self, parent=None):
         super(Main, self).__init__(parent)
+
+        #glowna baza slowek
+        self.main_base_word = DataStorage("../data/main_base")
+        self.main_base_word.open()
 
         #tworzenie stosu widokow
         self.stacked_widget = QtGui.QStackedWidget()
@@ -46,7 +52,9 @@ class Main(QtGui.QMainWindow):
         print('sets')
 
     def base(self):
-        print('base')
+        base_window = BaseWindow(self.stacked_widget, self.main_base_word)
+        self.stacked_widget.addWidget(base_window)
+        self.stacked_widget.setCurrentWidget(base_window)
 
     #definicja wysrodkowania okna
     def center(self):

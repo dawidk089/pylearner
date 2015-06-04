@@ -11,14 +11,17 @@ import re
 
 class BaseWindow(QtGui.QWidget):
 
-    def __init__(self, stacked_widget):
+    def __init__(self, stacked_widget, word_list):
         super().__init__()
 
         self.stacked_widget = stacked_widget
 
-        self.session_word = []
+        self.base_word_list = word_list
+        for row in self.base_word_list.get():
+            print('row: ', row)
+            self.list_model.appendRow(QStandardItem(row))
 
-        self.header = QLabel('<h1><b>Nauka indywidualna</b></h1>', self)
+        self.header = QLabel('<h1><b>Główna baza słówek</b></h1>', self)
 
         self.button = {}
 
@@ -35,15 +38,36 @@ class BaseWindow(QtGui.QWidget):
         self.list_model = QStandardItemModel(self.word_list)
         self.word_list.setModel(self.list_model)
 
-        self.ask = QLineEdit(self)
         self.que = QLineEdit(self)
+        self.ans = QLineEdit(self)
 
         self.initUI()
 
     #inicjalizacja widget'ow i layout'u
     def initUI(self):
 
-        #layout
+        print('word list: ', self.word_list)
+        #layout step 1
+        self.add_butt_l = [
+            ('stretch',),
+            ('widget', self.button['add']),
+        ]
+
+        self.add_que_l = [
+            ('widget', QLabel('słówko pytające', self)),
+            ('widget', self.que),
+        ]
+
+        self.add_ans_l = [
+            ('widget', QLabel('słówko odpowiadające', self)),
+            ('widget', self.ans),
+        ]
+
+        self.add_butt_box = self.box('vertical', self.add_butt_l)
+        self.add_que_box = self.box('vertical', self.add_que_l)
+        self.add_ans_box = self.box('vertical', self.add_ans_l)
+
+        #layout step 2
         self.header_l = [
             ('stretch',),
             ('widget', self.header),
@@ -51,9 +75,9 @@ class BaseWindow(QtGui.QWidget):
         ]
 
         self.add_l = [
-            ('widget', self.button['add']),
-            ('widget', self.ask),
-            ('widget', self.que),
+            ('layout', self.add_butt_box),
+            ('layout', self.add_que_box),
+            ('layout', self.add_ans_box),
             ('stretch',),
         ]
 
@@ -84,6 +108,7 @@ class BaseWindow(QtGui.QWidget):
         self.delete_box = self.box('horizontal', self.delete_l)
         self.done_box = self.box('horizontal', self.done_l)
 
+        #layout step 3
         main_l = [
             ('layout', self.header_box),
             ('layout', self.add_box),
@@ -94,7 +119,7 @@ class BaseWindow(QtGui.QWidget):
             ('layout', self.done_box),
         ]
 
-        main_box = self.box('vertical', main_l)
+        self.main_box = self.box('vertical', main_l)
 
         #podpiecie przyciskow
         slots = {
@@ -109,7 +134,7 @@ class BaseWindow(QtGui.QWidget):
 
         self.set_edit_line(200)
         self.slot_conn()
-        self.setLayout(main_box)
+        self.setLayout(self.main_box)
         self.show()
 
     #pomocnicza metoda do budowania layout'u
@@ -141,6 +166,7 @@ class BaseWindow(QtGui.QWidget):
     #definicje funkcji podpinanych do przyciskow
     def add(self):
         print('add')
+        self.add_word()
 
     def change(self):
         print('change')
@@ -150,13 +176,14 @@ class BaseWindow(QtGui.QWidget):
 
     def done(self):
         print('done')
+        self.stacked_widget.removeWidget(self.stacked_widget.currentWidget())
 
     def imprt(self):
         print('import')
 
     def set_edit_line(self, a):
-        self.ask.setMaximumWidth(a)
         self.que.setMaximumWidth(a)
+        self.ans.setMaximumWidth(a)
 
 #   definicja podpiec
     def slot_conn(self, slots={}):
@@ -165,15 +192,13 @@ class BaseWindow(QtGui.QWidget):
             print(">checkpoint: slots plugging for key: ", key, 'in class: ', self.__class__.__name__)
 
     def add_word(self):
-        ask = self.left_l[1][1].text()
-        que = self.left_l[3][1].text()
-        self.session_word.append((ask, que))
-        print('session word: ', self.session_word)
-        list_item = QStandardItem(ask+' = '+que)
-        list_item.setCheckable(True)
-        self.list_model.appendRow(list_item)
-        self.amount_word += 1
-        self.counter.setText(str(self.amount_word))
+            que = self.que.text()
+            ans = self.ans.text()
+            self.que.setText("")
+            self.ans.setText("")
+            self.base_word_list.add([que, ans])
+            print('word_list: ', self.word_list)
+            self.list_model.appendRow(QStandardItem([que, ans]))
 
     def file_dialog(self):
         splitter = self.left_l[8][1].text()
@@ -190,8 +215,8 @@ class BaseWindow(QtGui.QWidget):
                 self.list_model.appendRow(list_item)
                 list.setModel(self.list_model)
 
-if __name__ == '__main__':
-    app = QtGui.QApplication([])
-    window = BaseWindow(None)
-    window.show()
-    app.exec_()
+#if __name__ == '__main__':
+#    app = QtGui.QApplication([])
+#    window = BaseWindow(None)
+#    window.show()
+#    app.exec_()

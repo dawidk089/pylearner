@@ -170,7 +170,6 @@ class PoolWindow(QtGui.QWidget):
         self.file_dialog()
 
     def cancel(self):
-        print('cancel')
         self.stacked_widget.removeWidget(self.stacked_widget.currentWidget())
 
     def set_butt_size(self, a):
@@ -191,6 +190,8 @@ class PoolWindow(QtGui.QWidget):
     def add_word(self):
         ask = self.left_l[1][1].text()
         que = self.left_l[3][1].text()
+        self.left_l[1][1].setText("")
+        self.left_l[3][1].setText("")
         self.session_word.append((ask, que))
         print('session word: ', self.session_word)
         list_item = QStandardItem(ask+' = '+que)

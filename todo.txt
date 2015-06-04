@@ -1,4 +1,6 @@
 >zadbanie o sciezki do ikony i logo glownego
->sprawdzaj czy slowko dodawane do sesji juz sie w niej znajduje
+>sprawdzaj czy slowko dodawane do sesji juz sie w niej znajduje,
+>sprawdzaj czy wprowadzane slowko dodawane do sesji nie jest pustym stringiem
 >poprawa layoutu listy w word_pool (prawy/lewy)
 >log in view
+>poprawic layouty w word_pool & main_view -- sposob implementacji
