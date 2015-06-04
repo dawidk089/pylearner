@@ -10,9 +10,11 @@ import re
 class PoolWindow(QtGui.QWidget):
 
     def __init__(self, stacked_widget):
-        super(PoolWindow, self).__init__()
+        super().__init__()
 
         self.stacked_widget = stacked_widget
+
+        self.session_word = []
 
         self.button = {}
 
@@ -21,12 +23,14 @@ class PoolWindow(QtGui.QWidget):
         self.button["import"] = QPushButton('+', self)
         self.button["cancel"] = QPushButton('Anuluj', self)
 
+        #definicja listy
         self.word_list = QListView()
         self.word_list.setMinimumSize(600, 400)
         #word_list.setWindowTitle('Example List')
         self.list_model = QStandardItemModel(self.word_list)
         self.word_list.setModel(self.list_model)
 
+        self.counter = QLabel(str(0), self)
         self.initUI()
         self.amount_word = 0
 
@@ -57,7 +61,7 @@ class PoolWindow(QtGui.QWidget):
 
         self.w_amount_l = [
             ('widget', QLabel('Ilość: ', self)),
-            ('widget', QLabel(str(0), self)),
+            ('widget', self.counter),
             ('stretch',),
         ]
 
@@ -160,6 +164,7 @@ class PoolWindow(QtGui.QWidget):
 
     def choose(self):
         print('choose')
+        mb = QMessageBox()
 
     def imprt(self):
         self.file_dialog()
@@ -186,11 +191,13 @@ class PoolWindow(QtGui.QWidget):
     def add_word(self):
         ask = self.left_l[1][1].text()
         que = self.left_l[3][1].text()
+        self.session_word.append((ask, que))
+        print('session word: ', self.session_word)
         list_item = QStandardItem(ask+' = '+que)
         list_item.setCheckable(True)
         self.list_model.appendRow(list_item)
         self.amount_word += 1
-        self.w_amount_l[1][1].setText(str(self.amount_word))
+        self.counter.setText(str(self.amount_word))
 
     def file_dialog(self):
         splitter = self.left_l[8][1].text()
@@ -209,7 +216,4 @@ class PoolWindow(QtGui.QWidget):
                 list.setModel(self.list_model)
 
         self.amount_word += n
-        self.w_amount_l[1][1].setText(str(self.amount_word))
-
-    def simple(self):
-        print("makarena")
+        self.counter.setText(str(self.amount_word))
