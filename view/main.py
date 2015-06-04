@@ -23,44 +23,34 @@ class Main(QtGui.QMainWindow):
         self.stacked_widget.addWidget(main_window)
 
         #podpiecie przyciskow
-        slots = [ self.pool, ]
-        main_window.button["learn"].clicked.connect(self.pool)
-        main_window.slot_conn()
+        slots = {
+            'learn': self.pool,
+            'auto': self.auto,
+            'sets': self.sets,
+            'close': QtCore.QCoreApplication.instance().quit,
+            }
 
+        main_window.slot_conn(slots)
 
+    #definicje funkcji podpinanych do przyciskow
     def pool(self):
         pool_window = PoolWindow()
         self.stacked_widget.addWidget(pool_window)
         self.stacked_widget.setCurrentWidget(pool_window)
 
+    def auto(self):
+        print('auto')
+
+    def sets(self):
+        print('sets')
+
+    #definicja wysrodkowania okna
     def center(self):
 
         qr = self.frameGeometry()
         cp = QtGui.QDesktopWidget().availableGeometry().center()
         qr.moveCenter(cp)
         self.move(qr.topLeft())
-
-
-
-class LoginWidget(QtGui.QWidget):
-    def __init__(self, parent=None):
-        super(LoginWidget, self).__init__(parent)
-        layout = QtGui.QHBoxLayout()
-        self.button = QtGui.QPushButton('Login')
-        layout.addWidget(self.button)
-        self.setLayout(layout)
-        # you might want to do self.button.click.connect(self.parent().login) here
-
-
-class LoggedWidget(QtGui.QWidget):
-    def __init__(self, parent=None):
-        super(LoggedWidget, self).__init__(parent)
-        layout = QtGui.QHBoxLayout()
-        self.label = QtGui.QLabel('logged in!')
-        layout.addWidget(self.label)
-        self.setLayout(layout)
-
-
 
 if __name__ == '__main__':
     app = QtGui.QApplication([])

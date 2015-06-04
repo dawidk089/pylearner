@@ -57,10 +57,11 @@ class MainWindow(QtGui.QWidget):
 
         self.show()
 
-    def slot_conn(self, functions=[]):
-        #for slot in self.button:
-
-        self.button["close"].clicked.connect(QtCore.QCoreApplication.instance().quit)
+    def slot_conn(self, slots={}):
+        for key in slots:
+            self.button[key].clicked.connect(slots[key])
+            print(">checkpoint: slots plugging for key: ", key, 'in class: ', self.__class__.__name__)
+        #self.button["close"].clicked.connect(QtCore.QCoreApplication.instance().quit)
         #self.button["learn"].clicked.connect(self.learn)
         #print(">checkpoint 1")
         #self.impt_butt[1][1].clicked.connect(self.file_dialog)
