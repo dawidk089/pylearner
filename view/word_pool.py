@@ -9,8 +9,10 @@ import re
 
 class PoolWindow(QtGui.QWidget):
 
-    def __init__(self, main_window):
+    def __init__(self, stacked_widget):
         super(PoolWindow, self).__init__()
+
+        self.stacked_widget = stacked_widget
 
         self.button = {}
 
@@ -154,16 +156,17 @@ class PoolWindow(QtGui.QWidget):
 
     #definicje funkcji podpinanych do przyciskow
     def add(self):
-        print('add')
+        self.add_word()
 
     def choose(self):
-        self.add_word()
+        print('choose')
 
     def imprt(self):
         self.file_dialog()
 
     def cancel(self):
         print('cancel')
+        self.stacked_widget.removeWidget(self.stacked_widget.currentWidget())
 
     def set_butt_size(self, a):
         self.add_butt[1][1].setMaximumSize(a, a)

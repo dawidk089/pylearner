@@ -35,7 +35,7 @@ class Main(QtGui.QMainWindow):
 
     #definicje funkcji podpinanych do przyciskow
     def pool(self):
-        pool_window = PoolWindow(self)
+        pool_window = PoolWindow(self.stacked_widget)
         self.stacked_widget.addWidget(pool_window)
         self.stacked_widget.setCurrentWidget(pool_window)
 
