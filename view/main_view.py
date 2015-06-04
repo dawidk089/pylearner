@@ -11,14 +11,6 @@ class MainWindow(QtGui.QWidget):
     def __init__(self):
         super(MainWindow, self).__init__()
 
-        self.initUI()
-
-    def initUI(self):
-
-        logo = QtGui.QLabel(self)
-        logo.resize(500, 250)
-        logo.setPixmap(QtGui.QPixmap("../image/logo_orange-black.jpg").scaled(logo.size(), QtCore.Qt.KeepAspectRatio))
-
         self.button = {}
 
         self.button["learn"] = QtGui.QPushButton('Nauka indywidualna', self)
@@ -26,6 +18,15 @@ class MainWindow(QtGui.QWidget):
         self.button["base"] = QtGui.QPushButton(u'bazy słówek', self)
         self.button["sets"] = QtGui.QPushButton('Ustawienia', self)
         self.button["close"] = QtGui.QPushButton(u'Wyjście', self)
+
+        self.initUI()
+
+    #inicjalizacja widget'ow i layout'u
+    def initUI(self):
+
+        logo = QtGui.QLabel(self)
+        logo.resize(500, 250)
+        logo.setPixmap(QtGui.QPixmap("../image/logo_orange-black.jpg").scaled(logo.size(), QtCore.Qt.KeepAspectRatio))
 
         hbox = QtGui.QHBoxLayout()
         vbox = QtGui.QVBoxLayout()
@@ -57,6 +58,7 @@ class MainWindow(QtGui.QWidget):
 
         self.show()
 
+    #definicja podpiec
     def slot_conn(self, slots={}):
         for key in slots:
             self.button[key].clicked.connect(slots[key])

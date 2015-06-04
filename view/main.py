@@ -26,6 +26,7 @@ class Main(QtGui.QMainWindow):
         slots = {
             'learn': self.pool,
             'auto': self.auto,
+            'base': self.base,
             'sets': self.sets,
             'close': QtCore.QCoreApplication.instance().quit,
             }
@@ -34,7 +35,7 @@ class Main(QtGui.QMainWindow):
 
     #definicje funkcji podpinanych do przyciskow
     def pool(self):
-        pool_window = PoolWindow()
+        pool_window = PoolWindow(self)
         self.stacked_widget.addWidget(pool_window)
         self.stacked_widget.setCurrentWidget(pool_window)
 
@@ -43,6 +44,9 @@ class Main(QtGui.QMainWindow):
 
     def sets(self):
         print('sets')
+
+    def base(self):
+        print('base')
 
     #definicja wysrodkowania okna
     def center(self):
