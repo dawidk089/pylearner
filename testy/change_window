@@ -8,7 +8,7 @@ class MainWindow(QtGui.QMainWindow):
         self.central_widget = QtGui.QStackedWidget()
         self.setCentralWidget(self.central_widget)
         login_widget = LoginWidget(self)
-        login_widget.button.clicked.connect(self.login)
+        #login_widget.button.clicked.connect(self.login)
         self.central_widget.addWidget(login_widget)
     def login(self):
         logged_in_widget = LoggedWidget(self)

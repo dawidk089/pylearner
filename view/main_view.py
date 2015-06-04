@@ -3,6 +3,7 @@ __author__ = 'mcmushroom'
 
 import sys
 from PyQt4 import QtGui, QtCore, Qt
+from view.word_pool import *
 
 
 class MainWindow(QtGui.QWidget):
@@ -16,7 +17,7 @@ class MainWindow(QtGui.QWidget):
 
         logo = QtGui.QLabel(self)
         logo.resize(500, 250)
-        logo.setPixmap(QtGui.QPixmap("image/logo_orange-black.jpg").scaled(logo.size(), QtCore.Qt.KeepAspectRatio))
+        logo.setPixmap(QtGui.QPixmap("../image/logo_orange-black.jpg").scaled(logo.size(), QtCore.Qt.KeepAspectRatio))
 
         self.button = {}
 
@@ -54,26 +55,18 @@ class MainWindow(QtGui.QWidget):
         self.slot_conn()
         self.setLayout(hbox)
 
-        self.resize(800, 600)
-        self.center()
-        self.setWindowTitle('Learner -- You just to learn_butt, and I will do the rest. ')
-        self.setWindowIcon(QtGui.QIcon('image/app_ico.png'))
         self.show()
 
-    def center(self):
+    def slot_conn(self, functions=[]):
+        #for slot in self.button:
 
-        qr = self.frameGeometry()
-        cp = QtGui.QDesktopWidget().availableGeometry().center()
-        qr.moveCenter(cp)
-        self.move(qr.topLeft())
-
-    def slot_conn(self):
         self.button["close"].clicked.connect(QtCore.QCoreApplication.instance().quit)
-        self.button["learn"].clicked.connect(self.learn)
-        print(">checkpoint 1")
+        #self.button["learn"].clicked.connect(self.learn)
+        #print(">checkpoint 1")
         #self.impt_butt[1][1].clicked.connect(self.file_dialog)
         #self.add_butt[1][1].clicked.connect(self.add_word)
 
-    def learn(self):
-        print(">checkpoint 2")
-        del self
+    #def learn(self):
+        #print(">checkpoint 2")
+        #pool = PoolWindow()
+
