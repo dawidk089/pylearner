@@ -15,6 +15,7 @@
 >(! 4.2)dodac i podpiac przycisk 'ucz sie!'
 >(! 3.1)podpiac przycisk 'dodaj z bazy'
 >(! 2.3)dodac i podpiac przycisk 'usun'
+>obsluzyc sytuacje gdy edit line dla splittera jest pusty
 
 #base_view
 >(! 2.2)sprawdzanie czy slowko nie jest juz wprowadzone przy dodawaniu z klawiatury (ignorowac i podac w linii statusu)
