@@ -13,7 +13,6 @@
 >poprawa layoutu listy w word_pool (prawy/lewy)
 >(! 4.2)dodac i podpiac przycisk 'ucz sie!'
 >(! 3.1)podpiac przycisk 'dodaj z bazy'
->(! 2.3)dodac i podpiac przycisk 'usun'
 
 
 #base_view
@@ -28,3 +27,5 @@
 >linia statusu
 >zadbanie o tworzenie plikow gdy nie istnieja
 >rozwiazac problem z ponownym wpsianie lub nadpisaniem slowka (tupla i string)(?)
+>wylaczyc przycisk gdy niezaznaczony wiersz
+>obsluga niewybranego pliku

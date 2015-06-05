@@ -30,6 +30,7 @@ class PoolWindow(QtGui.QWidget):
         self.button["choose"] = QPushButton('+', self)
         self.button["import"] = QPushButton('+', self)
         self.button["cancel"] = QPushButton('Anuluj', self)
+        self.button["delete"] = QPushButton('Usuń', self)
         self.button["add"].setMaximumSize(20, 20)
         self.button["choose"].setMaximumSize(20, 20)
         self.button["import"].setMaximumSize(20, 20)
@@ -40,9 +41,12 @@ class PoolWindow(QtGui.QWidget):
         #word_list.setWindowTitle('Example List')
         self.list_model = QStandardItemModel(self.word_list)
         self.word_list.setModel(self.list_model)
+        self.word_list.clicked.connect(self.catch_item)
 
         self.split_line = QLineEdit(self)
         self.split_line.setText(' = ')
+
+        self.choosen_item = None
 
         self.initUI()
         self.amount_word = 0
@@ -83,12 +87,18 @@ class PoolWindow(QtGui.QWidget):
             ('widget', self.button['cancel']),
         ]
 
+        delete_l = [
+            ('widget', self.button['delete']),
+            ('stretch',),
+        ]
+
         self.add_box = self.box('horizontal', add_butt)
         self.chs_box = self.box('horizontal', chs_butt)
         self.impt_box = self.box('horizontal', impt_butt)
 
         self.w_amount_box = self.box('horizontal', w_amount_l)
         self.cancel_box = self.box('horizontal', cancel_l)
+        self.delete_box = self.box('horizontal', delete_l)
 
         left_l = [
             ('widget', QLabel('słówko pytające', self)),
@@ -100,6 +110,7 @@ class PoolWindow(QtGui.QWidget):
             ('layout', self.impt_box),
             ('widget', QLabel('znak rozdzielający', self)),
             ('widget', self.split_line),
+            ('layout', self.delete_box),
             ('stretch',),
         ]
 
@@ -135,6 +146,7 @@ class PoolWindow(QtGui.QWidget):
             'choose': self.choose,
             'import': self.imprt,
             'cancel': self.cancel,
+            'delete': self.delete,
             }
 
         self.slot_conn(slots)
@@ -181,6 +193,12 @@ class PoolWindow(QtGui.QWidget):
     def cancel(self):
         self.stacked_widget.removeWidget(self.stacked_widget.currentWidget())
 
+    def delete(self):
+        if self.choosen_item is not None:
+            self.list_model.removeRow(self.choosen_item)
+            self.session_word.remove(self.choosen_item)
+            self.choosen_item = None
+
 #   definicja podpiec
     def slot_conn(self, slots={}):
         for key in slots:
@@ -220,3 +238,8 @@ class PoolWindow(QtGui.QWidget):
 
             self.amount_word += n
             self.counter.setText(str(self.amount_word))
+
+    def catch_item(self):
+        items = self.word_list.selectedIndexes()
+        for item in items:
+            self.choosen_item = item.row()
