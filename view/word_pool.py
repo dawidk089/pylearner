@@ -193,7 +193,7 @@ class PoolWindow(QtGui.QWidget):
         self.que_editline.setText("")
         self.ans_editline.setText("")
         if que != "" and ans != "":
-            word = (que, ans)
+            word = [que, ans]
             if not self.session_word.search_if_is(word):
                 self.session_word.add(word)
                 self.list_model.appendRow(QStandardItem(que+' = '+ans))
@@ -202,20 +202,21 @@ class PoolWindow(QtGui.QWidget):
 
     def file_dialog(self):
         splitter = self.split_line.text()
-        file = open(QtGui.QFileDialog(self).getOpenFileName()).read()
-        n = 0
-        for row in file.split('\n'):
-            if row != '':
-                word = row.split(splitter)
-                if len(word) == 2:
-                    que = row.split(splitter)[0]
-                    ans = row.split(splitter)[1]
-                    word = (que, ans)
-                    if not self.session_word.search_if_is(word):
-                        n += 1
-                        item = QStandardItem(que+" = "+ans)
-                        self.list_model.appendRow(item)
-                        self.session_word.add(word)
+        if splitter != '':
+            file = open(QtGui.QFileDialog(self).getOpenFileName()).read()
+            n = 0
+            for row in file.split('\n'):
+                if row != '':
+                    word = row.split(splitter)
+                    if len(word) == 2:
+                        que = row.split(splitter)[0]
+                        ans = row.split(splitter)[1]
+                        word = [que, ans]
+                        if not self.session_word.search_if_is(word):
+                            n += 1
+                            item = QStandardItem(que+" = "+ans)
+                            self.list_model.appendRow(item)
+                            self.session_word.add(word)
 
-        self.amount_word += n
-        self.counter.setText(str(self.amount_word))
+            self.amount_word += n
+            self.counter.setText(str(self.amount_word))

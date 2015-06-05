@@ -17,6 +17,7 @@ class BaseWindow(QtGui.QWidget):
         self.stacked_widget = stacked_widget
 
         self.base_word_list = word_list
+        print('base_word_list: ', self.base_word_list.get())
 
         self.header = QLabel('<h1><b>Główna baza słówek</b></h1>', self)
 
@@ -29,92 +30,90 @@ class BaseWindow(QtGui.QWidget):
         self.button["cancel"] = QtGui.QPushButton('Anuluj', self)
         self.button["done"] = QtGui.QPushButton('Gotowe', self)
 
-        #definicja listy
+        # definicja listy
         self.word_list = QListView()
         self.word_list.setMinimumSize(600, 400)
-        #word_list.setWindowTitle('Example List')
         self.list_model = QStandardItemModel(self.word_list)
-        print('list_model before: ', self.list_model)
         for row in self.base_word_list.get():
-            print('row: ', row)
             self.list_model.appendRow(QStandardItem(row[0]+" = "+row[1]))
-        print('list_model after: ', self.list_model)
         self.word_list.setModel(self.list_model)
         self.word_list.clicked.connect(self.catch_item)
         self.choosen_item = None
 
-        self.que = QLineEdit(self)
-        self.ans = QLineEdit(self)
+        self.que_editline = QLineEdit(self)
+        self.ans_editline = QLineEdit(self)
+        self.que_editline.setMaximumWidth(200)
+        self.ans_editline.setMaximumWidth(200)
 
         self.initUI()
 
-    #inicjalizacja widget'ow i layout'u
+    # inicjalizacja widget'ow i layout'u
     def initUI(self):
 
         print('word list: ', self.word_list)
         #layout step 1
-        self.add_butt_l = [
+        add_butt_l = [
             ('stretch',),
             ('widget', self.button['add']),
         ]
 
-        self.add_que_l = [
+        add_que_l = [
             ('widget', QLabel('słówko pytające', self)),
-            ('widget', self.que),
+            ('widget', self.que_editline),
         ]
 
-        self.add_ans_l = [
+        add_ans_l = [
             ('widget', QLabel('słówko odpowiadające', self)),
-            ('widget', self.ans),
+            ('widget', self.ans_editline),
         ]
 
-        self.add_butt_box = self.box('vertical', self.add_butt_l)
-        self.add_que_box = self.box('vertical', self.add_que_l)
-        self.add_ans_box = self.box('vertical', self.add_ans_l)
+        self.add_butt_box = self.box('vertical', add_butt_l)
+        self.add_que_box = self.box('vertical', add_que_l)
+        self.add_ans_box = self.box('vertical', add_ans_l)
 
         #layout step 2
-        self.header_l = [
+        header_l = [
             ('stretch',),
             ('widget', self.header),
             ('stretch',),
         ]
 
-        self.add_l = [
+        add_l = [
             ('layout', self.add_butt_box),
             ('layout', self.add_que_box),
             ('layout', self.add_ans_box),
             ('stretch',),
         ]
 
-        self.import_l = [
+        import_l = [
             ('widget', self.button['import']),
             ('stretch',),
         ]
 
-        self.change_l = [
+        change_l = [
             ('widget', self.button['change']),
             ('stretch',),
         ]
 
-        self.delete_l = [
+        delete_l = [
             ('widget', self.button['delete']),
             ('stretch',),
         ]
 
-        self.done_l = [
+        done_l = [
             ('stretch',),
             ('widget', self.button['cancel']),
             ('widget', self.button['done']),
         ]
 
-        self.header_box = self.box('horizontal', self.header_l)
-        self.add_box = self.box('horizontal', self.add_l)
-        self.import_box = self.box('horizontal', self.import_l)
-        self.change_box = self.box('horizontal', self.change_l)
-        self.delete_box = self.box('horizontal', self.delete_l)
-        self.done_box = self.box('horizontal', self.done_l)
+        self.header_box = self.box('horizontal', header_l)
+        self.add_box = self.box('horizontal', add_l)
+        self.import_box = self.box('horizontal', import_l)
+        self.change_box = self.box('horizontal', change_l)
+        self.delete_box = self.box('horizontal', delete_l)
+        self.done_box = self.box('horizontal', done_l)
 
-        #layout step 3
+        # layout step 3
         main_l = [
             ('layout', self.header_box),
             ('layout', self.add_box),
@@ -127,7 +126,7 @@ class BaseWindow(QtGui.QWidget):
 
         self.main_box = self.box('vertical', main_l)
 
-        #podpiecie przyciskow
+        # podpiecie przyciskow
         slots = {
             'add': self.add,
             'change': self.change,
@@ -138,9 +137,6 @@ class BaseWindow(QtGui.QWidget):
             }
 
         self.slot_conn(slots)
-
-        self.set_edit_line(200)
-        self.slot_conn()
         self.setLayout(self.main_box)
         self.show()
 
@@ -163,16 +159,12 @@ class BaseWindow(QtGui.QWidget):
 
         return box
 
-    #metoda pomocnicza do dodawania elementow do listy
+    # metoda pomocnicza do dodawania elementow do listy
     def add_to_list(self, item_to_add):
+        self.list_model.appendRow(QStandardItem(item_to_add))
 
-        item = QStandardItem(item_to_add)
-        item.setCheckable(True)
-        self.list_model.appendRow(item)
-
-    #definicje funkcji podpinanych do przyciskow
+    # definicje funkcji podpinanych do przyciskow
     def add(self):
-        print('add')
         self.add_word()
 
     def change(self):
@@ -185,64 +177,56 @@ class BaseWindow(QtGui.QWidget):
         self.base_word_list.remove(self.choosen_item)
 
     def done(self):
-        print('done')
         self.base_word_list.save()
         self.stacked_widget.removeWidget(self.stacked_widget.currentWidget())
 
     def cancel(self):
-        print('cancel')
         self.base_word_list.reset()
         self.stacked_widget.removeWidget(self.stacked_widget.currentWidget())
 
     def imprt(self):
-        print('import')
         self.file_dialog()
-
-    def set_edit_line(self, a):
-        self.que.setMaximumWidth(a)
-        self.ans.setMaximumWidth(a)
 
 #   definicja podpiec
     def slot_conn(self, slots={}):
         for key in slots:
             self.button[key].clicked.connect(slots[key])
-            print(">checkpoint: slots plugging for key: ", key, 'in class: ', self.__class__.__name__)
 
     def add_word(self):
-            que = self.que.text()
-            ans = self.ans.text()
-            self.que.setText("")
-            self.ans.setText("")
+        que = self.que_editline.text()
+        ans = self.ans_editline.text()
+        self.que_editline.setText("")
+        self.ans_editline.setText("")
 
-            if que != "" and ans != "" and not self.base_word_list.search_if_is((que, ans)):
-                self.base_word_list.add((que, ans))
-                print('word_list: ', self.word_list)
+        if que != "" and ans != "":
+            word = [que, ans]
+            if not self.base_word_list.search_if_is(word):
+                self.base_word_list.add(word)
                 self.list_model.appendRow(QStandardItem(que+" = "+ans))
 
     def file_dialog(self):
-        splitter = ''#self.left_l[8][1].text()
-        list = self.word_list
-        if splitter == '':
-            splitter = '='
-        fd = QtGui.QFileDialog(self)
-        file = open(fd.getOpenFileName()).read()
+        splitter = '='#self.left_l[8][1].text()
+        file = open(QtGui.QFileDialog(self).getOpenFileName()).read()
 
         for row in file.split('\n'):
             if row != '':
-                list_item = QStandardItem(row)
-                self.list_model.appendRow(list_item)
-                list.setModel(self.list_model)
+                word = row.split(splitter)
+                if len(word) == 2:
+                    que = row.split(splitter)[0]
+                    ans = row.split(splitter)[1]
+                    word = [que, ans]
+                    print('base word list before adding:\n', self.base_word_list.get())
+                    print('..and adding word: ', word)
+                    if not self.base_word_list.search_if_is(word):
 
-                new_word = []
-                for element in row.split(splitter):
-                    new_word.append(element)
-                self.base_word_list.add(new_word)
+                        item = QStandardItem(que+" = "+ans)
+                        self.list_model.appendRow(item)
+                        self.base_word_list.add(word)
 
     def catch_item(self):
         items = self.word_list.selectedIndexes()
         for item in items:
             self.choosen_item = item.row()
-            print('selected item index found at %s' % item.row())
 
 #if __name__ == '__main__':
 #    app = QtGui.QApplication([])
