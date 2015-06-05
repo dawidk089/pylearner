@@ -27,3 +27,9 @@ class DataStorage:
     def reset(self):
         self.data = []
         self.open()
+
+    def search_if_is(self, element):
+        if element in self.data:
+            return True
+        else:
+            return False

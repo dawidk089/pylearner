@@ -5,7 +5,7 @@
 >(! 3.2)dodac widok okienka pod wybor z bazy
 
 #word_pool
->(! 2.1)sprawdzanie czy slowko nie jest juz wprowadzone przy dodawaniu z klawiatury (ignorowac i podac w linii statusu)
+>czy slowko nie jest juz wprowadzone przy dodawaniu z klawiatury -- podac w linii statusu
 >dodanie funkcjonalnosci wcisniecia enter w drugim editline'ie by dodac slowko (jak przycisk)
 >walidowac editline przed znakami specjalnymi, spacja i cyframi (oprocz: ' / ? ! -)
 >przy wczytywaniu z pliku sprawdzic czy znajduje sie znak rozdzielajacy (tylko raz) i czy plik nie jest binarny(?), czy plik sie otworzyl
@@ -14,6 +14,7 @@
 >poprawa layoutu listy w word_pool (prawy/lewy)
 >(! 4.2)dodac i podpiac przycisk 'ucz sie!'
 >(! 3.1)podpiac przycisk 'dodaj z bazy'
+>(! 2.3)dodac i podpiac przycisk 'usun'
 
 #base_view
 >(! 2.2)sprawdzanie czy slowko nie jest juz wprowadzone przy dodawaniu z klawiatury (ignorowac i podac w linii statusu)
@@ -26,3 +27,5 @@
 >zadbanie o sciezki do ikony i logo glownego
 >poprawic layouty w word_pool & main_view -- sposob implementacji
 >linia statusu
+>zadbanie o tworzenie plikow gdy nie istnieja
+>rozwiazac problem z ponownym wpsianie lub nadpisaniem slowka (tupla i string)
