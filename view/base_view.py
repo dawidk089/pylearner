@@ -16,10 +16,8 @@ class BaseWindow(QtGui.QWidget):
 
         self.stacked_widget = stacked_widget
 
+
         self.base_word_list = word_list
-        for row in self.base_word_list.get():
-            print('row: ', row)
-            self.list_model.appendRow(QStandardItem(row))
 
         self.header = QLabel('<h1><b>Główna baza słówek</b></h1>', self)
 
@@ -36,7 +34,14 @@ class BaseWindow(QtGui.QWidget):
         self.word_list.setMinimumSize(600, 400)
         #word_list.setWindowTitle('Example List')
         self.list_model = QStandardItemModel(self.word_list)
+        print('list_model before: ', self.list_model)
+        for row in self.base_word_list.get():
+            print('row: ', row)
+            self.list_model.appendRow(QStandardItem(row[0]+" = "+row[1]))
+        print('list_model after: ', self.list_model)
         self.word_list.setModel(self.list_model)
+        self.word_list.clicked.connect(self.catch_item)
+        self.choosen_item = None
 
         self.que = QLineEdit(self)
         self.ans = QLineEdit(self)
@@ -169,17 +174,23 @@ class BaseWindow(QtGui.QWidget):
         self.add_word()
 
     def change(self):
-        print('change')
+        print('change: ', self.choosen_item)
+        self.list_model.setItem(self.choosen_item, QStandardItem("makarena"))
 
     def delete(self):
-        print('delete')
+        print('delete: ', self.choosen_item)
+        self.list_model.removeRow(self.choosen_item)
+        self.base_word_list.remove(self.choosen_item)
+
 
     def done(self):
         print('done')
+        self.base_word_list.save()
         self.stacked_widget.removeWidget(self.stacked_widget.currentWidget())
 
     def imprt(self):
         print('import')
+        self.file_dialog()
 
     def set_edit_line(self, a):
         self.que.setMaximumWidth(a)
@@ -196,24 +207,37 @@ class BaseWindow(QtGui.QWidget):
             ans = self.ans.text()
             self.que.setText("")
             self.ans.setText("")
-            self.base_word_list.add([que, ans])
-            print('word_list: ', self.word_list)
-            self.list_model.appendRow(QStandardItem([que, ans]))
+
+            if que != "" and ans != "":
+                print('que is empty string')
+                self.base_word_list.add([que, ans])
+                print('word_list: ', self.word_list)
+                self.list_model.appendRow(QStandardItem(que+" = "+ans))
 
     def file_dialog(self):
-        splitter = self.left_l[8][1].text()
-        list = self.right_l[1][1]
+        splitter = ''#self.left_l[8][1].text()
+        list = self.word_list
         if splitter == '':
             splitter = '='
         fd = QtGui.QFileDialog(self)
         file = open(fd.getOpenFileName()).read()
 
         for row in file.split('\n'):
-            if row != '' and True:
+            if row != '':
                 list_item = QStandardItem(row)
-                list_item.setCheckable(True)
                 self.list_model.appendRow(list_item)
                 list.setModel(self.list_model)
+
+                new_word = []
+                for element in row.split(splitter):
+                    new_word.append(element)
+                self.base_word_list.add(new_word)
+
+    def catch_item(self):
+        items = self.word_list.selectedIndexes()
+        for item in items:
+            self.choosen_item = item.row()
+            print('selected item index found at %s' % item.row())
 
 #if __name__ == '__main__':
 #    app = QtGui.QApplication([])

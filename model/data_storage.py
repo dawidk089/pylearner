@@ -20,3 +20,6 @@ class DataStorage:
 
     def save(self):
         json.dump(self.data, open(self.path, 'w'))
+
+    def remove(self, i):
+        self.data.pop(i)

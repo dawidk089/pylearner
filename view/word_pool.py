@@ -154,9 +154,7 @@ class PoolWindow(QtGui.QWidget):
     #metoda pomocnicza do dodawania elementow do listy
     def add_to_list(self, item_to_add):
 
-        item = QStandardItem(item_to_add)
-        item.setCheckable(True)
-        self.list_model.appendRow(item)
+        self.list_model.appendRow(QStandardItem(item_to_add))
 
     #definicje funkcji podpinanych do przyciskow
     def add(self):
@@ -188,17 +186,17 @@ class PoolWindow(QtGui.QWidget):
             print(">checkpoint: slots plugging for key: ", key, 'in class: ', self.__class__.__name__)
 
     def add_word(self):
-        ask = self.left_l[1][1].text()
-        que = self.left_l[3][1].text()
+        que = self.left_l[1][1].text()
+        ans = self.left_l[3][1].text()
         self.left_l[1][1].setText("")
         self.left_l[3][1].setText("")
-        self.session_word.append((ask, que))
-        print('session word: ', self.session_word)
-        list_item = QStandardItem(ask+' = '+que)
-        list_item.setCheckable(True)
-        self.list_model.appendRow(list_item)
-        self.amount_word += 1
-        self.counter.setText(str(self.amount_word))
+        if que != "" and ans != "":
+            self.session_word.append((que, ans))
+            print('session word: ', self.session_word)
+            list_item = QStandardItem(que+' = '+ans)
+            self.list_model.appendRow(list_item)
+            self.amount_word += 1
+            self.counter.setText(str(self.amount_word))
 
     def file_dialog(self):
         splitter = self.left_l[8][1].text()
