@@ -16,7 +16,6 @@ class BaseWindow(QtGui.QWidget):
 
         self.stacked_widget = stacked_widget
 
-
         self.base_word_list = word_list
 
         self.header = QLabel('<h1><b>Główna baza słówek</b></h1>', self)
@@ -27,6 +26,7 @@ class BaseWindow(QtGui.QWidget):
         self.button["import"] = QtGui.QPushButton('Importuj', self)
         self.button["change"] = QtGui.QPushButton('Zmień', self)
         self.button["delete"] = QtGui.QPushButton('Usuń', self)
+        self.button["cancel"] = QtGui.QPushButton('Anuluj', self)
         self.button["done"] = QtGui.QPushButton('Gotowe', self)
 
         #definicja listy
@@ -103,6 +103,7 @@ class BaseWindow(QtGui.QWidget):
 
         self.done_l = [
             ('stretch',),
+            ('widget', self.button['cancel']),
             ('widget', self.button['done']),
         ]
 
@@ -132,6 +133,7 @@ class BaseWindow(QtGui.QWidget):
             'change': self.change,
             'import': self.imprt,
             'delete': self.delete,
+            'cancel': self.cancel,
             'done': self.done,
             }
 
@@ -182,10 +184,14 @@ class BaseWindow(QtGui.QWidget):
         self.list_model.removeRow(self.choosen_item)
         self.base_word_list.remove(self.choosen_item)
 
-
     def done(self):
         print('done')
         self.base_word_list.save()
+        self.stacked_widget.removeWidget(self.stacked_widget.currentWidget())
+
+    def cancel(self):
+        print('cancel')
+        self.base_word_list.reset()
         self.stacked_widget.removeWidget(self.stacked_widget.currentWidget())
 
     def imprt(self):

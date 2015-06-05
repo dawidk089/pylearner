@@ -23,3 +23,7 @@ class DataStorage:
 
     def remove(self, i):
         self.data.pop(i)
+
+    def reset(self):
+        self.data = []
+        self.open()

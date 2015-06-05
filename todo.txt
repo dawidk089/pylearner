@@ -21,7 +21,6 @@
 >przy wczytywaniu z pliku sprawdzic czy znajduje sie znak rozdzielajacy (tylko raz) i czy plik nie jest binarny(?), czy plik sie otworzyl
     informacja w pasku statusu
 >wylaczyc obsluge edycji wiersza listy po dwukliku
->(! 1)dodac i podlaczyc obsluge przycisku anuluj
 
 #ogolnie
 >zadbanie o sciezki do ikony i logo glownego
