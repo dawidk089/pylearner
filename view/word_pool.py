@@ -18,12 +18,21 @@ class PoolWindow(QtGui.QWidget):
         self.session_word = DataStorage("../data/session_word")
         self.session_word.open()
 
+        self.counter = QLabel(str(0), self)
+        self.que_editline = QLineEdit(self)
+        self.ans_editline = QLineEdit(self)
+        self.que_editline.setMaximumWidth(200)
+        self.ans_editline.setMaximumWidth(200)
+
         self.button = {}
 
         self.button["add"] = QPushButton('+', self)
         self.button["choose"] = QPushButton('+', self)
         self.button["import"] = QPushButton('+', self)
         self.button["cancel"] = QPushButton('Anuluj', self)
+        self.button["add"].setMaximumSize(20, 20)
+        self.button["choose"].setMaximumSize(20, 20)
+        self.button["import"].setMaximumSize(20, 20)
 
         #definicja listy
         self.word_list = QListView()
@@ -31,8 +40,6 @@ class PoolWindow(QtGui.QWidget):
         #word_list.setWindowTitle('Example List')
         self.list_model = QStandardItemModel(self.word_list)
         self.word_list.setModel(self.list_model)
-
-        self.counter = QLabel(str(0), self)
 
         self.split_line = QLineEdit(self)
         self.split_line.setText(' = ')
@@ -44,50 +51,50 @@ class PoolWindow(QtGui.QWidget):
     def initUI(self):
 
         #layout
-        self.header = [
+        header = [
             ('stretch',),
             ('widget', QLabel('<h1><b>Nauka indywidualna</b></h1>', self)),
             ('stretch',),
         ]
 
-        self.add_butt = [
+        add_butt = [
             ('widget', QLabel('Dopisz słówko do puli', self)),
             ('widget', self.button['add']),
         ]
 
-        self.chs_butt = [
+        chs_butt = [
             ('widget', QLabel('Wybierz z bazy', self)),
             ('widget', self.button['choose']),
         ]
 
-        self.impt_butt = [
+        impt_butt = [
             ('widget', QLabel('Importuj z pliku', self)),
             ('widget', self.button['import']),
         ]
 
-        self.w_amount_l = [
+        w_amount_l = [
             ('widget', QLabel('Ilość: ', self)),
             ('widget', self.counter),
             ('stretch',),
         ]
 
-        self.cancel_l = [
+        cancel_l = [
             ('stretch',),
             ('widget', self.button['cancel']),
         ]
 
-        self.add_box = self.box('horizontal', self.add_butt)
-        self.chs_box = self.box('horizontal', self.chs_butt)
-        self.impt_box = self.box('horizontal', self.impt_butt)
+        self.add_box = self.box('horizontal', add_butt)
+        self.chs_box = self.box('horizontal', chs_butt)
+        self.impt_box = self.box('horizontal', impt_butt)
 
-        w_amount_box = self.box('horizontal', self.w_amount_l)
-        cancel_box = self.box('horizontal', self.cancel_l)
+        self.w_amount_box = self.box('horizontal', w_amount_l)
+        self.cancel_box = self.box('horizontal', cancel_l)
 
-        self.left_l = [
+        left_l = [
             ('widget', QLabel('słówko pytające', self)),
-            ('widget', QLineEdit(self)),
+            ('widget', self.que_editline),
             ('widget', QLabel('słówko odpowiadające', self)),
-            ('widget', QLineEdit(self)),
+            ('widget', self.ans_editline),
             ('layout', self.add_box),
             ('layout', self.chs_box),
             ('layout', self.impt_box),
@@ -96,31 +103,31 @@ class PoolWindow(QtGui.QWidget):
             ('stretch',),
         ]
 
-        self.right_l = [
+        right_l = [
             ('widget', QLabel('Wybrane słówka', self)),
             ('widget', self.word_list),
-            ('layout', w_amount_box),
-            ('layout', cancel_box),
+            ('layout', self.w_amount_box),
+            ('layout', self.cancel_box),
         ]
 
-        left_box = self.box('vertical', self.left_l)
-        right_box = self.box('vertical', self.right_l)
+        self.left_box = self.box('vertical', left_l)
+        self.right_box = self.box('vertical', right_l)
 
-        top_box = self.box('horizontal', self.header)
+        self.top_box = self.box('horizontal', header)
 
         bottom_l = [
-            ('layout', left_box),
-            ('layout', right_box),
+            ('layout', self.left_box),
+            ('layout', self.right_box),
         ]
 
-        bottom_box = self.box('horizontal', bottom_l)
+        self.bottom_box = self.box('horizontal', bottom_l)
 
         main_l = [
-            ('layout', top_box),
-            ('layout', bottom_box),
+            ('layout', self.top_box),
+            ('layout', self.bottom_box),
         ]
 
-        main_box = self.box('vertical', main_l)
+        self.main_box = self.box('vertical', main_l)
 
         #podpiecie przyciskow
         slots = {
@@ -131,11 +138,7 @@ class PoolWindow(QtGui.QWidget):
             }
 
         self.slot_conn(slots)
-
-        self.set_butt_size(20)
-        self.set_edit_line(200)
-        self.slot_conn()
-        self.setLayout(main_box)
+        self.setLayout(self.main_box)
         self.show()
 
     #pomocnicza metoda do budowania layout'u
@@ -178,15 +181,6 @@ class PoolWindow(QtGui.QWidget):
     def cancel(self):
         self.stacked_widget.removeWidget(self.stacked_widget.currentWidget())
 
-    def set_butt_size(self, a):
-        self.add_butt[1][1].setMaximumSize(a, a)
-        self.chs_butt[1][1].setMaximumSize(a, a)
-        self.impt_butt[1][1].setMaximumSize(a, a)
-
-    def set_edit_line(self, a):
-        self.left_l[1][1].setMaximumWidth(a)
-        self.left_l[3][1].setMaximumWidth(a)
-
 #   definicja podpiec
     def slot_conn(self, slots={}):
         for key in slots:
@@ -194,35 +188,34 @@ class PoolWindow(QtGui.QWidget):
             print(">checkpoint: slots plugging for key: ", key, 'in class: ', self.__class__.__name__)
 
     def add_word(self):
-        que = self.left_l[1][1].text()
-        ans = self.left_l[3][1].text()
-        self.left_l[1][1].setText("")
-        self.left_l[3][1].setText("")
-        if que != "" and ans != "" and not self.session_word.search_if_is((que, ans)):
-            self.session_word.add((que, ans))
-            print('session word: ', self.session_word)
-            list_item = QStandardItem(que+' = '+ans)
-            self.list_model.appendRow(list_item)
-            self.amount_word += 1
-            self.counter.setText(str(self.amount_word))
+        que = self.que_editline.text()
+        ans = self.ans_editline.text()
+        self.que_editline.setText("")
+        self.ans_editline.setText("")
+        if que != "" and ans != "":
+            word = (que, ans)
+            if not self.session_word.search_if_is(word):
+                self.session_word.add(word)
+                self.list_model.appendRow(QStandardItem(que+' = '+ans))
+                self.amount_word += 1
+                self.counter.setText(str(self.amount_word))
 
     def file_dialog(self):
-        splitter = self.left_l[8][1].text()
-        fd = QtGui.QFileDialog(self)
-        file = open(fd.getOpenFileName()).read()
+        splitter = self.split_line.text()
+        file = open(QtGui.QFileDialog(self).getOpenFileName()).read()
         n = 0
         for row in file.split('\n'):
             if row != '':
-                print('row :', row)
-                que = row.split(splitter)[0]
-                ans = row.split(splitter)[1]
-                if not self.session_word.search_if_is((que, ans)):
-                    n += 1
-                    list_item = QStandardItem(row)
-                    self.list_model.appendRow(list_item)
-                    #self.word_list.setModel(self.list_model)
-                    self.session_word.add((que, ans))
-                    print('session word after add', self.session_word.get())
+                word = row.split(splitter)
+                if len(word) == 2:
+                    que = row.split(splitter)[0]
+                    ans = row.split(splitter)[1]
+                    word = (que, ans)
+                    if not self.session_word.search_if_is(word):
+                        n += 1
+                        item = QStandardItem(que+" = "+ans)
+                        self.list_model.appendRow(item)
+                        self.session_word.add(word)
 
         self.amount_word += n
         self.counter.setText(str(self.amount_word))

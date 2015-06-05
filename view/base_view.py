@@ -214,9 +214,8 @@ class BaseWindow(QtGui.QWidget):
             self.que.setText("")
             self.ans.setText("")
 
-            if que != "" and ans != "":
-                print('que is empty string')
-                self.base_word_list.add([que, ans])
+            if que != "" and ans != "" and not self.base_word_list.search_if_is((que, ans)):
+                self.base_word_list.add((que, ans))
                 print('word_list: ', self.word_list)
                 self.list_model.appendRow(QStandardItem(que+" = "+ans))
 
