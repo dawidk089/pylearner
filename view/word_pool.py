@@ -6,14 +6,16 @@ from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 import re
 from model.data_storage import DataStorage
+from view.chooseBase_view import ChooseBase
 
 
 class PoolWindow(QtGui.QWidget):
 
-    def __init__(self, stacked_widget):
+    def __init__(self, stacked_widget, main_base_word):
         super().__init__()
 
         self.stacked_widget = stacked_widget
+        self.main_base_word = main_base_word
 
         self.session_word = DataStorage("../data/session_word")
         self.session_word.open()
@@ -182,9 +184,12 @@ class PoolWindow(QtGui.QWidget):
         self.add_word()
         print('session word', self.session_word.get())
 
-    def choose(self):
-        print('choose')
-        mb = QMessageBox()
+    def choose(self):# ...?
+        adding_word = []
+        chooseBase_window = ChooseBase(self.stacked_widget, self.main_base_word, adding_word)
+        self.stacked_widget.addWidget(chooseBase_window)
+        self.stacked_widget.setCurrentWidget(chooseBase_window)
+
 
     def imprt(self):
         self.file_dialog()
@@ -198,6 +203,8 @@ class PoolWindow(QtGui.QWidget):
             self.list_model.removeRow(self.choosen_item)
             self.session_word.remove(self.choosen_item)
             self.choosen_item = None
+            self.amount_word -= 1
+            self.counter.setText(str(self.amount_word))
 
 #   definicja podpiec
     def slot_conn(self, slots={}):

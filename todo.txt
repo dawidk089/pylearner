@@ -2,7 +2,6 @@
 >dodac widok pod nauke automatyczna
 >(! 5)dodac widok pod ustawienia
 >(! 4.1)dodac widok pod nauke
->(! 3.2)dodac widok okienka pod wybor z bazy
 
 #word_pool
 >dodanie funkcjonalnosci wcisniecia enter w drugim editline'ie by dodac slowko (jak przycisk)
@@ -12,8 +11,9 @@
 >wprowadzic obsluge sesji
 >poprawa layoutu listy w word_pool (prawy/lewy)
 >(! 4.2)dodac i podpiac przycisk 'ucz sie!'
->(! 3.1)podpiac przycisk 'dodaj z bazy'
 
+#chooseBase
+>(! 3.1.1)podpiac zdarzenie pod zaznaczenie slowka (checkable) na dodanie do listy i zliczanie
 
 #base_view
 >czy slowko nie jest juz wprowadzone, przy dodawaniu z klawiatury (podac w linii statusu)
