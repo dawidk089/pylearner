@@ -13,7 +13,7 @@
 >(! 4.2)dodac i podpiac przycisk 'ucz sie!'
 
 #chooseBase
->(! 3.1.1)podpiac zdarzenie pod zaznaczenie slowka (checkable) na dodanie do listy i zliczanie
+>zaladowac juz wybrane slowka jako wybrane z session_list
 
 #base_view
 >czy slowko nie jest juz wprowadzone, przy dodawaniu z klawiatury (podac w linii statusu)

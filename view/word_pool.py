@@ -129,7 +129,7 @@ class PoolWindow(QtGui.QWidget):
         self.top_box = self.box('horizontal', header)
 
         bottom_l = [
-            ('layout', self.left_box),
+            ('layout', self.left_box),# ?! to fix
             ('layout', self.right_box),
         ]
 
@@ -184,11 +184,11 @@ class PoolWindow(QtGui.QWidget):
         self.add_word()
         print('session word', self.session_word.get())
 
-    def choose(self):# ...?
-        adding_word = []
-        chooseBase_window = ChooseBase(self.stacked_widget, self.main_base_word, adding_word)
+    def choose(self):
+        chooseBase_window = ChooseBase(self.stacked_widget, self)
         self.stacked_widget.addWidget(chooseBase_window)
         self.stacked_widget.setCurrentWidget(chooseBase_window)
+        print('chooseBase window has been closed')
 
 
     def imprt(self):
