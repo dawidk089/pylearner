@@ -33,11 +33,17 @@ class Learn(QtGui.QWidget):
         self.ans_editline = QLineEdit(self)
         self.ans_editline.setMaximumWidth(200)
 
+        # button
         self.button = {}
 
         self.button["ok"] = QPushButton('OK', self)
         self.button["abort"] = QPushButton('przerwij', self)
 
+        # sets
+        self.amount_not_learned.setMaximumWidth(20)
+        self.progress.setMaximumWidth(20)
+        self.button['ok'].resize(self.button['ok'].sizeHint())
+        self.que_line.setMinimumWidth(200)
         #self.button["OK"].setMaximumSize(20, 20)
 
 
@@ -71,12 +77,13 @@ class Learn(QtGui.QWidget):
 
         self.progress_box = self.box('horizontal', progress_l)
 
-        que_l = [
-            ('widget', self.que_line),
+        ans_l = [
+            ('widget', self.ans_editline),
             ('widget', self.button['ok']),
+            ('stretch',),
         ]
 
-        self.que_box = self.box('horizontal', que_l)
+        self.ans_editline_box = self.box('horizontal', ans_l)
 
         ans_label_l = [
             ('widget', QLabel('twoja odpowiedź to', self)),
@@ -116,10 +123,11 @@ class Learn(QtGui.QWidget):
         # folding boxes
         middle_l = [
             ('layout', self.header_box),
+            ('stretch',),
             ('layout', self.not_learned_box),
             ('layout', self.progress_box),
-            ('layout', self.que_box),
-            ('widget', self.ans_editline),
+            ('widget', self.que_line),
+            ('layout', self.ans_editline_box),
             ('layout', self.ans_box),
             ('stretch',),
             ('layout', self.countoff_box),
@@ -128,8 +136,8 @@ class Learn(QtGui.QWidget):
             ('layout', self.abort_box),
         ]
 
-        self.main_box = self.box('vertical', middle_l)
-        """
+        self.middle_box = self.box('vertical', middle_l)
+
         main_l = [
             ('stretch',),
             ('layout', self.middle_box),
@@ -137,7 +145,7 @@ class Learn(QtGui.QWidget):
         ]
 
         self.main_box = self.box('horizontal', main_l)
-        """
+
         #podpiecie przyciskow
         slots = {
             'ok': self.ok,

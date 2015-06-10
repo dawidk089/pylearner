@@ -21,7 +21,7 @@
 >wylaczyc obsluge edycji wiersza listy po dwukliku
 
 #learn
->poprawa layoutu
+>(!)poprawienie odwijania widokow
 
 #ogolnie
 >zadbanie o sciezki do ikony i logo glownego
