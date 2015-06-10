@@ -8,6 +8,8 @@ from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 import re
 from model.data_storage import DataStorage
+import random
+import time
 
 
 class Learn(QtGui.QWidget):
@@ -16,8 +18,21 @@ class Learn(QtGui.QWidget):
         super().__init__()
 
         self.stacked_widget = stacked_widget
+
+        # list definition
         self.init_word_list = word_list
-        self.eliminated_word_list = word_list
+        self.eliminated_word_list = []
+        for word in self.init_word_list.data:
+            self.eliminated_word_list.append(
+                {
+                    'word': word,
+                    'que': word[0],
+                    'ans': word[1],
+                    'points': 0,
+                    'wrong_combo': 0,
+                    'wrong_amount': 0,
+                }
+            )
 
         # labels
         self.header = QLabel('<h1><b>Nauka</b></h1>', self)
@@ -44,12 +59,14 @@ class Learn(QtGui.QWidget):
         self.progress.setMaximumWidth(20)
         self.button['ok'].resize(self.button['ok'].sizeHint())
         self.que_line.setMinimumWidth(200)
-        #self.button["OK"].setMaximumSize(20, 20)
-
         self.ans_editline.returnPressed.connect(self.button['ok'].click)
 
+        #queries storage
+        self.current_id_word = None
+        self.start_time = None
 
         self.initUI()
+        self.rand_word()
 
     #inicjalizacja widget'ow i layout'u
     def initUI(self):
@@ -179,14 +196,28 @@ class Learn(QtGui.QWidget):
 
     #definicje funkcji podpinanych do przyciskow
     def ok(self):
-        print('ok')
+        self.time = self.get_time() - self.time
+        print('ok', self.time)
+        answer = self.ans_editline.text()
+        self.ans_editline.setText('')
+        self.your_ans_line.setText(answer)
+        self.rand_word()
 
     def abort(self):
         self.stacked_widget.removeWidget(self.stacked_widget.currentWidget())
 
-#   definicja podpiec
+    # definicja podpiec
     def slot_conn(self, slots={}):
         for key in slots:
             self.button[key].clicked.connect(slots[key])
             print(">checkpoint: slots plugging for key: ", key, 'in class: ', self.__class__.__name__)
 
+    # definicje funkcji pomocniczych do logiki 'nauki'
+    def rand_word(self):
+        word = random.choice(self.eliminated_word_list)
+        self.current_id_word = word['word']
+        self.que_line.setText(word['que'])
+        self.time = self.get_time()
+
+    def get_time(self):
+        return int(round(time.time() * 1000))

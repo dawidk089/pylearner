@@ -22,8 +22,14 @@
 
 #learn
 >(!)poprawienie odwijania widokow
->(! 4.1)zdefiniowanie funkcji losuj slowko i podpiecie OK
->(! 4.0)podpiecie enter pod ok
+>(! 4.2.1)spr odpowiedzi
+>(! 4.2.2)przeliczanie punktow
+>(! 4.3)spr stanu (zwykly, wyjatkowy, koniec)
+>(! 4.4)przeliczenie trudnosci slowka
+>(! 4.5)sortowanie po trudnosci, zmienic algorytm losowania
+>(! 4.6)sredni wzgledny czas odpowiedzi, podpiecie kolorow
+>(! 4.7)poprawa layoutow
+>(!)zablokowanie okna na pewien czas (dobra/zla odpowiedz)
 
 #ogolnie
 >zadbanie o sciezki do ikony i logo glownego
