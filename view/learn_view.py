@@ -208,6 +208,8 @@ class Learn(QtGui.QWidget):
     def init_list(self):
         n = 0
         for word in self.init_word_list.data:
+            words = len(word[0].split())
+            letters = len(max(word[0].split(), key=len))
             self.eliminated_word_list[n] = {
                 'id': n,
                 'word': word,
@@ -216,9 +218,10 @@ class Learn(QtGui.QWidget):
                 'points': 0,
                 'wrong_combo': 0,
                 'wrong_amount': 0,
+                'difficulty': letters/8,
             }
             n += 1
-
+        print('list\n', self.eliminated_word_list)
 
     def rand_word(self):
         word = random.choice(self.eliminated_word_list)
@@ -233,15 +236,12 @@ class Learn(QtGui.QWidget):
         correct = self.eliminated_word_list[self.current_id_word]['ans']
         self.correct_ans_line.setText(correct)
         word = self.eliminated_word_list[self.current_id_word]
-        #m = re.search('\s*'+correct+'\s*', answer)
-        #print('regex', m.group(0))
-        """
-        m = re.search('(?<=\ )\w+', str(answer))
-        print('regex', m.group(0))
-        """
+
+        #print('words', correct, correct.split(), len(correct.split()))
+
         test = re.compile("\s*"+correct+"\s*")
         if test.match(answer):
-            word['points'] += 1
+            word['points'] += 3000/self.time
             word['wrong_combo'] = 0
 
 
