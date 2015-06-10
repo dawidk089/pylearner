@@ -22,7 +22,6 @@
 
 #learn
 >(!)poprawienie odwijania widokow
->(! 4.2.1)spr odpowiedzi
 >(! 4.2.2)przeliczanie punktow
 >(! 4.3)spr stanu (zwykly, wyjatkowy, koniec)
 >(! 4.4)przeliczenie trudnosci slowka

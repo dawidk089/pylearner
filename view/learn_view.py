@@ -21,18 +21,8 @@ class Learn(QtGui.QWidget):
 
         # list definition
         self.init_word_list = word_list
-        self.eliminated_word_list = []
-        for word in self.init_word_list.data:
-            self.eliminated_word_list.append(
-                {
-                    'word': word,
-                    'que': word[0],
-                    'ans': word[1],
-                    'points': 0,
-                    'wrong_combo': 0,
-                    'wrong_amount': 0,
-                }
-            )
+        self.eliminated_word_list = {}
+        self.init_list()
 
         # labels
         self.header = QLabel('<h1><b>Nauka</b></h1>', self)
@@ -201,6 +191,8 @@ class Learn(QtGui.QWidget):
         answer = self.ans_editline.text()
         self.ans_editline.setText('')
         self.your_ans_line.setText(answer)
+        print('word id', self.current_id_word)
+        self.check_ans(answer)
         self.rand_word()
 
     def abort(self):
@@ -213,11 +205,46 @@ class Learn(QtGui.QWidget):
             print(">checkpoint: slots plugging for key: ", key, 'in class: ', self.__class__.__name__)
 
     # definicje funkcji pomocniczych do logiki 'nauki'
+    def init_list(self):
+        n = 0
+        for word in self.init_word_list.data:
+            self.eliminated_word_list[n] = {
+                'id': n,
+                'word': word,
+                'que': word[0],
+                'ans': word[1],
+                'points': 0,
+                'wrong_combo': 0,
+                'wrong_amount': 0,
+            }
+            n += 1
+
+
     def rand_word(self):
         word = random.choice(self.eliminated_word_list)
-        self.current_id_word = word['word']
+        self.current_id_word = word['id']
         self.que_line.setText(word['que'])
         self.time = self.get_time()
 
     def get_time(self):
         return int(round(time.time() * 1000))
+
+    def check_ans(self, answer):
+        correct = self.eliminated_word_list[self.current_id_word]['ans']
+        self.correct_ans_line.setText(correct)
+        word = self.eliminated_word_list[self.current_id_word]
+        #m = re.search('\s*'+correct+'\s*', answer)
+        #print('regex', m.group(0))
+        """
+        m = re.search('(?<=\ )\w+', str(answer))
+        print('regex', m.group(0))
+        """
+        test = re.compile("\s*"+correct+"\s*")
+        if test.match(answer):
+            word['points'] += 1
+            word['wrong_combo'] = 0
+
+
+        else:
+            word['wrong_combo'] += 1
+            word['wrong_amount'] += 1
