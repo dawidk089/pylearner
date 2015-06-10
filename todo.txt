@@ -1,7 +1,6 @@
 #main_view
 >dodac widok pod nauke automatyczna
 >(! 5)dodac widok pod ustawienia
->(! 4.1)dodac widok pod nauke
 
 #word_pool
 >dodanie funkcjonalnosci wcisniecia enter w drugim editline'ie by dodac slowko (jak przycisk)
@@ -10,7 +9,6 @@
     informacja w pasku statusu
 >wprowadzic obsluge sesji
 >poprawa layoutu listy w word_pool (prawy/lewy)
->(! 4.2)dodac i podpiac przycisk 'ucz sie!'
 
 #chooseBase
 >zaladowac juz wybrane slowka jako wybrane z session_list
@@ -21,6 +19,9 @@
 >przy wczytywaniu z pliku sprawdzic czy plik nie jest binarny(?), czy plik sie otworzyl
     informacja w pasku statusu
 >wylaczyc obsluge edycji wiersza listy po dwukliku
+
+#learn
+>poprawa layoutu
 
 #ogolnie
 >zadbanie o sciezki do ikony i logo glownego

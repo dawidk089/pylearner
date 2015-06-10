@@ -7,6 +7,7 @@ from PyQt4.QtGui import *
 import re
 from model.data_storage import DataStorage
 from view.chooseBase_view import ChooseBase
+from view.learn_view import Learn
 
 
 class PoolWindow(QtGui.QWidget):
@@ -33,6 +34,8 @@ class PoolWindow(QtGui.QWidget):
         self.button["import"] = QPushButton('+', self)
         self.button["cancel"] = QPushButton('Anuluj', self)
         self.button["delete"] = QPushButton('Usuń', self)
+        self.button['done'] = QPushButton('Gotowe', self)
+        
         self.button["add"].setMaximumSize(20, 20)
         self.button["choose"].setMaximumSize(20, 20)
         self.button["import"].setMaximumSize(20, 20)
@@ -86,6 +89,7 @@ class PoolWindow(QtGui.QWidget):
 
         cancel_l = [
             ('stretch',),
+            ('widget', self.button['done']),
             ('widget', self.button['cancel']),
         ]
 
@@ -147,6 +151,7 @@ class PoolWindow(QtGui.QWidget):
             'add': self.add,
             'choose': self.choose,
             'import': self.imprt,
+            'done': self.done,
             'cancel': self.cancel,
             'delete': self.delete,
             }
@@ -190,7 +195,6 @@ class PoolWindow(QtGui.QWidget):
         self.stacked_widget.setCurrentWidget(chooseBase_window)
         print('chooseBase window has been closed')
 
-
     def imprt(self):
         self.file_dialog()
         print('session word', self.session_word.get())
@@ -205,6 +209,11 @@ class PoolWindow(QtGui.QWidget):
             self.choosen_item = None
             self.amount_word -= 1
             self.counter.setText(str(self.amount_word))
+            
+    def done(self):
+        learn_window = Learn(self.stacked_widget, self.session_word)
+        self.stacked_widget.addWidget(learn_window)
+        self.stacked_widget.setCurrentWidget(learn_window)
 
 #   definicja podpiec
     def slot_conn(self, slots={}):
