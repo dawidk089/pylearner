@@ -46,6 +46,8 @@ class Learn(QtGui.QWidget):
         self.que_line.setMinimumWidth(200)
         #self.button["OK"].setMaximumSize(20, 20)
 
+        self.ans_editline.returnPressed.connect(self.button['ok'].click)
+
 
         self.initUI()
 
