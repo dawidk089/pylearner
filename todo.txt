@@ -21,7 +21,7 @@
 >wylaczyc obsluge edycji wiersza listy po dwukliku
 
 #learn
->(!)poprawienie odwijania widokow
+>dodanie widoku na zakonczenie nauki
 >(! 4.3)spr stanu (zwykly, wyjatkowy, koniec) -- do przetestowania
 >(! 4.4)przeliczenie trudnosci slowka -- do przetestowania
 >(! 4.5)sortowanie po trudnosci, zmienic algorytm losowania

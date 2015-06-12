@@ -258,6 +258,7 @@ class Learn(QtGui.QWidget):
         if not self.eliminated_word_list and self.hard_word is None:
             print('wszystkie slowka sa nauczone')
             self.stacked_widget.removeWidget(self.stacked_widget.currentWidget())
+            self.stacked_widget.removeWidget(self.stacked_widget.currentWidget())
             return True
 
     def ask(self):
