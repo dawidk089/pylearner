@@ -214,7 +214,8 @@ class Learn(QtGui.QWidget):
         self.your_ans_line.setText(answer)
         self.correct_ans_line.setText(self.eliminated_word_list[self.current_id_word]['ans'])
         self.check_ans(answer)
-        self.end_asking()
+        if self.end_asking():
+            return
         # next question
         self.set_que_word()
 
@@ -243,14 +244,24 @@ class Learn(QtGui.QWidget):
                 'difficulty': letters/8,
             }
             n += 1
-        # print('list\n', self.eliminated_word_list)
 
     def end_asking(self):
+        # sprawdzanie czy osiagnieta ilosc  graniczna punktow dla slowka
+        if self.eliminated_word_list[self.current_id_word]['points'] > self.point_limit:
+            del self.eliminated_word_list[self.current_id_word]
+
+        # sprawdzanie czy wszystkie slowka sa nauczone
+        #@ debugging
+        print('sprawdzanie czy wszystkie slowka sa nauczone')
+        print('self.eliminated_word_list', not self.eliminated_word_list)
+        print('hard word checking', self.hard_word is None)
         if not self.eliminated_word_list and self.hard_word is None:
+            print('wszystkie slowka sa nauczone')
             self.stacked_widget.removeWidget(self.stacked_widget.currentWidget())
+            return True
 
     def ask(self):
-        #setting que word
+        # setting que word
         self.set_que_word(self.hard_word)
 
 
@@ -280,9 +291,7 @@ class Learn(QtGui.QWidget):
             #TODO to fix depends on asking state
             word['points'] += self.avr_time_response/self.time
             word['wrong_combo'] = 0
-            # checking for learned word
-            if word['points'] > self.point_limit:
-                del self.eliminated_word_list[self.current_id_word]
+
         else:
             #set color wors answer
             self.your_ans_line.setStyleSheet("QLabel { color : red; }")

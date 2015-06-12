@@ -28,6 +28,7 @@
 >(! 4.7)poprawa layoutow
 >(!)pokreslanie/zaznaczanie na czerwono bledow(porownanie correct word i answer word)
 >(!)zablokowanie okna na pewien czas (dobra/zla odpowiedz)
+>walidacja cyf w odpowiedziach
 
 #ogolnie
 >zadbanie o sciezki do ikony i logo glownego
