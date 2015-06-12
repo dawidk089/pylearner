@@ -17,6 +17,10 @@ class Learn(QtGui.QWidget):
     def __init__(self, stacked_widget, word_list):
         super().__init__()
 
+        # bedzie pobierane z ustawien
+        self.wrong_combo_limit = 5
+        self.point_limit = 3
+
         self.stacked_widget = stacked_widget
 
         # list definition
@@ -53,10 +57,12 @@ class Learn(QtGui.QWidget):
 
         #queries storage
         self.current_id_word = None
-        self.start_time = None
+        self.time = None
+        self.hard_word = None
 
         self.initUI()
         self.rand_word()
+        self.time = self.get_time()
 
     #inicjalizacja widget'ow i layout'u
     def initUI(self):
@@ -224,10 +230,20 @@ class Learn(QtGui.QWidget):
         print('list\n', self.eliminated_word_list)
 
     def rand_word(self):
-        word = random.choice(self.eliminated_word_list)
-        self.current_id_word = word['id']
-        self.que_line.setText(word['que'])
-        self.time = self.get_time()
+        if len(self.eliminated_word_list) == 0:
+            self.stacked_widget.removeWidget(self.stacked_widget.currentWidget())
+            print('hard', self.hard_word)
+            if self.hard_word is not None:
+                word = random.choice(self.eliminated_word_list)
+                self.current_id_word = word['id']
+                print('current', self.current_id_word)
+                self.que_line.setText(word['que'])
+            else:
+                self.current_id_word = self.hard_word
+                self.que_line.setText(self.eliminated_word_list[self.current_id_word]['que'])
+            self.time = self.get_time()
+
+
 
     def get_time(self):
         return int(round(time.time() * 1000))
@@ -243,8 +259,11 @@ class Learn(QtGui.QWidget):
         if test.match(answer):
             word['points'] += 3000/self.time
             word['wrong_combo'] = 0
-
+            if word['points'] > self.point_limit:
+                del self.eliminated_word_list[self.current_id_word]
 
         else:
             word['wrong_combo'] += 1
             word['wrong_amount'] += 1
+            if word['wrong_combo'] > self.wrong_combo_limit:
+                self.hard_word = self.current_id_word

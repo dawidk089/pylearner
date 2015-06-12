@@ -40,7 +40,7 @@ class Main(QtGui.QMainWindow):
 
         main_window.slot_conn(slots)
 
-    #definicje funkcji podpinanych do przyciskow
+    # definicje funkcji podpinanych do przyciskow
     def pool(self):
         pool_window = PoolWindow(self.stacked_widget, self.main_base_word)
         self.stacked_widget.addWidget(pool_window)
