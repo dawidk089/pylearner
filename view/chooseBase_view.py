@@ -19,7 +19,7 @@ class ChooseBase(QtGui.QWidget):
         self.n_word_pool = self.word_pool.amount_word
         self.counter = self.word_pool.counter
 
-        print('base_word_list: ', self.adding_words_list)
+        # print('base_word_list: ', self.adding_words_list)
 
         self.header = QLabel('<h1><b>Główna baza słówek</b></h1>', self)
         self.list_caption = QLabel('Wybierz słówka z bazy', self)
@@ -49,7 +49,7 @@ class ChooseBase(QtGui.QWidget):
     # inicjalizacja widget'ow i layout'u
     def initUI(self):
 
-        print('word list: ', self.word_list)
+        # print('word list: ', self.word_list)
 
         #layout step 1
         header_l = [
@@ -136,7 +136,7 @@ class ChooseBase(QtGui.QWidget):
                     n += 1
                     item = QStandardItem(que+" = "+ans)
                     self.list_model.appendRow(item)
-        print('parent list get:\n', self.adding_words_list.get())
+        # print('parent list get:\n', self.adding_words_list.get())
         """
         self.stacked_widget.removeWidget(self.stacked_widget.currentWidget())
 

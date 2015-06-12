@@ -15,7 +15,7 @@ class Main(QtGui.QMainWindow):
         #glowna baza slowek
         self.main_base_word = DataStorage("../data/main_base")
         self.main_base_word.open()
-        print('main base word -- main: ', self.main_base_word.get())
+        # print('main base word -- main: ', self.main_base_word.get())
 
         #tworzenie stosu widokow
         self.stacked_widget = QtGui.QStackedWidget()

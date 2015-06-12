@@ -187,17 +187,17 @@ class PoolWindow(QtGui.QWidget):
     #definicje funkcji podpinanych do przyciskow
     def add(self):
         self.add_word()
-        print('session word', self.session_word.get())
+        # print('session word', self.session_word.get())
 
     def choose(self):
         chooseBase_window = ChooseBase(self.stacked_widget, self)
         self.stacked_widget.addWidget(chooseBase_window)
         self.stacked_widget.setCurrentWidget(chooseBase_window)
-        print('chooseBase window has been closed')
+        # print('chooseBase window has been closed')
 
     def imprt(self):
         self.file_dialog()
-        print('session word', self.session_word.get())
+        # print('session word', self.session_word.get())
 
     def cancel(self):
         self.stacked_widget.removeWidget(self.stacked_widget.currentWidget())
@@ -219,7 +219,7 @@ class PoolWindow(QtGui.QWidget):
     def slot_conn(self, slots={}):
         for key in slots:
             self.button[key].clicked.connect(slots[key])
-            print(">checkpoint: slots plugging for key: ", key, 'in class: ', self.__class__.__name__)
+            # print(">checkpoint: slots plugging for key: ", key, 'in class: ', self.__class__.__name__)
 
     def add_word(self):
         que = self.que_editline.text()

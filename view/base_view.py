@@ -17,7 +17,7 @@ class BaseWindow(QtGui.QWidget):
         self.stacked_widget = stacked_widget
 
         self.base_word_list = word_list
-        print('base_word_list: ', self.base_word_list.get())
+        # print('base_word_list: ', self.base_word_list.get())
 
         self.header = QLabel('<h1><b>Główna baza słówek</b></h1>', self)
 
@@ -50,7 +50,7 @@ class BaseWindow(QtGui.QWidget):
     # inicjalizacja widget'ow i layout'u
     def initUI(self):
 
-        print('word list: ', self.word_list)
+        # print('word list: ', self.word_list)
         #layout step 1
         add_butt_l = [
             ('stretch',),
@@ -168,11 +168,11 @@ class BaseWindow(QtGui.QWidget):
         self.add_word()
 
     def change(self):
-        print('change: ', self.choosen_item)
+        # print('change: ', self.choosen_item)
         self.list_model.setItem(self.choosen_item, QStandardItem("makarena"))
 
     def delete(self):
-        print('delete: ', self.choosen_item)
+        # print('delete: ', self.choosen_item)
         self.list_model.removeRow(self.choosen_item)
         self.base_word_list.remove(self.choosen_item)
 
@@ -215,8 +215,8 @@ class BaseWindow(QtGui.QWidget):
                     que = row.split(splitter)[0]
                     ans = row.split(splitter)[1]
                     word = [que, ans]
-                    print('base word list before adding:\n', self.base_word_list.get())
-                    print('..and adding word: ', word)
+                    # print('base word list before adding:\n', self.base_word_list.get())
+                    # print('..and adding word: ', word)
                     if not self.base_word_list.search_if_is(word):
 
                         item = QStandardItem(que+" = "+ans)

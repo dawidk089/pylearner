@@ -62,6 +62,6 @@ class MainWindow(QtGui.QWidget):
     def slot_conn(self, slots={}):
         for key in slots:
             self.button[key].clicked.connect(slots[key])
-            print(">checkpoint: slots plugging for key: ", key, 'in class: ', self.__class__.__name__)
+            # print(">checkpoint: slots plugging for key: ", key, 'in class: ', self.__class__.__name__)
 
 
