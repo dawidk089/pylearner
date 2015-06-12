@@ -22,10 +22,9 @@
 
 #learn
 >(!)poprawienie odwijania widokow
->(! 4.3)spr stanu (zwykly, wyjatkowy, koniec)
->(! 4.4)przeliczenie trudnosci slowka
+>(! 4.3)spr stanu (zwykly, wyjatkowy, koniec) -- do przetestowania
+>(! 4.4)przeliczenie trudnosci slowka -- do przetestowania
 >(! 4.5)sortowanie po trudnosci, zmienic algorytm losowania
->(! 4.6)sredni wzgledny czas odpowiedzi, podpiecie kolorow
 >(! 4.7)poprawa layoutow
 >(!)zablokowanie okna na pewien czas (dobra/zla odpowiedz)
 

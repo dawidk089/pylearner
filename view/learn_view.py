@@ -20,6 +20,7 @@ class Learn(QtGui.QWidget):
         # bedzie pobierane z ustawien
         self.wrong_combo_limit = 5
         self.point_limit = 3
+        self.avr_time_response = 3000
 
         self.stacked_widget = stacked_widget
 
@@ -27,6 +28,17 @@ class Learn(QtGui.QWidget):
         self.init_word_list = word_list
         self.eliminated_word_list = {}
         self.init_list()
+
+        #$ sprawdzanie zainicjalizowanych list
+        print('init word list:\n', self.init_word_list.data)
+        print('eliminated word list:')
+        for key in self.eliminated_word_list:
+            word = self.eliminated_word_list[key]
+            key_parent = key
+            print(key)
+            for key in word:
+                print('\t', key, word[key])
+        #print('eliminated word list:\n', self.eliminated_word_list)
 
         # labels
         self.header = QLabel('<h1><b>Nauka</b></h1>', self)
@@ -60,8 +72,9 @@ class Learn(QtGui.QWidget):
         self.time = None
         self.hard_word = None
 
+        #pierwsze zapytanie
         self.initUI()
-        self.rand_word()
+        self.set_que_word()
         self.time = self.get_time()
 
     #inicjalizacja widget'ow i layout'u
@@ -192,14 +205,18 @@ class Learn(QtGui.QWidget):
 
     #definicje funkcji podpinanych do przyciskow
     def ok(self):
+        # set time response
         self.time = self.get_time() - self.time
-        print('ok', self.time)
+        #$ printing time
+        print('respons time:', self.time)
         answer = self.ans_editline.text()
         self.ans_editline.setText('')
         self.your_ans_line.setText(answer)
-        print('word id', self.current_id_word)
+        self.correct_ans_line.setText(self.eliminated_word_list[self.current_id_word]['ans'])
         self.check_ans(answer)
-        self.rand_word()
+        self.end_asking()
+        # next question
+        self.set_que_word()
 
     def abort(self):
         self.stacked_widget.removeWidget(self.stacked_widget.currentWidget())
@@ -208,7 +225,6 @@ class Learn(QtGui.QWidget):
     def slot_conn(self, slots={}):
         for key in slots:
             self.button[key].clicked.connect(slots[key])
-            print(">checkpoint: slots plugging for key: ", key, 'in class: ', self.__class__.__name__)
 
     # definicje funkcji pomocniczych do logiki 'nauki'
     def init_list(self):
@@ -227,22 +243,15 @@ class Learn(QtGui.QWidget):
                 'difficulty': letters/8,
             }
             n += 1
-        print('list\n', self.eliminated_word_list)
+        # print('list\n', self.eliminated_word_list)
 
-    def rand_word(self):
-        if len(self.eliminated_word_list) == 0:
+    def end_asking(self):
+        if not self.eliminated_word_list and self.hard_word is None:
             self.stacked_widget.removeWidget(self.stacked_widget.currentWidget())
-            print('hard', self.hard_word)
-            if self.hard_word is not None:
-                word = random.choice(self.eliminated_word_list)
-                self.current_id_word = word['id']
-                print('current', self.current_id_word)
-                self.que_line.setText(word['que'])
-            else:
-                self.current_id_word = self.hard_word
-                self.que_line.setText(self.eliminated_word_list[self.current_id_word]['que'])
-            self.time = self.get_time()
 
+    def ask(self):
+        #setting que word
+        self.set_que_word(self.hard_word)
 
 
     def get_time(self):
@@ -250,20 +259,67 @@ class Learn(QtGui.QWidget):
 
     def check_ans(self, answer):
         correct = self.eliminated_word_list[self.current_id_word]['ans']
-        self.correct_ans_line.setText(correct)
         word = self.eliminated_word_list[self.current_id_word]
-
-        #print('words', correct, correct.split(), len(correct.split()))
-
+        #TODO to fix regex
         test = re.compile("\s*"+correct+"\s*")
         if test.match(answer):
-            word['points'] += 3000/self.time
+            #set color wors answer
+            self.your_ans_line.setStyleSheet("QLabel { color : green; }")
+
+            # points proportial for average time response
+            #TODO to fix depends on asking state
+            word['points'] += self.avr_time_response/self.time
             word['wrong_combo'] = 0
+            # checking for learned word
             if word['points'] > self.point_limit:
                 del self.eliminated_word_list[self.current_id_word]
-
         else:
+            #set color wors answer
+            self.your_ans_line.setStyleSheet("QLabel { color : red; }")
             word['wrong_combo'] += 1
             word['wrong_amount'] += 1
+            # checking for hard word
             if word['wrong_combo'] > self.wrong_combo_limit:
                 self.hard_word = self.current_id_word
+
+        #$ debugger printing eliminated list
+        print('eliminated word list:')
+        for key in self.eliminated_word_list:
+            word = self.eliminated_word_list[key]
+            key_parent = key
+            print(key)
+            for key in word:
+                print('\t', key, '=', word[key])
+
+    def set_que_word(self, word_id=None):
+        if word_id is not None:
+            self.current_id_word = word_id
+        else:
+            #TODO create special random asking
+            word = random.choice(self.eliminated_word_list)
+            self.current_id_word = word['id']
+        self.time = self.get_time()
+        self.que_line.setText(self.eliminated_word_list[self.current_id_word]['que'])
+        #$ printing cuurent random word
+        print('\ncurrent word:', self.current_id_word)
+
+
+def weighted_choice(weights):
+    totals = []
+    running_total = 0
+
+    for w in weights:
+        running_total += w
+        totals.append(running_total)
+
+    rnd = random.random() * running_total
+    for i, total in enumerate(totals):
+        if rnd < total:
+            return i
+
+
+def list_from_dict_list(dict_list, dict_key):
+    tab = []
+    for value in dict_list:
+        tab.append(value[dict_key])
+    return tab
