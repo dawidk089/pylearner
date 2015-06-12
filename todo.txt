@@ -26,6 +26,7 @@
 >(! 4.4)przeliczenie trudnosci slowka -- do przetestowania
 >(! 4.5)sortowanie po trudnosci, zmienic algorytm losowania
 >(! 4.7)poprawa layoutow
+>(!)pokreslanie/zaznaczanie na czerwono bledow(porownanie correct word i answer word)
 >(!)zablokowanie okna na pewien czas (dobra/zla odpowiedz)
 
 #ogolnie

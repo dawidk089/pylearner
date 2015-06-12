@@ -258,12 +258,22 @@ class Learn(QtGui.QWidget):
         return int(round(time.time() * 1000))
 
     def check_ans(self, answer):
-        correct = self.eliminated_word_list[self.current_id_word]['ans']
+        #@ validate data before fix
+        print('correct: ->|', self.eliminated_word_list[self.current_id_word]['ans'], '|<-', sep='')
+        print('correct: ->|', answer, '|<-', sep='')
+        correct = fix_word(
+            self.eliminated_word_list[self.current_id_word]['ans']
+        )
         word = self.eliminated_word_list[self.current_id_word]
-        #TODO to fix regex
-        test = re.compile("\s*"+correct+"\s*")
-        if test.match(answer):
-            #set color wors answer
+        your = fix_word(answer)
+        #@ sprawdzanie poprawnosci przejscia re.match
+        if not correct or not your:
+            print('re.match zwrocil blad')
+        print('correct: ->|', correct, '|<-', sep='')
+        print('answer: ->|', your, '|<-', sep='')
+
+        if correct == your:
+            #set color word answer
             self.your_ans_line.setStyleSheet("QLabel { color : green; }")
 
             # points proportial for average time response
@@ -323,3 +333,9 @@ def list_from_dict_list(dict_list, dict_key):
     for value in dict_list:
         tab.append(value[dict_key])
     return tab
+
+
+def fix_word(l):
+    whitespace = re.compile("\s*(?P<word>[A-Z]?(\s*[a-z\'])*[.|...|...?|?|!|?!]*)\s*$")
+    m = whitespace.match(l)
+    return bool(m) if not m else m.group('word')
