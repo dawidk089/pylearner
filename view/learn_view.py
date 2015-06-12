@@ -21,6 +21,7 @@ class Learn(QtGui.QWidget):
         self.wrong_combo_limit = 5
         self.point_limit = 3
         self.avr_time_response = 3000
+        self.max_speed_writing = 1060/60/1000
 
         self.stacked_widget = stacked_widget
 
@@ -29,9 +30,6 @@ class Learn(QtGui.QWidget):
         self.eliminated_word_list = {}
         self.init_list()
 
-        #$ sprawdzanie zainicjalizowanych list
-        print('init word list:\n', self.init_word_list.data)
-        print('eliminated word list:')
         for key in self.eliminated_word_list:
             word = self.eliminated_word_list[key]
             key_parent = key
@@ -207,8 +205,6 @@ class Learn(QtGui.QWidget):
     def ok(self):
         # set time response
         self.time = self.get_time() - self.time
-        #$ printing time
-        print('respons time:', self.time)
         answer = self.ans_editline.text()
         self.ans_editline.setText('')
         self.your_ans_line.setText(answer)
@@ -217,7 +213,10 @@ class Learn(QtGui.QWidget):
         if self.end_asking():
             return
         # next question
-        self.set_que_word()
+        #$ oddzielacz
+        print('-'*50)
+        print('hard word: ', self.hard_word, sep='')
+        self.set_que_word(self.hard_word)
 
     def abort(self):
         self.stacked_widget.removeWidget(self.stacked_widget.currentWidget())
@@ -250,11 +249,6 @@ class Learn(QtGui.QWidget):
         if self.eliminated_word_list[self.current_id_word]['points'] > self.point_limit:
             del self.eliminated_word_list[self.current_id_word]
 
-        # sprawdzanie czy wszystkie slowka sa nauczone
-        #@ debugging
-        print('sprawdzanie czy wszystkie slowka sa nauczone')
-        print('self.eliminated_word_list', not self.eliminated_word_list)
-        print('hard word checking', self.hard_word is None)
         if not self.eliminated_word_list and self.hard_word is None:
             print('wszystkie slowka sa nauczone')
             self.stacked_widget.removeWidget(self.stacked_widget.currentWidget())
@@ -270,20 +264,11 @@ class Learn(QtGui.QWidget):
         return int(round(time.time() * 1000))
 
     def check_ans(self, answer):
-        #@ validate data before fix
-        print('correct: ->|', self.eliminated_word_list[self.current_id_word]['ans'], '|<-', sep='')
-        print('correct: ->|', answer, '|<-', sep='')
         correct = fix_word(
             self.eliminated_word_list[self.current_id_word]['ans']
         )
         word = self.eliminated_word_list[self.current_id_word]
         your = fix_word(answer)
-        #@ sprawdzanie poprawnosci przejscia re.match
-        if not correct or not your:
-            print('re.match zwrocil blad')
-        print('correct: ->|', correct, '|<-', sep='')
-        print('answer: ->|', your, '|<-', sep='')
-
         if correct == your:
             #set color word answer
             self.your_ans_line.setStyleSheet("QLabel { color : green; }")
@@ -292,15 +277,19 @@ class Learn(QtGui.QWidget):
             #TODO to fix depends on asking state
             word['points'] += self.avr_time_response/self.time
             word['wrong_combo'] = 0
+            self.hard_word = None
 
         else:
-            #set color wors answer
-            self.your_ans_line.setStyleSheet("QLabel { color : red; }")
+            if your == '':
+                self.your_ans_line.setText('zrezygnowano')
+                self.your_ans_line.setStyleSheet("QLabel { color : orange; }")
+            else:
+                self.your_ans_line.setStyleSheet("QLabel { color : red; }")
             word['wrong_combo'] += 1
             word['wrong_amount'] += 1
             # checking for hard word
             if word['wrong_combo'] > self.wrong_combo_limit:
-                self.hard_word = self.current_id_word
+                self.hard_word = self.current_id_word # tu juz wiem ze jest
 
         #$ debugger printing eliminated list
         print('eliminated word list:')
@@ -308,8 +297,9 @@ class Learn(QtGui.QWidget):
             word = self.eliminated_word_list[key]
             key_parent = key
             print(key)
-            for key in word:
-                print('\t', key, '=', word[key])
+            print('wrong combo: ', word['wrong_combo'], sep='')
+            #for key in word:
+            #   print('\t', key, '=', word[key])
 
     def set_que_word(self, word_id=None):
         if word_id is not None:
@@ -321,7 +311,7 @@ class Learn(QtGui.QWidget):
         self.time = self.get_time()
         self.que_line.setText(self.eliminated_word_list[self.current_id_word]['que'])
         #$ printing cuurent random word
-        print('\ncurrent word:', self.current_id_word)
+        print('current word:', self.current_id_word)
 
 
 def weighted_choice(weights):

@@ -22,13 +22,14 @@
 
 #learn
 >dodanie widoku na zakonczenie nauki
->(! 4.3)spr stanu (zwykly, wyjatkowy, koniec) -- do przetestowania
->(! 4.4)przeliczenie trudnosci slowka -- do przetestowania
+>przeliczenie trudnosci slowka jest do poprawy
 >(! 4.5)sortowanie po trudnosci, zmienic algorytm losowania
 >(! 4.7)poprawa layoutow
 >(!)pokreslanie/zaznaczanie na czerwono bledow(porownanie correct word i answer word)
 >(!)zablokowanie okna na pewien czas (dobra/zla odpowiedz)
->walidacja cyf w odpowiedziach
+>walidacja cyfr w odpowiedziach
+>wprowadzic zabezpieczenie przed trzymaniem eneter - max szybkosc pisania 1060znakow/min
+
 
 #ogolnie
 >zadbanie o sciezki do ikony i logo glownego
