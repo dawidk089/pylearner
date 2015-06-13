@@ -2,12 +2,9 @@ __author__ = 'mcmushroom'
 
 # -*- coding: utf-8 -*-
 
-import sys
-from PyQt4 import QtGui, QtCore, Qt
-from PyQt4.QtCore import *
+from PyQt4 import QtGui
 from PyQt4.QtGui import *
 import re
-from model.data_storage import DataStorage
 import random
 import time
 
@@ -21,7 +18,8 @@ class Learn(QtGui.QWidget):
         self.wrong_combo_limit = 5
         self.point_limit = 3
         self.avr_time_response = 3000
-        self.max_speed_writing = 1060/60/1000
+        self.max_speed_writing = 1060/60/1000 #TODO trzeba podpiac max speed writing
+        self.random_distance = 5
 
         self.stacked_widget = stacked_widget
 

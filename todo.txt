@@ -1,6 +1,5 @@
 #main_view
 >dodac widok pod nauke automatyczna
->(! 5)dodac widok pod ustawienia
 
 #word_pool
 >dodanie funkcjonalnosci wcisniecia enter w drugim editline'ie by dodac slowko (jak przycisk)
@@ -30,6 +29,8 @@
 >walidacja cyfr w odpowiedziach
 >wprowadzic zabezpieczenie przed trzymaniem eneter - max szybkosc pisania 1060znakow/min
 
+#ustawienia
+>zabezpieczyc dane przed niedozwolonymi znakami
 
 #ogolnie
 >zadbanie o sciezki do ikony i logo glownego

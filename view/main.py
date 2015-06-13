@@ -4,6 +4,7 @@ from PyQt4 import QtCore, QtGui
 from view.main_view import MainWindow
 from view.word_pool import PoolWindow
 from view.base_view import BaseWindow
+from view.setting_view import Setting
 from model.data_storage import DataStorage
 
 
@@ -50,6 +51,9 @@ class Main(QtGui.QMainWindow):
         print('auto')
 
     def sets(self):
+        settins_window = Setting(self.stacked_widget)
+        self.stacked_widget.addWidget(settins_window)
+        self.stacked_widget.setCurrentWidget(settins_window)
         print('sets')
 
     def base(self):
