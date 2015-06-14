@@ -2,14 +2,17 @@
 __author__ = 'mcmushroom'
 
 import sys
-from PyQt4 import QtGui, QtCore, Qt
-from view.word_pool import *
+#from view.word_pool import *
+from view.main import View
 
 
-class MainWindow(QtGui.QWidget):
+class MainWindow(View):
 
-    def __init__(self):
-        super(MainWindow, self).__init__()
+    def __init__(self, main, stacked_widgets):
+        super().__init__()
+
+        self.main = main
+        self.stacked_widgets = stacked_widgets
 
         self.button = {}
 
@@ -58,10 +61,35 @@ class MainWindow(QtGui.QWidget):
 
         self.show()
 
-    #definicja podpiec
-    def slot_conn(self, slots={}):
-        for key in slots:
-            self.button[key].clicked.connect(slots[key])
-            # print(">checkpoint: slots plugging for key: ", key, 'in class: ', self.__class__.__name__)
+    # podpiecie przyciskow
+        slots = {
+            'learn': self.pool,
+            'auto': self.auto,
+            'base': self.base,
+            'sets': self.sets,
+            'close': QtCore.QCoreApplication.instance().quit,
+            }
+
+        self.slot_conn(slots)
+
+    # definicje funkcji podpinanych do przyciskow
+    def pool(self):
+        print('click on individual learn button')
+        #TODO PoolWindow potrzebuje main_base_word
+        self.stacked_widget.addWidget(self.main.windows['word_pool'])
+        self.stacked_widget.setCurrentWidget(self.main.windows['word_pool'])
+
+    def auto(self):
+        print('click on auto learn button')
+
+    def sets(self):
+        print('click on setting button')
+        self.stacked_widget.addWidget(self.main.windows['settings'])
+        self.stacked_widget.setCurrentWidget(self.main.windows['settings'])
+
+    def base(self):
+        print('click on main base button')
+        self.stacked_widget.addWidget(self.main.windows['base'])
+        self.stacked_widget.setCurrentWidget(self.main.windows['base'])
 
 

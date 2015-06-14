@@ -8,14 +8,16 @@ import random
 import time
 
 from model.data_storage import DataStorage
+from view.main import View
 
 
-class Setting(QtGui.QWidget):
+class SettingWindow(View):
 
-    def __init__(self, stacked_widget):
+    def __init__(self, main, stacked_widgets):
         super().__init__()
 
-        self.stacked_widget = stacked_widget
+        self.main = main
+        self.stacked_widgets = stacked_widgets
         
         self.default = {
             'wrong_combo_limit': 5,
@@ -57,6 +59,7 @@ class Setting(QtGui.QWidget):
             self.set_editline()
 
         self.initUI()
+        self.layout()
 
     #inicjalizacja widget'ow i layout'u
     def initUI(self):
@@ -129,25 +132,6 @@ class Setting(QtGui.QWidget):
         self.setLayout(self.main_box)
         self.show()
 
-    #pomocnicza metoda do budowania layout'u
-    def box(self, el_type, elems):
-
-        if el_type == 'vertical':
-            box = QtGui.QVBoxLayout()
-
-        elif el_type == 'horizontal':
-            box = QtGui.QHBoxLayout()
-
-        for elem in elems:
-            if elem[0] == 'widget':
-                box.addWidget(elem[1])
-            elif elem[0] == 'layout':
-                box.addLayout(elem[1])
-            elif elem[0] == 'stretch':
-                box.addStretch(1)
-
-        return box
-
     #definicje funkcji podpinanych do przyciskow
     def save(self):
         self.sets.data[0]['wrong_combo_limit'] = int(self.wrong_combo_limit.text())
@@ -166,11 +150,6 @@ class Setting(QtGui.QWidget):
         self.set_editline()
         #$
         print(self.sets.data[0])
-
-    # definicja podpiec
-    def slot_conn(self, slots={}):
-        for key in slots:
-            self.button[key].clicked.connect(slots[key])
 
     def set_editline(self):
         self.wrong_combo_limit.setText(str(self.sets.data[0]['wrong_combo_limit']))

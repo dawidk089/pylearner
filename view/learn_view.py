@@ -7,11 +7,12 @@ from PyQt4.QtGui import *
 import re
 import random
 import time
+from view.main import View
 
 
-class Learn(QtGui.QWidget):
+class LearnWindow(View):
 
-    def __init__(self, stacked_widget, word_list):
+    def __init__(self, main, stacked_widget):
         super().__init__()
 
         # bedzie pobierane z ustawien
@@ -21,10 +22,11 @@ class Learn(QtGui.QWidget):
         self.max_speed_writing = 1060/60/1000 #TODO trzeba podpiac max speed writing
         self.random_distance = 5
 
+        self.main = main
         self.stacked_widget = stacked_widget
 
         # list definition
-        self.init_word_list = word_list
+        self.init_word_list = self.main.session_word
         self.eliminated_word_list = {}
         self.init_list()
 
@@ -180,25 +182,6 @@ class Learn(QtGui.QWidget):
         self.setLayout(self.main_box)
         self.show()
 
-    #pomocnicza metoda do budowania layout'u
-    def box(self, el_type, elems):
-
-        if el_type == 'vertical':
-            box = QtGui.QVBoxLayout()
-
-        elif el_type == 'horizontal':
-            box = QtGui.QHBoxLayout()
-
-        for elem in elems:
-            if elem[0] == 'widget':
-                box.addWidget(elem[1])
-            elif elem[0] == 'layout':
-                box.addLayout(elem[1])
-            elif elem[0] == 'stretch':
-                box.addStretch(1)
-
-        return box
-
     #definicje funkcji podpinanych do przyciskow
     def ok(self):
         # set time response
@@ -218,11 +201,6 @@ class Learn(QtGui.QWidget):
 
     def abort(self):
         self.stacked_widget.removeWidget(self.stacked_widget.currentWidget())
-
-    # definicja podpiec
-    def slot_conn(self, slots={}):
-        for key in slots:
-            self.button[key].clicked.connect(slots[key])
 
     # definicje funkcji pomocniczych do logiki 'nauki'
     def init_list(self):

@@ -6,18 +6,16 @@ import sys
 from PyQt4 import QtGui, QtCore, Qt
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
-import re
+from view.main import View
 
 
-class BaseWindow(QtGui.QWidget):
+class BaseWindow(View):
 
-    def __init__(self, stacked_widget, word_list):
+    def __init__(self, main, stacked_widgets):
         super().__init__()
 
-        self.stacked_widget = stacked_widget
-
-        self.base_word_list = word_list
-        # print('base_word_list: ', self.base_word_list.get())
+        self.main = main
+        self.stacked_widgets = stacked_widgets
 
         self.header = QLabel('<h1><b>Główna baza słówek</b></h1>', self)
 
@@ -34,7 +32,7 @@ class BaseWindow(QtGui.QWidget):
         self.word_list = QListView()
         self.word_list.setMinimumSize(600, 400)
         self.list_model = QStandardItemModel(self.word_list)
-        for row in self.base_word_list.get():
+        for row in self.main.base_word_list.get():
             self.list_model.appendRow(QStandardItem(row[0]+" = "+row[1]))
         self.word_list.setModel(self.list_model)
         self.word_list.clicked.connect(self.catch_item)
@@ -140,25 +138,6 @@ class BaseWindow(QtGui.QWidget):
         self.setLayout(self.main_box)
         self.show()
 
-    #pomocnicza metoda do budowania layout'u
-    def box(self, el_type, elems):
-
-        if el_type == 'vertical':
-            box = QtGui.QVBoxLayout()
-
-        elif el_type == 'horizontal':
-            box = QtGui.QHBoxLayout()
-
-        for elem in elems:
-            if elem[0] == 'widget':
-                box.addWidget(elem[1])
-            elif elem[0] == 'layout':
-                box.addLayout(elem[1])
-            elif elem[0] == 'stretch':
-                box.addStretch(1)
-
-        return box
-
     # metoda pomocnicza do dodawania elementow do listy
     def add_to_list(self, item_to_add):
         self.list_model.appendRow(QStandardItem(item_to_add))
@@ -174,23 +153,18 @@ class BaseWindow(QtGui.QWidget):
     def delete(self):
         # print('delete: ', self.choosen_item)
         self.list_model.removeRow(self.choosen_item)
-        self.base_word_list.remove(self.choosen_item)
+        self.main.base_word_list.remove(self.choosen_item)
 
     def done(self):
-        self.base_word_list.save()
+        self.main.base_word_list.save()
         self.stacked_widget.removeWidget(self.stacked_widget.currentWidget())
 
     def cancel(self):
-        self.base_word_list.reset()
+        self.main.base_word_list.reset()
         self.stacked_widget.removeWidget(self.stacked_widget.currentWidget())
 
     def imprt(self):
         self.file_dialog()
-
-#   definicja podpiec
-    def slot_conn(self, slots={}):
-        for key in slots:
-            self.button[key].clicked.connect(slots[key])
 
     def add_word(self):
         que = self.que_editline.text()
@@ -200,12 +174,12 @@ class BaseWindow(QtGui.QWidget):
 
         if que != "" and ans != "":
             word = [que, ans]
-            if not self.base_word_list.search_if_is(word):
-                self.base_word_list.add(word)
+            if not self.main.base_word_list.search_if_is(word):
+                self.main.base_word_list.add(word)
                 self.list_model.appendRow(QStandardItem(que+" = "+ans))
 
     def file_dialog(self):
-        splitter = '='#self.left_l[8][1].text()
+        splitter = '='
         file = open(QtGui.QFileDialog(self).getOpenFileName()).read()
 
         for row in file.split('\n'):
@@ -215,21 +189,13 @@ class BaseWindow(QtGui.QWidget):
                     que = row.split(splitter)[0]
                     ans = row.split(splitter)[1]
                     word = [que, ans]
-                    # print('base word list before adding:\n', self.base_word_list.get())
-                    # print('..and adding word: ', word)
-                    if not self.base_word_list.search_if_is(word):
+                    if not self.main.base_word_list.search_if_is(word):
 
                         item = QStandardItem(que+" = "+ans)
                         self.list_model.appendRow(item)
-                        self.base_word_list.add(word)
+                        self.main.base_word_list.add(word)
 
     def catch_item(self):
         items = self.word_list.selectedIndexes()
         for item in items:
             self.choosen_item = item.row()
-
-#if __name__ == '__main__':
-#    app = QtGui.QApplication([])
-#    window = BaseWindow(None)
-#    window.show()
-#    app.exec_()
