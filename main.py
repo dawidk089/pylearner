@@ -18,16 +18,22 @@ class Main(QtGui.QMainWindow):
         self.main_base_word.open()
 
         #tworzenie stosu widokow
-        self.stacked_widget = QtGui.QStackedWidget()
-        self.setCentralWidget(self.stacked_widget)
+        self.windows_c = QtGui.QStackedWidget()
+        self.setCentralWidget(self.windows_c)
+        self.windows = {}
 
-        #zaladowanie glownego okna
-        main_window = MainWindow()
+        for i, val in enumerate([MainWindow()]):
+            self.windows[val.__class__.__name__] = {'instance': val, 'id': i}
+
+        print('length of windows list:', len(self.windows))#$
+
+        for key in self.windows:
+            self.windows_c.addWidget(self.windows[key]['instance'])
+
         self.setWindowIcon(QtGui.QIcon('image/app_ico.png'))
         self.setWindowTitle('Learner -- You just to learn_butt, and I will do the rest. ')
         self.resize(800, 600)
         self.center()
-        self.stacked_widget.addWidget(main_window)
 
         #podpiecie przyciskow
         slots = {
