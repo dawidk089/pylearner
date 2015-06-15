@@ -16,9 +16,6 @@ class ChooseBase(View):
         self.main = main
         self.adding_words_list = self.main.session_word
         self.base_word_list = self.main.main_base_word
-        self.n_word_pool = self.main.amount_word
-        self.counter = self.self.main.windows['word_pool'].counter
-        self.list_model = self.main.windows['word_pool'].list_model
 
         self.n = 0
 
@@ -100,6 +97,7 @@ class ChooseBase(View):
         self.list_model.appendRow(QStandardItem(item_to_add))
 
     def done(self):
+        label_n_word_pool = self.main.windows['word_pool'].amount_word
         for item_nr in range(self.list_model.rowCount()):
             if self.list_model.item(item_nr).checkState() == 2:
                 word = self.base_word_list.data[item_nr]
@@ -109,8 +107,8 @@ class ChooseBase(View):
                     self.adding_words_list.add(word)
                     item = QStandardItem(que+" = "+ans)
                     self.list_model.appendRow(item)
-                    self.n_word_pool += 1
-        self.counter.setText(str(self.n_word_pool))
+                    label_n_word_pool += 1
+        self.main.windows['word_pool'].counter.setText(str(label_n_word_pool))
 
         self.main.stacked_widget.removeWidget(self.main.stacked_widget.currentWidget())
 

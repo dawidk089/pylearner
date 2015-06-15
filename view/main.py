@@ -39,10 +39,10 @@ class Main(QtGui.QMainWindow):
         self.windows = {
             'main': MainWindow(self),
             'word_pool': PoolWindow(self),
-            #'base': BaseWindow(self),
-            #'setting': SettingWindow(self),
-            #'choose_base': ChooseBase(self),
-            #'learn': LearnWindow(self),
+            'base': BaseWindow(self),
+            'setting': SettingWindow(self),
+            'choose_base': ChooseBase(self),
+            'learn': LearnWindow(self),
         }
 
         print('>zaladowano widoki')#$

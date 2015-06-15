@@ -31,7 +31,7 @@ class BaseWindow(View):
         self.word_list = QListView()
         self.word_list.setMinimumSize(600, 400)
         self.list_model = QStandardItemModel(self.word_list)
-        for row in self.main.base_word_list.get():
+        for row in self.main.main_base_word.get():
             self.list_model.appendRow(QStandardItem(row[0]+" = "+row[1]))
         self.word_list.setModel(self.list_model)
         self.word_list.clicked.connect(self.catch_item)
