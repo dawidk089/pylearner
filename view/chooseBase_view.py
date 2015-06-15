@@ -1,4 +1,4 @@
-__author__ = 'mcmushroom'
+# -*- coding: utf-8 -*-
 
 import sys
 from PyQt4 import QtGui, QtCore, Qt
@@ -9,7 +9,7 @@ import re
 class ChooseBase(QtGui.QWidget):
 
     def __init__(self, stacked_widget, word_pool):
-        super().__init__()
+        super(ChooseBase, self).__init__()
 
         self.word_pool = word_pool
         self.stacked_widget = stacked_widget
@@ -21,8 +21,8 @@ class ChooseBase(QtGui.QWidget):
 
         # print('base_word_list: ', self.adding_words_list)
 
-        self.header = QLabel('<h1><b>Główna baza słówek</b></h1>', self)
-        self.list_caption = QLabel('Wybierz słówka z bazy', self)
+        self.header = QLabel(u"<h1><b>Główna baza słówek</b></h1>", self)
+        self.list_caption = QLabel(u'Wybierz słówka z bazy', self)
         self.amount_word = QLabel(str(self.n), self)
 
         self.button = {}
@@ -59,7 +59,7 @@ class ChooseBase(QtGui.QWidget):
         ]
 
         amount_l = [
-            ('widget', QLabel('Wybrano słówek:', self)),
+            ('widget', QLabel(u'Wybrano słówek:', self)),
             ('widget', self.amount_word),
             ('stretch',),
         ]

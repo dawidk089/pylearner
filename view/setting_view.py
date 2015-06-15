@@ -1,4 +1,4 @@
-__author__ = 'mcmushroom'
+# -*- coding: utf-8 -*-
 
 from PyQt4 import QtGui
 from PyQt4.QtGui import *
@@ -13,7 +13,7 @@ from model.data_storage import DataStorage
 class Setting(QtGui.QWidget):
 
     def __init__(self, stacked_widget):
-        super().__init__()
+        super(Setting, self).__init__()
 
         self.stacked_widget = stacked_widget
         
@@ -25,7 +25,7 @@ class Setting(QtGui.QWidget):
         }
         
         # sets storage
-        self.sets = DataStorage('../data/settings')
+        self.sets = DataStorage('data/settings')
         self.sets.open()
 
         # labels
@@ -72,10 +72,10 @@ class Setting(QtGui.QWidget):
         self.header_box = self.box('horizontal', header_l)
 
         labels_l = [
-            ('widget', QLabel('min odległość losowania słówka', self)),
-            ('widget', QLabel('próg punktowy dla słówka', self)),
-            ('widget', QLabel('limit błędnych odpowiedzi', self)),
-            ('widget', QLabel('średni czas odpowiedzi', self)),
+            ('widget', QLabel(u'min odległość losowania słówka', self)),
+            ('widget', QLabel(u'próg punktowy dla słówka', self)),
+            ('widget', QLabel(u'limit błędnych odpowiedzi', self)),
+            ('widget', QLabel(u'średni czas odpowiedzi', self)),
         ]
 
         self.labels_box = self.box('vertical', labels_l)
