@@ -1,5 +1,3 @@
-__author__ = 'mcmushroom'
-
 # -*- coding: utf-8 -*-
 
 import sys
@@ -12,21 +10,21 @@ import re
 class BaseWindow(QtGui.QWidget):
 
     def __init__(self, stacked_widget, word_list):
-        super().__init__()
+        super(BaseWindow, self).__init__()
 
         self.stacked_widget = stacked_widget
 
         self.base_word_list = word_list
         # print('base_word_list: ', self.base_word_list.get())
 
-        self.header = QLabel('<h1><b>Główna baza słówek</b></h1>', self)
+        self.header = QLabel(u'<h1><b>Główna baza słówek</b></h1>', self)
 
         self.button = {}
 
         self.button["add"] = QtGui.QPushButton('Dodaj', self)
         self.button["import"] = QtGui.QPushButton('Importuj', self)
-        self.button["change"] = QtGui.QPushButton('Zmień', self)
-        self.button["delete"] = QtGui.QPushButton('Usuń', self)
+        self.button["change"] = QtGui.QPushButton(u'Zmień', self)
+        self.button["delete"] = QtGui.QPushButton(u'Usuń', self)
         self.button["cancel"] = QtGui.QPushButton('Anuluj', self)
         self.button["done"] = QtGui.QPushButton('Gotowe', self)
 
@@ -58,12 +56,12 @@ class BaseWindow(QtGui.QWidget):
         ]
 
         add_que_l = [
-            ('widget', QLabel('słówko pytające', self)),
+            ('widget', QLabel(u'słówko pytające', self)),
             ('widget', self.que_editline),
         ]
 
         add_ans_l = [
-            ('widget', QLabel('słówko odpowiadające', self)),
+            ('widget', QLabel(u'słówko odpowiadające', self)),
             ('widget', self.ans_editline),
         ]
 

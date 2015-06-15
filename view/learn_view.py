@@ -1,5 +1,3 @@
-__author__ = 'mcmushroom'
-
 # -*- coding: utf-8 -*-
 
 from PyQt4 import QtGui
@@ -12,7 +10,7 @@ import time
 class Learn(QtGui.QWidget):
 
     def __init__(self, stacked_widget, word_list):
-        super().__init__()
+        super(Learn, self).__init__()
 
         # bedzie pobierane z ustawien
         self.wrong_combo_limit = 5
@@ -89,14 +87,14 @@ class Learn(QtGui.QWidget):
 
         not_learned_l = [
             ('widget', self.amount_not_learned),
-            ('widget', QLabel('nauczonych słówek', self)),
+            ('widget', QLabel(u'nauczonych słówek', self)),
         ]
 
         self.not_learned_box = self.box('horizontal', not_learned_l)
 
         progress_l = [
             ('widget', self.progress),
-            ('widget', QLabel('postęp', self)),
+            ('widget', QLabel(u'postęp', self)),
         ]
 
         self.progress_box = self.box('horizontal', progress_l)
@@ -110,8 +108,8 @@ class Learn(QtGui.QWidget):
         self.ans_editline_box = self.box('horizontal', ans_l)
 
         ans_label_l = [
-            ('widget', QLabel('twoja odpowiedź to', self)),
-            ('widget', QLabel('prawidłowa odpowiedź to', self)),
+            ('widget', QLabel(u'twoja odpowiedź to', self)),
+            ('widget', QLabel(u'prawidłowa odpowiedź to', self)),
         ]
 
         self.ans_label_box = self.box('vertical', ans_label_l)
@@ -131,7 +129,7 @@ class Learn(QtGui.QWidget):
         self.ans_box = self.box('horizontal', ans_l)
 
         countoff_l = [
-            ('widget', QLabel('szacowany czas do końca')),
+            ('widget', QLabel(u'szacowany czas do końca')),
             ('widget', self.count_time_off),
         ]
 
@@ -211,9 +209,6 @@ class Learn(QtGui.QWidget):
         if self.end_asking():
             return
         # next question
-        #$ oddzielacz
-        print('-'*50)
-        print('hard word: ', self.hard_word, sep='')
         self.set_que_word(self.hard_word)
 
     def abort(self):
@@ -294,10 +289,6 @@ class Learn(QtGui.QWidget):
         for key in self.eliminated_word_list:
             word = self.eliminated_word_list[key]
             key_parent = key
-            print(key)
-            print('wrong combo: ', word['wrong_combo'], sep='')
-            #for key in word:
-            #   print('\t', key, '=', word[key])
 
     def set_que_word(self, word_id=None):
         if word_id is not None:

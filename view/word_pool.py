@@ -13,12 +13,12 @@ from view.learn_view import Learn
 class PoolWindow(QtGui.QWidget):
 
     def __init__(self, stacked_widget, main_base_word):
-        super().__init__()
+        super(PoolWindow, self).__init__()
 
         self.stacked_widget = stacked_widget
         self.main_base_word = main_base_word
 
-        self.session_word = DataStorage("../data/session_word")
+        self.session_word = DataStorage("data/session_word")
         self.session_word.open()
 
         self.counter = QLabel(str(0), self)
@@ -33,7 +33,7 @@ class PoolWindow(QtGui.QWidget):
         self.button["choose"] = QPushButton('+', self)
         self.button["import"] = QPushButton('+', self)
         self.button["cancel"] = QPushButton('Anuluj', self)
-        self.button["delete"] = QPushButton('Usuń', self)
+        self.button["delete"] = QPushButton(u'Usuń', self)
         self.button['done'] = QPushButton('Gotowe', self)
         
         self.button["add"].setMaximumSize(20, 20)
@@ -62,12 +62,12 @@ class PoolWindow(QtGui.QWidget):
         #layout
         header = [
             ('stretch',),
-            ('widget', QLabel('<h1><b>Nauka indywidualna</b></h1>', self)),
+            ('widget', QLabel(u'<h1><b>Nauka indywidualna</b></h1>', self)),
             ('stretch',),
         ]
 
         add_butt = [
-            ('widget', QLabel('Dopisz słówko do puli', self)),
+            ('widget', QLabel(u'Dopisz słówko do puli', self)),
             ('widget', self.button['add']),
         ]
 
@@ -82,7 +82,7 @@ class PoolWindow(QtGui.QWidget):
         ]
 
         w_amount_l = [
-            ('widget', QLabel('Ilość: ', self)),
+            ('widget', QLabel(u'Ilość: ', self)),
             ('widget', self.counter),
             ('stretch',),
         ]
@@ -107,21 +107,21 @@ class PoolWindow(QtGui.QWidget):
         self.delete_box = self.box('horizontal', delete_l)
 
         left_l = [
-            ('widget', QLabel('słówko pytające', self)),
+            ('widget', QLabel(u'słówko pytające', self)),
             ('widget', self.que_editline),
-            ('widget', QLabel('słówko odpowiadające', self)),
+            ('widget', QLabel(u'słówko odpowiadające', self)),
             ('widget', self.ans_editline),
             ('layout', self.add_box),
             ('layout', self.chs_box),
             ('layout', self.impt_box),
-            ('widget', QLabel('znak rozdzielający', self)),
+            ('widget', QLabel(u'znak rozdzielający', self)),
             ('widget', self.split_line),
             ('layout', self.delete_box),
             ('stretch',),
         ]
 
         right_l = [
-            ('widget', QLabel('Wybrane słówka', self)),
+            ('widget', QLabel(u'Wybrane słówka', self)),
             ('widget', self.word_list),
             ('layout', self.w_amount_box),
             ('layout', self.cancel_box),

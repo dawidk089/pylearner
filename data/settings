@@ -1,1 +1,1 @@
-[{"avr_time_response": 3000, "point_limit": 3, "random_distance": 5, "wrong_combo_limit": 5}]
+[{"random_distance": 5, "point_limit": 3, "wrong_combo_limit": 5, "avr_time_response": 3000}]

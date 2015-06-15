@@ -26,7 +26,7 @@ class MainWindow(QtGui.QWidget):
 
         logo = QtGui.QLabel(self)
         logo.resize(500, 250)
-        logo.setPixmap(QtGui.QPixmap("../image/logo_orange-black.jpg").scaled(logo.size(), QtCore.Qt.KeepAspectRatio))
+        logo.setPixmap(QtGui.QPixmap("image/logo_orange-black.jpg").scaled(logo.size(), QtCore.Qt.KeepAspectRatio))
 
         hbox = QtGui.QHBoxLayout()
         vbox = QtGui.QVBoxLayout()

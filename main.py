@@ -14,9 +14,8 @@ class Main(QtGui.QMainWindow):
         super(Main, self).__init__(parent)
 
         #glowna baza slowek
-        self.main_base_word = DataStorage("../data/main_base")
+        self.main_base_word = DataStorage("data/main_base")
         self.main_base_word.open()
-        # print('main base word -- main: ', self.main_base_word.get())
 
         #tworzenie stosu widokow
         self.stacked_widget = QtGui.QStackedWidget()
@@ -24,7 +23,7 @@ class Main(QtGui.QMainWindow):
 
         #zaladowanie glownego okna
         main_window = MainWindow()
-        self.setWindowIcon(QtGui.QIcon('../image/app_ico.png'))
+        self.setWindowIcon(QtGui.QIcon('image/app_ico.png'))
         self.setWindowTitle('Learner -- You just to learn_butt, and I will do the rest. ')
         self.resize(800, 600)
         self.center()
@@ -70,6 +69,7 @@ class Main(QtGui.QMainWindow):
         self.move(qr.topLeft())
 
 if __name__ == '__main__':
+
     app = QtGui.QApplication([])
     window = Main()
     window.show()
