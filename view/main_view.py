@@ -20,7 +20,7 @@ class MainWindow(QtGui.QWidget):
 
         logo = QtGui.QLabel()
         logo.resize(500, 250)
-        logo.setPixmap(QtGui.QPixmap("../image/logo_orange-black.jpg").scaled(logo.size(), QtCore.Qt.KeepAspectRatio))
+        logo.setPixmap(QtGui.QPixmap("image/logo_orange-black.jpg").scaled(logo.size(), QtCore.Qt.KeepAspectRatio))
 
         hbox = QtGui.QHBoxLayout()
         vbox = QtGui.QVBoxLayout()
@@ -86,14 +86,8 @@ class MainWindow(QtGui.QWidget):
         self.main.stacked_widget.setCurrentWidget(self.main.windows['base'])
     """
 
-"""
-def main():
-    import sys
-    app = QtGui.QApplication(sys.argv)
-    mainWindow = MainWindow()
-    sys.exit(app.exec_())
-
-
 if __name__ == '__main__':
-    main()
-"""
+    app = QtGui.QApplication([])
+    window = MainWindow()
+    window.show()
+    app.exec_()

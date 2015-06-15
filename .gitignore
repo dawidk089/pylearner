@@ -4,4 +4,6 @@
 *.pyc
 .idea/
 *.tar.gz
+*.swp
+testy/
 __pycache__/

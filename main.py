@@ -2,8 +2,10 @@ __author__ = 'mcmushroom'
 
 from PyQt4 import QtGui
 from PyQt4.QtGui import QStackedWidget
+from model.data_storage import DataStorage
 
 from view.main_view import MainWindow
+
 """
 from view.word_pool import PoolWindow
 from view.base_view import BaseWindow
@@ -11,7 +13,7 @@ from view.setting_view import SettingWindow
 from view.chooseBase_view import ChooseBase
 from view.learn_view import LearnWindow
 """
-from model.data_storage import DataStorage
+#from model.data_storage import DataStorage
 
 
 class Main(QtGui.QMainWindow):
@@ -22,24 +24,32 @@ class Main(QtGui.QMainWindow):
         print('>rozpoczecie biegu programu')#$
 
         # glowna baza slowek
-        self.main_base_word = DataStorage("../data/main_base")
-        self.main_base_word.open()
+        main_base_word = DataStorage("data/main_base")
+        main_base_word.open()
 
         # otwarcie sesji
-        self.session_word = DataStorage("../data/session_word")
-        self.session_word.open()
+        session_word = DataStorage("data/session_word")
+        session_word.open()
 
         print('>zainicjowano bazy slowek i sesji')#$
 
         # deklaracja listy kontenerow widget'ow dla widokow
-        self.windows_c = QStackedWidget()
-        self.setCentralWidget(self.windows_c)
+        windows_c = QStackedWidget()
+        self.setCentralWidget(windows_c)
 
-        self.windows = {}
-        for i, val in enumerate([MainWindow(), ]):
-            self.windows[val.__class__.__name__] = {'instance': val, 'id': i}
+        print('>zadklerowano kontener slowek')#$
 
-        #...
+        windows = {}
+
+        for i, val in enumerate([MainWindow()]):
+            windows[val.__class__.__name__] = {'instance': val, 'id': i}
+
+        print('length of windows list:', len(windows))
+
+        for key in windows:
+            windows_c.addWidget(windows[key]['instance'])
+
+        print('>zapakowano obiekty widokow')#$
 
         #'word_pool': PoolWindow(self),
         #'base': BaseWindow(self),
@@ -48,8 +58,6 @@ class Main(QtGui.QMainWindow):
         #'learn': LearnWindow(self),
 
         self.switch_window('MainWindow')
-
-        print('>stworzono stos widokow')#$
 
         """
         # zaladowanie widokow
@@ -73,6 +81,7 @@ class Main(QtGui.QMainWindow):
         """
 
     def switch_window(self, name):
+        print('przelaczanie na widok: ', name, Main.windows[name])
         self.windows_c.setCurrentWidget(self.windows_c.widget(self.windows[name]['id']))
 
     #definicja wysrodkowania okna
