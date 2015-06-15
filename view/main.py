@@ -27,16 +27,16 @@ class Main(QtGui.QMainWindow):
 
         # tworzenie stosu widokow
         self.stacked_widgets = QtGui.QStackedWidget()
-        self.setCentralWidget(self.stacked_widget)
+        self.setCentralWidget(self.stacked_widgets)
 
         # zaladowanie widokow
         self.windows = {
-            'main': MainWindow(self.windows, self.stacked_widgets),
-            'word_pool': PoolWindow(self.windows, self.stacked_widgets),
-            'base': BaseWindow(self.windows, self.stacked_widgets),
-            'setting': SettingWindow(self.windows, self.stacked_widgets),
-            'choose_base': ChooseBase(self.windows, self.stacked_widgets),
-            'learn': LearnWindow(self.windows, self.stacked_widgets),
+            'main': MainWindow(self, self.stacked_widgets),
+            'word_pool': PoolWindow(self, self.stacked_widgets),
+            'base': BaseWindow(self, self.stacked_widgets),
+            'setting': SettingWindow(self, self.stacked_widgets),
+            'choose_base': ChooseBase(self, self.stacked_widgets),
+            'learn': LearnWindow(self, self.stacked_widgets),
         }
         
         # ustawienia okna
@@ -44,7 +44,7 @@ class Main(QtGui.QMainWindow):
         self.setWindowTitle('Learner -- You just to learn_butt, and I will do the rest. ')
         self.resize(800, 600)
         self.center()
-        self.stacked_widget.addWidget(self.windows['learn'])
+        self.stacked_widget.addWidget(self.windows['main'])
 
 
     #definicja wysrodkowania okna
@@ -54,34 +54,6 @@ class Main(QtGui.QMainWindow):
         cp = QtGui.QDesktopWidget().availableGeometry().center()
         qr.moveCenter(cp)
         self.move(qr.topLeft())
-
-
-class View(QtGui.QWidget):
-    def __init__(self):
-        super().__init__()
-
-    #pomocnicza metoda do budowania layout'u
-    def box(self, el_type, elems):
-
-        if el_type == 'vertical':
-            box = QtGui.QVBoxLayout()
-
-        elif el_type == 'horizontal':
-            box = QtGui.QHBoxLayout()
-
-        for elem in elems:
-            if elem[0] == 'widget':
-                box.addWidget(elem[1])
-            elif elem[0] == 'layout':
-                box.addLayout(elem[1])
-            elif elem[0] == 'stretch':
-                box.addStretch(1)
-
-    #definicja podpiec
-    def slot_conn(self, slots={}):
-        for key in slots:
-            self.button[key].clicked.connect(slots[key])
-
 
 if __name__ == '__main__':
     app = QtGui.QApplication([])

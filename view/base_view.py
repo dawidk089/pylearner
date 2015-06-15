@@ -6,7 +6,7 @@ import sys
 from PyQt4 import QtGui, QtCore, Qt
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
-from view.main import View
+from view.view_template import View
 
 
 class BaseWindow(View):

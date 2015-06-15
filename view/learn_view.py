@@ -7,7 +7,7 @@ from PyQt4.QtGui import *
 import re
 import random
 import time
-from view.main import View
+from view.view_template import View
 
 
 class LearnWindow(View):

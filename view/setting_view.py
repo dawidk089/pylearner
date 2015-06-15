@@ -8,7 +8,7 @@ import random
 import time
 
 from model.data_storage import DataStorage
-from view.main import View
+from view.view_template import View
 
 
 class SettingWindow(View):

@@ -8,7 +8,7 @@ import re
 from model.data_storage import DataStorage
 from view.chooseBase_view import ChooseBase
 from view.learn_view import LearnWindow
-from view.main import View
+from view.view_template import View
 
 
 class PoolWindow(View):

@@ -3,7 +3,8 @@ __author__ = 'mcmushroom'
 
 import sys
 #from view.word_pool import *
-from view.main import View
+from view.view_template import View
+from PyQt4 import QtCore, QtGui
 
 
 class MainWindow(View):
