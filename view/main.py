@@ -16,6 +16,8 @@ class Main(QtGui.QMainWindow):
     def __init__(self, parent=None):
         super(Main, self).__init__(parent)
 
+        print('>rozpoczecie biegu programu')#$
+
         # glowna baza slowek
         self.main_base_word = DataStorage("../data/main_base")
         self.main_base_word.open()
@@ -25,9 +27,13 @@ class Main(QtGui.QMainWindow):
         self.session_word = DataStorage("../data/session_word")
         self.session_word.open()
 
+        print('>zainicjowano bazy slowek i sesji')#$
+
         # tworzenie stosu widokow
         self.stacked_widgets = QtGui.QStackedWidget()
         self.setCentralWidget(self.stacked_widgets)
+
+        print('>stworzono stos widokow')#$
 
         # zaladowanie widokow
         self.windows = {
@@ -38,14 +44,20 @@ class Main(QtGui.QMainWindow):
             'choose_base': ChooseBase(self, self.stacked_widgets),
             'learn': LearnWindow(self, self.stacked_widgets),
         }
+
+        print('>zaladowano widoki')#$
         
         # ustawienia okna
         self.setWindowIcon(QtGui.QIcon('../image/app_ico.png'))
         self.setWindowTitle('Learner -- You just to learn_butt, and I will do the rest. ')
         self.resize(800, 600)
         self.center()
+
+        print('>ustawiono okno')#$
+
         self.stacked_widget.addWidget(self.windows['main'])
 
+        print('>dodano widok glowny do stosu widokow')#$
 
     #definicja wysrodkowania okna
     def center(self):
