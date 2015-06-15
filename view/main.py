@@ -1,27 +1,29 @@
 __author__ = 'mcmushroom'
 
 from PyQt4 import QtGui
+from PyQt4.QtGui import QStackedWidget
 
 from view.main_view import MainWindow
+"""
 from view.word_pool import PoolWindow
 from view.base_view import BaseWindow
 from view.setting_view import SettingWindow
 from view.chooseBase_view import ChooseBase
 from view.learn_view import LearnWindow
+"""
 from model.data_storage import DataStorage
 
 
 class Main(QtGui.QMainWindow):
 
     def __init__(self, parent=None):
-        super(Main, self).__init__(parent)
+        super().__init__(parent)
 
         print('>rozpoczecie biegu programu')#$
 
         # glowna baza slowek
         self.main_base_word = DataStorage("../data/main_base")
         self.main_base_word.open()
-        # print('main base word -- main: ', self.main_base_word.get())
 
         # otwarcie sesji
         self.session_word = DataStorage("../data/session_word")
@@ -29,21 +31,29 @@ class Main(QtGui.QMainWindow):
 
         print('>zainicjowano bazy slowek i sesji')#$
 
-        # tworzenie stosu widokow
-        self.stacked_widgets = QtGui.QStackedWidget()
-        self.setCentralWidget(self.stacked_widgets)
+        # deklaracja listy kontenerow widget'ow dla widokow
+        self.windows_c = QStackedWidget()
+        self.setCentralWidget(self.windows_c)
+
+        self.windows = {}
+        for i, val in enumerate([MainWindow(), ]):
+            self.windows[val.__class__.__name__] = {'instance': val, 'id': i}
+
+        #...
+
+        #'word_pool': PoolWindow(self),
+        #'base': BaseWindow(self),
+        #'setting': SettingWindow(self),
+        #'choose_base': ChooseBase(self),
+        #'learn': LearnWindow(self),
+
+        self.switch_window('MainWindow')
 
         print('>stworzono stos widokow')#$
 
+        """
         # zaladowanie widokow
-        self.windows = {
-            'main': MainWindow(self),
-            'word_pool': PoolWindow(self),
-            'base': BaseWindow(self),
-            'setting': SettingWindow(self),
-            'choose_base': ChooseBase(self),
-            'learn': LearnWindow(self),
-        }
+
 
         print('>zaladowano widoki')#$
 
@@ -60,6 +70,10 @@ class Main(QtGui.QMainWindow):
         print('>ustawiono okno')#$
 
         self.stacked_widgets.setCurrentWidget(self.stacked_widgets.currentWidget())
+        """
+
+    def switch_window(self, name):
+        self.windows_c.setCurrentWidget(self.windows_c.widget(self.windows[name]['id']))
 
     #definicja wysrodkowania okna
     def center(self):

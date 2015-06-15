@@ -4,7 +4,7 @@ import sys
 from PyQt4 import QtGui, QtCore, Qt
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
-from view.view_template import View
+#from view.view_template import View
 
 
 class ChooseBase(View):

@@ -1,33 +1,24 @@
-# -*- coding: utf-8 -*-
-__author__ = 'mcmushroom'
-
-import sys
-#from view.word_pool import *
-from view.view_template import View
 from PyQt4 import QtCore, QtGui
 
 
-class MainWindow(View):
+class MainWindow(QtGui.QWidget):
 
-    def __init__(self, main):
+    def __init__(self):
         super().__init__()
+        self.init_widget()
 
-        self.main = main
+    def init_widget(self):
+        button = {
+            "learn": QtGui.QPushButton('Nauka indywidualna'),
+            "auto": QtGui.QPushButton('Nauka automatyczna'),
+            "base": QtGui.QPushButton('bazy słówek'),
+            "sets": QtGui.QPushButton('Ustawienia'),
+            "close": QtGui.QPushButton('Wyjście'),
+        }
 
-        self.button = {}
+        #inicjalizacja widget'ow i layout'u
 
-        self.button["learn"] = QtGui.QPushButton('Nauka indywidualna', self)
-        self.button["auto"] = QtGui.QPushButton('Nauka automatyczna', self)
-        self.button["base"] = QtGui.QPushButton(u'bazy słówek', self)
-        self.button["sets"] = QtGui.QPushButton('Ustawienia', self)
-        self.button["close"] = QtGui.QPushButton(u'Wyjście', self)
-
-        self.initUI()
-
-    #inicjalizacja widget'ow i layout'u
-    def initUI(self):
-
-        logo = QtGui.QLabel(self)
+        logo = QtGui.QLabel()
         logo.resize(500, 250)
         logo.setPixmap(QtGui.QPixmap("../image/logo_orange-black.jpg").scaled(logo.size(), QtCore.Qt.KeepAspectRatio))
 
@@ -36,11 +27,11 @@ class MainWindow(View):
         hbox_butt = QtGui.QHBoxLayout()
         vbox_butt = QtGui.QVBoxLayout()
 
-        vbox_butt.addWidget(self.button["learn"])
-        vbox_butt.addWidget(self.button["auto"])
-        vbox_butt.addWidget(self.button["base"])
-        vbox_butt.addWidget(self.button["sets"])
-        vbox_butt.addWidget(self.button["close"])
+        vbox_butt.addWidget(button["learn"])
+        vbox_butt.addWidget(button["auto"])
+        vbox_butt.addWidget(button["base"])
+        vbox_butt.addWidget(button["sets"])
+        vbox_butt.addWidget(button["close"])
 
         hbox_butt.addStretch(1)
         hbox_butt.addLayout(vbox_butt)
@@ -56,11 +47,13 @@ class MainWindow(View):
         hbox.addLayout(vbox)
         hbox.addStretch(1)
 
-        self.slot_conn()
         self.setLayout(hbox)
+        #self.show()
 
-        self.show()
 
+
+    """
+    #self.slot_conn()
     # podpiecie przyciskow
         slots = {
             'learn': self.pool,
@@ -91,5 +84,16 @@ class MainWindow(View):
         print('click on main base button')
         self.main.stacked_widget.addWidget(self.main.windows['base'])
         self.main.stacked_widget.setCurrentWidget(self.main.windows['base'])
+    """
+
+"""
+def main():
+    import sys
+    app = QtGui.QApplication(sys.argv)
+    mainWindow = MainWindow()
+    sys.exit(app.exec_())
 
 
+if __name__ == '__main__':
+    main()
+"""
