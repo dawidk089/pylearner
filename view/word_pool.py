@@ -13,11 +13,10 @@ from view.view_template import View
 
 class PoolWindow(View):
 
-    def __init__(self, main, stacked_widgets):
+    def __init__(self, main):
         super().__init__()
 
         self.main = main
-        self.stacked_widgets = stacked_widgets
         #self.main_base_word = main_base_word
 
         self.counter = QLabel(str(0), self)
@@ -168,14 +167,14 @@ class PoolWindow(View):
         self.add_word()
 
     def choose(self):
-        self.stacked_widget.addWidget(self.main.windows['choose_base'])
-        self.stacked_widget.setCurrentWidget(self.main.windows['choose_base'])
+        self.main.stacked_widget.addWidget(self.main.windows['choose_base'])
+        self.main.stacked_widget.setCurrentWidget(self.main.windows['choose_base'])
 
     def imprt(self):
         self.file_dialog()
 
     def cancel(self):
-        self.stacked_widget.removeWidget(self.stacked_widget.currentWidget())
+        self.main.stacked_widget.removeWidget(self.main.stacked_widget.currentWidget())
 
     def delete(self):
         if self.choosen_item is not None:
@@ -186,8 +185,8 @@ class PoolWindow(View):
             self.counter.setText(str(self.amount_word))
             
     def done(self):
-        self.stacked_widget.addWidget(self.main.windows['learn'])
-        self.stacked_widget.setCurrentWidget(self.main.windows['learn'])
+        self.main.stacked_widget.addWidget(self.main.windows['learn'])
+        self.main.stacked_widget.setCurrentWidget(self.main.windows['learn'])
 
     def add_word(self):
         que = self.que_editline.text()

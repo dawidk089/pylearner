@@ -12,7 +12,7 @@ from view.view_template import View
 
 class LearnWindow(View):
 
-    def __init__(self, main, stacked_widget):
+    def __init__(self, main):
         super().__init__()
 
         # bedzie pobierane z ustawien
@@ -23,7 +23,6 @@ class LearnWindow(View):
         self.random_distance = 5
 
         self.main = main
-        self.stacked_widget = stacked_widget
 
         # list definition
         self.init_word_list = self.main.session_word
@@ -200,7 +199,7 @@ class LearnWindow(View):
         self.set_que_word(self.hard_word)
 
     def abort(self):
-        self.stacked_widget.removeWidget(self.stacked_widget.currentWidget())
+        self.main.stacked_widget.removeWidget(self.main.stacked_widget.currentWidget())
 
     # definicje funkcji pomocniczych do logiki 'nauki'
     def init_list(self):
@@ -227,8 +226,8 @@ class LearnWindow(View):
 
         if not self.eliminated_word_list and self.hard_word is None:
             print('wszystkie slowka sa nauczone')
-            self.stacked_widget.removeWidget(self.stacked_widget.currentWidget())
-            self.stacked_widget.removeWidget(self.stacked_widget.currentWidget())
+            self.main.stacked_widget.removeWidget(self.main.stacked_widget.currentWidget())
+            self.main.stacked_widget.removeWidget(self.main.stacked_widget.currentWidget())
             return True
 
     def ask(self):

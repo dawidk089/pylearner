@@ -17,7 +17,7 @@ class SettingWindow(View):
         super().__init__()
 
         self.main = main
-        self.stacked_widgets = stacked_widgets
+        self.main.stacked_widgets = stacked_widgets
         
         self.default = {
             'wrong_combo_limit': 5,
@@ -140,10 +140,10 @@ class SettingWindow(View):
         self.sets.data[0]['random_distance'] = int(self.random_distance.text())
         self.sets.save()
         
-        self.stacked_widget.removeWidget(self.stacked_widget.currentWidget())
+        self.main.stacked_widget.removeWidget(self.main.stacked_widget.currentWidget())
 
     def abort(self):
-        self.stacked_widget.removeWidget(self.stacked_widget.currentWidget())
+        self.main.stacked_widget.removeWidget(self.main.stacked_widget.currentWidget())
         
     def reset(self):
         self.sets.data[0] = self.default

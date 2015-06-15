@@ -35,14 +35,18 @@ class Main(QtGui.QMainWindow):
 
         print('>stworzono stos widokow')#$
 
+        self.stacked_widgets.addWidget(MainWindow(self))
+
+        print('>dodano widok glowny do stosu widokow')#$
+
         # zaladowanie widokow
         self.windows = {
-            'main': MainWindow(self, self.stacked_widgets),
-            'word_pool': PoolWindow(self, self.stacked_widgets),
-            'base': BaseWindow(self, self.stacked_widgets),
-            'setting': SettingWindow(self, self.stacked_widgets),
-            'choose_base': ChooseBase(self, self.stacked_widgets),
-            'learn': LearnWindow(self, self.stacked_widgets),
+            #'main': MainWindow(self),
+            #'word_pool': PoolWindow(self),
+            #'base': BaseWindow(self),
+            #'setting': SettingWindow(self),
+            #'choose_base': ChooseBase(self),
+            #'learn': LearnWindow(self),
         }
 
         print('>zaladowano widoki')#$
@@ -55,9 +59,7 @@ class Main(QtGui.QMainWindow):
 
         print('>ustawiono okno')#$
 
-        self.stacked_widget.addWidget(self.windows['main'])
-
-        print('>dodano widok glowny do stosu widokow')#$
+        self.stacked_widgets.setCurrentWidget(self.stacked_widgets.currentWidget())
 
     #definicja wysrodkowania okna
     def center(self):

@@ -9,12 +9,11 @@ from view.view_template import View
 
 class ChooseBase(View):
 
-    def __init__(self, main, stacked_widgets):
+    def __init__(self, main):
         super().__init__()
 
         # potrzebne referencje
         self.main = main
-        self.stacked_widgets = stacked_widgets
         self.adding_words_list = self.main.session_word
         self.base_word_list = self.main.main_base_word
         self.n_word_pool = self.main.amount_word
@@ -113,10 +112,10 @@ class ChooseBase(View):
                     self.n_word_pool += 1
         self.counter.setText(str(self.n_word_pool))
 
-        self.stacked_widget.removeWidget(self.stacked_widget.currentWidget())
+        self.main.stacked_widget.removeWidget(self.main.stacked_widget.currentWidget())
 
     def cancel(self):
-        self.stacked_widget.removeWidget(self.stacked_widget.currentWidget())
+        self.main.stacked_widget.removeWidget(self.main.stacked_widget.currentWidget())
 
     def item_change(self):
         self.n = 0

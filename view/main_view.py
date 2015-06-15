@@ -9,11 +9,10 @@ from PyQt4 import QtCore, QtGui
 
 class MainWindow(View):
 
-    def __init__(self, main, stacked_widgets):
+    def __init__(self, main):
         super().__init__()
 
         self.main = main
-        self.stacked_widgets = stacked_widgets
 
         self.button = {}
 
@@ -77,20 +76,20 @@ class MainWindow(View):
     def pool(self):
         print('click on individual learn button')
         #TODO PoolWindow potrzebuje main_base_word
-        self.stacked_widget.addWidget(self.main.windows['word_pool'])
-        self.stacked_widget.setCurrentWidget(self.main.windows['word_pool'])
+        self.main.stacked_widget.addWidget(self.main.windows['word_pool'])
+        self.main.stacked_widget.setCurrentWidget(self.main.windows['word_pool'])
 
     def auto(self):
         print('click on auto learn button')
 
     def sets(self):
         print('click on setting button')
-        self.stacked_widget.addWidget(self.main.windows['settings'])
-        self.stacked_widget.setCurrentWidget(self.main.windows['settings'])
+        self.main.stacked_widget.addWidget(self.main.windows['settings'])
+        self.main.stacked_widget.setCurrentWidget(self.main.windows['settings'])
 
     def base(self):
         print('click on main base button')
-        self.stacked_widget.addWidget(self.main.windows['base'])
-        self.stacked_widget.setCurrentWidget(self.main.windows['base'])
+        self.main.stacked_widget.addWidget(self.main.windows['base'])
+        self.main.stacked_widget.setCurrentWidget(self.main.windows['base'])
 
 

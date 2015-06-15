@@ -15,7 +15,7 @@ class BaseWindow(View):
         super().__init__()
 
         self.main = main
-        self.stacked_widgets = stacked_widgets
+        self.main.stacked_widgets = stacked_widgets
 
         self.header = QLabel('<h1><b>Główna baza słówek</b></h1>', self)
 
@@ -157,11 +157,11 @@ class BaseWindow(View):
 
     def done(self):
         self.main.base_word_list.save()
-        self.stacked_widget.removeWidget(self.stacked_widget.currentWidget())
+        self.main.stacked_widget.removeWidget(self.main.stacked_widget.currentWidget())
 
     def cancel(self):
         self.main.base_word_list.reset()
-        self.stacked_widget.removeWidget(self.stacked_widget.currentWidget())
+        self.main.stacked_widget.removeWidget(self.main.stacked_widget.currentWidget())
 
     def imprt(self):
         self.file_dialog()
