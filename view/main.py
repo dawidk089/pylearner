@@ -35,14 +35,10 @@ class Main(QtGui.QMainWindow):
 
         print('>stworzono stos widokow')#$
 
-        self.stacked_widgets.addWidget(MainWindow(self))
-
-        print('>dodano widok glowny do stosu widokow')#$
-
         # zaladowanie widokow
         self.windows = {
-            #'main': MainWindow(self),
-            #'word_pool': PoolWindow(self),
+            'main': MainWindow(self),
+            'word_pool': PoolWindow(self),
             #'base': BaseWindow(self),
             #'setting': SettingWindow(self),
             #'choose_base': ChooseBase(self),
@@ -50,6 +46,10 @@ class Main(QtGui.QMainWindow):
         }
 
         print('>zaladowano widoki')#$
+
+        self.stacked_widgets.addWidget(self.windows['main'])
+
+        print('>dodano widok glowny do stosu widokow')#$
         
         # ustawienia okna
         self.setWindowIcon(QtGui.QIcon('../image/app_ico.png'))

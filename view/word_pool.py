@@ -15,9 +15,11 @@ class PoolWindow(View):
 
     def __init__(self, main):
         super().__init__()
+        print("checkpoint 1")
 
         self.main = main
         #self.main_base_word = main_base_word
+        print("checkpoint 2")
 
         self.counter = QLabel(str(0), self)
         self.que_editline = QLineEdit(self)
@@ -37,6 +39,7 @@ class PoolWindow(View):
         self.button["add"].setMaximumSize(20, 20)
         self.button["choose"].setMaximumSize(20, 20)
         self.button["import"].setMaximumSize(20, 20)
+        print("checkpoint 3")
 
         #definicja listy
         self.word_list = QListView()
@@ -45,13 +48,16 @@ class PoolWindow(View):
         self.list_model = QStandardItemModel(self.word_list)
         self.word_list.setModel(self.list_model)
         self.word_list.clicked.connect(self.catch_item)
+        print("checkpoint 4")
 
         self.split_line = QLineEdit(self)
         self.split_line.setText(' = ')
 
         self.choosen_item = None
+        print("checkpoint 5")
 
         self.initUI()
+        print("checkpoint end")
         self.amount_word = 0
 
     #inicjalizacja widget'ow i layout'u
@@ -96,13 +102,18 @@ class PoolWindow(View):
             ('stretch',),
         ]
 
+        print("checkpoint 6")
+
         self.add_box = self.box('horizontal', add_butt)
+        print (self.add_box)
         self.chs_box = self.box('horizontal', chs_butt)
         self.impt_box = self.box('horizontal', impt_butt)
 
         self.w_amount_box = self.box('horizontal', w_amount_l)
         self.cancel_box = self.box('horizontal', cancel_l)
         self.delete_box = self.box('horizontal', delete_l)
+
+        print("checkpoint 7")
 
         left_l = [
             ('widget', QLabel('słówko pytające', self)),
@@ -118,6 +129,8 @@ class PoolWindow(View):
             ('stretch',),
         ]
 
+        print("checkpoint 7.1")
+
         right_l = [
             ('widget', QLabel('Wybrane słówka', self)),
             ('widget', self.word_list),
@@ -125,10 +138,15 @@ class PoolWindow(View):
             ('layout', self.cancel_box),
         ]
 
+        print("checkpoint 7.2")
+
         self.left_box = self.box('vertical', left_l)
+        print("checkpoint 7.2.1")
         self.right_box = self.box('vertical', right_l)
 
         self.top_box = self.box('horizontal', header)
+
+        print("checkpoint 7.3")
 
         bottom_l = [
             ('layout', self.left_box),# ?! to fix
@@ -144,6 +162,8 @@ class PoolWindow(View):
 
         self.main_box = self.box('vertical', main_l)
 
+        print("checkpoint 8")
+
         #podpiecie przyciskow
         slots = {
             'add': self.add,
@@ -155,8 +175,11 @@ class PoolWindow(View):
             }
 
         self.slot_conn(slots)
+        print("checkpoint 9")
         self.setLayout(self.main_box)
+        print("checkpoint 10")
         self.show()
+        print("checkpoint 11")
 
     #metoda pomocnicza do dodawania elementow do listy
     def add_to_list(self, item_to_add):

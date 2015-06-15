@@ -11,11 +11,10 @@ from view.view_template import View
 
 class BaseWindow(View):
 
-    def __init__(self, main, stacked_widgets):
+    def __init__(self, main):
         super().__init__()
 
         self.main = main
-        self.main.stacked_widgets = stacked_widgets
 
         self.header = QLabel('<h1><b>Główna baza słówek</b></h1>', self)
 
