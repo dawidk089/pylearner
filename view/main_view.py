@@ -12,7 +12,7 @@ class MainWindow(QWidget):
         self.button = {
             "learn": QPushButton('Nauka indywidualna'),
             "auto": QPushButton('Nauka automatyczna'),
-            "base": QPushButton(u'bazy słówek'),
+            "base": QPushButton(u'Bazy słówek'),
             "sets": QPushButton('Ustawienia'),
             "close": QPushButton(u'Wyjście'),
             }
@@ -22,6 +22,7 @@ class MainWindow(QWidget):
         # ustawianie widget'ow
         self.logo.resize(500, 250)
         self.logo.setPixmap(QPixmap("image/logo_orange-black.jpg").scaled(self.logo.size(), QtCore.Qt.KeepAspectRatio))
+        self.button['auto'].hide()  # TODO dodac funkcjonalnosc automatycznego generowania slowek do nauki i powtarzania
 
         # ustawianie layout'ow
         self.hbox = QHBoxLayout()
