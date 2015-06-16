@@ -10,7 +10,7 @@ class PoolWindow(QtGui.QWidget):
     def __init__(self):
         super(PoolWindow, self).__init__()
 
-        # init Widget
+    def init_widget(self):
 
         self.counter = QLabel(str(0), self)
         self.que_editline = QLineEdit(self)
@@ -46,7 +46,19 @@ class PoolWindow(QtGui.QWidget):
 
         self.split_line.setText(' = ')
 
-        # setting Layout
+        # podpiecie przyciskow
+        slots = {
+            'add': self.add,
+            'choose': self.choose,
+            'import': self.imprt,
+            'done': self.done,
+            'cancel': self.cancel,
+            'delete': self.delete,
+            }
+
+        # self.slot_conn(slots)
+
+    def set_layout(self):
 
         header = [
             ('stretch',),
@@ -133,19 +145,6 @@ class PoolWindow(QtGui.QWidget):
         ]
 
         self.main_box = self.box('vertical', main_l)
-
-        #podpiecie przyciskow
-        slots = {
-            'add': self.add,
-            'choose': self.choose,
-            'import': self.imprt,
-            'done': self.done,
-            'cancel': self.cancel,
-            'delete': self.delete,
-            }
-
-        #self.slot_conn(slots)
-        self.setLayout(self.main_box)
 
     # definicje funkcji podpinanych do przyciskow
     def add(self):

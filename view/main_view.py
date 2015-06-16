@@ -8,8 +8,26 @@ class MainWindow(QtGui.QWidget):
     def __init__(self):
         super(MainWindow, self).__init__()
 
-        # init Widget
 
+
+        # layout declaration
+
+        self.hbox = QtGui.QHBoxLayout()
+        self.vbox = QtGui.QVBoxLayout()
+
+        self.hbox_butt = QtGui.QHBoxLayout()
+        self.vbox_butt = QtGui.QVBoxLayout()
+        
+        self.main_box = self.hbox
+
+        self.init_widget()
+        self.set_layout()
+        self.plug_buttons()
+        self.setLayout(self.main_box)
+
+    def init_widget(self):
+
+        # init Widget
         self.button = {
             "learn": QtGui.QPushButton('Nauka indywidualna'),
             "auto": QtGui.QPushButton('Nauka automatyczna'),
@@ -17,20 +35,14 @@ class MainWindow(QtGui.QWidget):
             "sets": QtGui.QPushButton('Ustawienia'),
             "close": QtGui.QPushButton(u'Wyjście'),
             }
-        
+
         self.logo = QtGui.QLabel(self)
-        
-        # setting Layout
-        
+
+        # widget sets
         self.logo.resize(500, 250)
         self.logo.setPixmap(QtGui.QPixmap("image/logo_orange-black.jpg").scaled(self.logo.size(), QtCore.Qt.KeepAspectRatio))
 
-        self.hbox = QtGui.QHBoxLayout()
-        self.vbox = QtGui.QVBoxLayout()
-        
-        self.hbox_butt = QtGui.QHBoxLayout()
-        self.vbox_butt = QtGui.QVBoxLayout()
-
+    def set_layout(self):
         self.vbox_butt.addWidget(self.button["learn"])
         self.vbox_butt.addWidget(self.button["auto"])
         self.vbox_butt.addWidget(self.button["base"])
@@ -50,8 +62,7 @@ class MainWindow(QtGui.QWidget):
         self.hbox.addStretch(1)
         self.hbox.addLayout(self.vbox)
         self.hbox.addStretch(1)
-
-        self.setLayout(self.hbox)
+        return self.hbox
 
     # setting widgets
 

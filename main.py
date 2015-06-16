@@ -30,29 +30,27 @@ class Main(QtGui.QMainWindow):
 
         for i, val in enumerate([MainWindow(), PoolWindow()]):
             self.windows[val.__class__.__name__] = {'instance': val, 'id': i}
-            import time
-            time.sleep(0.1)
-            self.windows[val.__class__.__name__]['instance'].hide()
-            time.sleep(0.1)
 
         print('length of windows list:', len(self.windows))#$
 
-        for key in self.windows:
-            self.windows_c.addWidget(self.windows[key]['instance'])
+        #self.windows_c.setCurrentIndex(0)
+        self.switch_window('MainWindow')
+        #self.windows['MainWindow']['instance'].plug_buttons()
+
 
         self.setWindowIcon(QtGui.QIcon('image/app_ico.png'))
         self.setWindowTitle('Learner -- You just to learn_butt, and I will do the rest. ')
         self.resize(800, 600)
         self.center()
 
-        self.switch_window('MainWindow')
-        self.windows['MainWindow']['instance'].show()
-        self.windows['MainWindow']['instance'].plug_buttons()
-
     def switch_window(self, name):
         print('przelaczanie na widok: ', name, self.windows[name])
-        self.windows_c.setCurrentWidget(self.windows_c.widget(self.windows[name]['id']))
-        self.windows[name]['instance'].show()
+        next = self.windows[name]
+        current = self.windows_c.currentWidget()
+        self.windows_c.removeWidget(current)
+        self.windows_c.addWidget(next['instance'])
+        self.windows_c.setCurrentIndex(next['id'])
+
         print('id now:', self.windows_c.currentIndex())
         print('-'*100)
 
