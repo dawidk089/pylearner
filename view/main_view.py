@@ -1,9 +1,6 @@
 # -*- coding: utf-8 -*-
-__author__ = 'mcmushroom'
 
-import sys
-from PyQt4 import QtGui, QtCore, Qt
-from view.word_pool import *
+from PyQt4 import QtGui, QtCore
 
 
 class MainWindow(QtGui.QWidget):
@@ -11,57 +8,79 @@ class MainWindow(QtGui.QWidget):
     def __init__(self):
         super(MainWindow, self).__init__()
 
-        self.button = {}
+        # init Widget
 
-        self.button["learn"] = QtGui.QPushButton('Nauka indywidualna', self)
-        self.button["auto"] = QtGui.QPushButton('Nauka automatyczna', self)
-        self.button["base"] = QtGui.QPushButton(u'bazy słówek', self)
-        self.button["sets"] = QtGui.QPushButton('Ustawienia', self)
-        self.button["close"] = QtGui.QPushButton(u'Wyjście', self)
+        self.button = {
+            "learn": QtGui.QPushButton('Nauka indywidualna'),
+            "auto": QtGui.QPushButton('Nauka automatyczna'),
+            "base": QtGui.QPushButton(u'bazy słówek'),
+            "sets": QtGui.QPushButton('Ustawienia'),
+            "close": QtGui.QPushButton(u'Wyjście'),
+            }
+        
+        self.logo = QtGui.QLabel(self)
+        
+        # setting Layout
+        
+        self.logo.resize(500, 250)
+        self.logo.setPixmap(QtGui.QPixmap("image/logo_orange-black.jpg").scaled(self.logo.size(), QtCore.Qt.KeepAspectRatio))
 
-        self.initUI()
+        self.hbox = QtGui.QHBoxLayout()
+        self.vbox = QtGui.QVBoxLayout()
+        
+        self.hbox_butt = QtGui.QHBoxLayout()
+        self.vbox_butt = QtGui.QVBoxLayout()
 
-    #inicjalizacja widget'ow i layout'u
-    def initUI(self):
+        self.vbox_butt.addWidget(self.button["learn"])
+        self.vbox_butt.addWidget(self.button["auto"])
+        self.vbox_butt.addWidget(self.button["base"])
+        self.vbox_butt.addWidget(self.button["sets"])
+        self.vbox_butt.addWidget(self.button["close"])
 
-        logo = QtGui.QLabel(self)
-        logo.resize(500, 250)
-        logo.setPixmap(QtGui.QPixmap("image/logo_orange-black.jpg").scaled(logo.size(), QtCore.Qt.KeepAspectRatio))
+        self.hbox_butt.addStretch(1)
+        self.hbox_butt.addLayout(self.vbox_butt)
+        self.hbox_butt.addStretch(1)
 
-        hbox = QtGui.QHBoxLayout()
-        vbox = QtGui.QVBoxLayout()
-        hbox_butt = QtGui.QHBoxLayout()
-        vbox_butt = QtGui.QVBoxLayout()
+        self.vbox.addStretch(1)
+        self.vbox.addWidget(self.logo)
+        self.vbox.addStretch(1)
+        self.vbox.addLayout(self.hbox_butt)
+        self.vbox.addStretch(1)
 
-        vbox_butt.addWidget(self.button["learn"])
-        vbox_butt.addWidget(self.button["auto"])
-        vbox_butt.addWidget(self.button["base"])
-        vbox_butt.addWidget(self.button["sets"])
-        vbox_butt.addWidget(self.button["close"])
+        self.hbox.addStretch(1)
+        self.hbox.addLayout(self.vbox)
+        self.hbox.addStretch(1)
 
-        hbox_butt.addStretch(1)
-        hbox_butt.addLayout(vbox_butt)
-        hbox_butt.addStretch(1)
+        self.setLayout(self.hbox)
 
-        vbox.addStretch(1)
-        vbox.addWidget(logo)
-        vbox.addStretch(1)
-        vbox.addLayout(hbox_butt)
-        vbox.addStretch(1)
+    # setting widgets
 
-        hbox.addStretch(1)
-        hbox.addLayout(vbox)
-        hbox.addStretch(1)
+    def plug_buttons(self):
+        self.button['learn'].clicked.connect(self.pool)
+        self.button['auto'].clicked.connect(self.auto)
+        self.button['base'].clicked.connect(self.base)
+        self.button['sets'].clicked.connect(self.sets)
+        self.button['close'].clicked.connect(QtCore.QCoreApplication.instance().quit)
 
-        self.slot_conn()
-        self.setLayout(hbox)
+    # events
+    def pool(self):
+        from main import Main
+        #window = Main.get().windows['PoolWindow']['id']
+        self.hide()
+        Main.get().switch_window('PoolWindow')
 
-        self.show()
+    def auto(self):
+        from main import Main
+        print('auto')
 
-    #definicja podpiec
-    def slot_conn(self, slots={}):
-        for key in slots:
-            self.button[key].clicked.connect(slots[key])
-            # print(">checkpoint: slots plugging for key: ", key, 'in class: ', self.__class__.__name__)
+    def sets(self):
+        from main import Main
+        window = Main.get().windows['SettingWindow']['id']
+        self.stacked_widget.setCurrentWidget(window)
+
+    def base(self):
+        from main import Main
+        window = Main.get().windows['BaseWindow']['id']
+        self.stacked_widget.setCurrentWidget(window)
 
 

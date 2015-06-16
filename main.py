@@ -3,27 +3,37 @@ __author__ = 'mcmushroom'
 from PyQt4 import QtCore, QtGui
 from view.main_view import MainWindow
 from view.word_pool import PoolWindow
+from view.chooseBase_view import ChooseBase
 from view.base_view import BaseWindow
-from view.setting_view import Setting
+from view.setting_view import SettingWindow
 from model.data_storage import DataStorage
 
 
 class Main(QtGui.QMainWindow):
 
     def __init__(self, parent=None):
+        # singleton protection
+        if Main.private:
+            raise RuntimeError("Próba odwołania się do kontruktora singletonu klasy "+self.__class__.__name__)
+
         super(Main, self).__init__(parent)
 
-        #glowna baza slowek
+        # glowna baza slowek
         self.main_base_word = DataStorage("data/main_base")
         self.main_base_word.open()
 
-        #tworzenie stosu widokow
+        # tworzenie stosu widokow
         self.windows_c = QtGui.QStackedWidget()
         self.setCentralWidget(self.windows_c)
+
         self.windows = {}
 
-        for i, val in enumerate([MainWindow()]):
+        for i, val in enumerate([MainWindow(), PoolWindow()]):
             self.windows[val.__class__.__name__] = {'instance': val, 'id': i}
+            import time
+            time.sleep(0.1)
+            self.windows[val.__class__.__name__]['instance'].hide()
+            time.sleep(0.1)
 
         print('length of windows list:', len(self.windows))#$
 
@@ -35,38 +45,18 @@ class Main(QtGui.QMainWindow):
         self.resize(800, 600)
         self.center()
 
-        #podpiecie przyciskow
-        slots = {
-            'learn': self.pool,
-            'auto': self.auto,
-            'base': self.base,
-            'sets': self.sets,
-            'close': QtCore.QCoreApplication.instance().quit,
-            }
+        self.switch_window('MainWindow')
+        self.windows['MainWindow']['instance'].show()
+        self.windows['MainWindow']['instance'].plug_buttons()
 
-        main_window.slot_conn(slots)
+    def switch_window(self, name):
+        print('przelaczanie na widok: ', name, self.windows[name])
+        self.windows_c.setCurrentWidget(self.windows_c.widget(self.windows[name]['id']))
+        self.windows[name]['instance'].show()
+        print('id now:', self.windows_c.currentIndex())
+        print('-'*100)
 
-    # definicje funkcji podpinanych do przyciskow
-    def pool(self):
-        pool_window = PoolWindow(self.stacked_widget, self.main_base_word)
-        self.stacked_widget.addWidget(pool_window)
-        self.stacked_widget.setCurrentWidget(pool_window)
-
-    def auto(self):
-        print('auto')
-
-    def sets(self):
-        settins_window = Setting(self.stacked_widget)
-        self.stacked_widget.addWidget(settins_window)
-        self.stacked_widget.setCurrentWidget(settins_window)
-        print('sets')
-
-    def base(self):
-        base_window = BaseWindow(self.stacked_widget, self.main_base_word)
-        self.stacked_widget.addWidget(base_window)
-        self.stacked_widget.setCurrentWidget(base_window)
-
-    #definicja wysrodkowania okna
+    # app center support
     def center(self):
 
         qr = self.frameGeometry()
@@ -74,10 +64,26 @@ class Main(QtGui.QMainWindow):
         qr.moveCenter(cp)
         self.move(qr.topLeft())
 
+    # singleton
+    instance = None
+    private = True
+
+    @staticmethod
+    def get():
+        Main.private = False
+        if not Main.instance:
+            print('zaraz wywolam konstruktor')
+            Main.instance = Main()
+            print('skonczylem wywolywac konstruktor')
+        Main.private = True
+        return Main.instance
+
+
+
 if __name__ == '__main__':
 
     app = QtGui.QApplication([])
-    window = Main()
+    window = Main.get()
     window.show()
     app.exec_()
 

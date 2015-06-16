@@ -10,10 +10,10 @@ import time
 from model.data_storage import DataStorage
 
 
-class Setting(QtGui.QWidget):
+class SettingWindow(QtGui.QWidget):
 
     def __init__(self, stacked_widget):
-        super(Setting, self).__init__()
+        super(SettingWindow, self).__init__()
 
         self.stacked_widget = stacked_widget
         
