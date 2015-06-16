@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from PyQt4.QtGui import *
 
 
@@ -9,7 +10,6 @@ class PoolWindow(QWidget):
 
         # deklaracja zmiennych pomocniczych
         self.choosen_item = None
-        self.amount_word = 0
 
         # deklaracja widget'ow
         self.counter = QLabel(str(0), self)
@@ -157,8 +157,7 @@ class PoolWindow(QWidget):
             if not self.main.session_word.search_if_is(word):
                 self.main.session_word.add(word)
                 self.list_model.appendRow(QStandardItem(que+' = '+ans))
-                self.amount_word += 1
-                self.counter.setText(str(self.amount_word))
+                self.counter.setText(str(len(self.main.session_word.data)))
 
     def choose(self):
         self.main.switch_window('ChooseBase')
@@ -167,7 +166,6 @@ class PoolWindow(QWidget):
         splitter = self.split_line.text()
         if splitter != '':
             file = open(QFileDialog(self).getOpenFileName()).read()
-            n = 0
             for row in file.split('\n'):
                 if row != '':
                     word = row.split(splitter)
@@ -176,13 +174,11 @@ class PoolWindow(QWidget):
                         ans = row.split(splitter)[1]
                         word = [que, ans]
                         if not self.main.session_word.search_if_is(word):
-                            n += 1
                             item = QStandardItem(que+" = "+ans)
                             self.list_model.appendRow(item)
                             self.main.session_word.add(word)
 
-            self.amount_word += n
-            self.counter.setText(str(self.amount_word))
+            self.counter.setText(str(len(self.main.session_word.data)))
 
     def cancel(self):
         self.main.switch_window('MainWindow')
@@ -192,8 +188,7 @@ class PoolWindow(QWidget):
             self.list_model.removeRow(self.choosen_item)
             self.main.session_word.remove(self.choosen_item)
             self.choosen_item = None
-            self.amount_word -= 1
-            self.counter.setText(str(self.amount_word))
+            self.counter.setText(str(len(self.main.session_word.data)))
 
     def done(self):
         self.main.switch_window('Learn')

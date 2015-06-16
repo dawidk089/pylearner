@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from PyQt4.QtGui import *
 from view.main_view import MainWindow
 from view.word_pool import PoolWindow

@@ -1,7 +1,8 @@
+# -*- coding: utf-8 -*-
 from PyQt4.QtGui import *
 
 
-# TODO poprawic logistyke prechowywania listy slowek orzed dodaniem do session_word
+# TODO poprawic logistyke prechowywania listy slowek przed dodaniem do session_word
 class ChooseBase(QWidget):
 
     def __init__(self, main):
@@ -9,16 +10,12 @@ class ChooseBase(QWidget):
         self.main = main
 
         # deklaracja zmiennych pomocniczych
-        self.word_pool = word_pool
-        self.adding_words_list = self.word_pool.session_word
-        self.n = 0  # TODO zmienic nazwe n na inna czytelniejsza
-        self.counter = self.word_pool.counter
         self.changed_item = None
 
         # deklaracja widget'ow
         self.header = QLabel(u"<h1><b>Główna baza słówek</b></h1>", self)
         self.list_caption = QLabel(u'Wybierz słówka z bazy', self)
-        self.amount_word = QLabel(str(self.n), self)
+        self.amount_word = QLabel(str(0), self)
 
         self.button = {
             "cancel": QPushButton('Anuluj', self),
@@ -31,7 +28,7 @@ class ChooseBase(QWidget):
         self.word_list.setMinimumSize(600, 400)
 
         self.list_model = QStandardItemModel(self.word_list)
-        for row in self.base_word_list.get():
+        for row in self.main.main_base_word.get():
             item = QStandardItem(row[0]+" = "+row[1])
             item.setCheckable(True)
             self.list_model.appendRow(item)
@@ -86,28 +83,31 @@ class ChooseBase(QWidget):
 
     # definicja zdarzen
     def done(self):
+        wordpool = self.main.windows['PoolWindow']['instance']
+        wordpool_list = self.main.session_word
+        wordpool_modellist = wordpool.list_model
+        counter = wordpool.counter
         for item_nr in range(self.list_model.rowCount()):
             if self.list_model.item(item_nr).checkState() == 2:
                 word = self.main.base_word_list.data[item_nr]
                 que = word[0]
                 ans = word[1]
-                if not self.adding_words_list.search_if_is(word):
-                    self.adding_words_list.add(word)
+                if not wordpool_list.data.search_if_is(word):
+                    wordpool_list.add(word)
                     item = QStandardItem(que+" = "+ans)
-                    self.word_pool.list_model.appendRow(item)
-                    self.n_word_pool += 1
-        self.counter.setText(str(self.n_word_pool))
+                    wordpool_modellist.appendRow(item)
+        counter.setText(str(len(wordpool_list)))
         self.main.switch_window('PoolWindow')
 
     def cancel(self):
         self.main.switch_window('PoolWindow')
 
     def item_change(self):
-        self.n = 0
+        n = 0
         for item_nr in range(self.list_model.rowCount()):
             if self.list_model.item(item_nr).checkState() == 2:
-                self.n += 1
-        self.amount_word.setText(str(self.n))
+                n += 1
+        self.amount_word.setText(str(n))
 
     # TODO metode add_to_list wrzucic jako statyczna-pomocnicza lub podziedziczyc po innej klasie
     # metoda pomocnicza do dodawania elementow do listy
