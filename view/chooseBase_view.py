@@ -8,8 +8,9 @@ import re
 
 class ChooseBase(QtGui.QWidget):
 
-    def __init__(self, stacked_widget, word_pool):
+    def __init__(self, main):
         super(ChooseBase, self).__init__()
+        self.main = main
 
         self.word_pool = word_pool
         self.stacked_widget = stacked_widget

@@ -5,9 +5,9 @@ from PyQt4 import QtGui, QtCore
 
 class MainWindow(QtGui.QWidget):
 
-    def __init__(self):
+    def __init__(self, main):
         super(MainWindow, self).__init__()
-
+        self.main = main
 
 
         # layout declaration
@@ -62,7 +62,6 @@ class MainWindow(QtGui.QWidget):
         self.hbox.addStretch(1)
         self.hbox.addLayout(self.vbox)
         self.hbox.addStretch(1)
-        return self.hbox
 
     # setting widgets
 
@@ -75,10 +74,7 @@ class MainWindow(QtGui.QWidget):
 
     # events
     def pool(self):
-        from main import Main
-        #window = Main.get().windows['PoolWindow']['id']
-        self.hide()
-        Main.get().switch_window('PoolWindow')
+        main_w_l.switch_window('PoolWindow')
 
     def auto(self):
         from main import Main

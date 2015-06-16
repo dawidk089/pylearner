@@ -7,8 +7,9 @@ from view.learn_view import Learn
 
 class PoolWindow(QtGui.QWidget):
 
-    def __init__(self):
+    def __init__(self, main):
         super(PoolWindow, self).__init__()
+        self.main = main
 
     def init_widget(self):
 
@@ -47,7 +48,7 @@ class PoolWindow(QtGui.QWidget):
         self.split_line.setText(' = ')
 
         # podpiecie przyciskow
-        slots = {
+        self.slots = {
             'add': self.add,
             'choose': self.choose,
             'import': self.imprt,
@@ -145,6 +146,9 @@ class PoolWindow(QtGui.QWidget):
         ]
 
         self.main_box = self.box('vertical', main_l)
+
+        self.setLayout(self.main_box)
+        self.slot_conn(self.slots)
 
     # definicje funkcji podpinanych do przyciskow
     def add(self):

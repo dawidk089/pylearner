@@ -10,12 +10,7 @@ from model.data_storage import DataStorage
 
 
 class Main(QtGui.QMainWindow):
-
     def __init__(self, parent=None):
-        # singleton protection
-        if Main.private:
-            raise RuntimeError("Próba odwołania się do kontruktora singletonu klasy "+self.__class__.__name__)
-
         super(Main, self).__init__(parent)
 
         # glowna baza slowek
@@ -28,7 +23,7 @@ class Main(QtGui.QMainWindow):
 
         self.windows = {}
 
-        for i, val in enumerate([MainWindow(), PoolWindow()]):
+        for i, val in enumerate([MainWindow(self), PoolWindow(self)]):
             self.windows[val.__class__.__name__] = {'instance': val, 'id': i}
 
         print('length of windows list:', len(self.windows))#$
@@ -50,9 +45,10 @@ class Main(QtGui.QMainWindow):
         self.windows_c.removeWidget(current)
         self.windows_c.addWidget(next['instance'])
         self.windows_c.setCurrentIndex(next['id'])
+        next['instance'].show()
 
         print('id now:', self.windows_c.currentIndex())
-        print('-'*100)
+
 
     # app center support
     def center(self):
@@ -62,27 +58,12 @@ class Main(QtGui.QMainWindow):
         qr.moveCenter(cp)
         self.move(qr.topLeft())
 
-    # singleton
-    instance = None
-    private = True
-
-    @staticmethod
-    def get():
-        Main.private = False
-        if not Main.instance:
-            print('zaraz wywolam konstruktor')
-            Main.instance = Main()
-            print('skonczylem wywolywac konstruktor')
-        Main.private = True
-        return Main.instance
-
-
 
 if __name__ == '__main__':
 
     app = QtGui.QApplication([])
-    window = Main.get()
-    window.show()
+    main_w_l = Main()
+    main_w_l.show()
     app.exec_()
 
 
