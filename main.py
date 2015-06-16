@@ -1,4 +1,4 @@
-from PyQt4 import QtCore, QtGui
+from PyQt4 import QtGui
 from view.main_view import MainWindow
 from view.word_pool import PoolWindow
 from view.chooseBase_view import ChooseBase
@@ -32,7 +32,14 @@ class Main(QtGui.QMainWindow):
         # przechowywanie instancji klas przechowywujacych widgety poszczegolnych 'widokow'
         self.windows = {}
 
-        for i, val in enumerate([MainWindow(self), PoolWindow(self)]):
+        for i, val in enumerate([
+            MainWindow(self),
+            PoolWindow(self),
+            ChooseBase(self),
+            BaseWindow(self),
+            SettingWindow(self),
+            Learn(self)
+        ]):
             self.windows[val.__class__.__name__] = {'instance': val, 'id': i}
 
         # ustawienie okna
