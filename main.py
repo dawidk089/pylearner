@@ -1,4 +1,4 @@
-from PyQt4 import QtGui
+from PyQt4.QtGui import *
 from view.main_view import MainWindow
 from view.word_pool import PoolWindow
 from view.chooseBase_view import ChooseBase
@@ -8,7 +8,7 @@ from view.learn_view import Learn
 from model.data_storage import DataStorage
 
 
-class Main(QtGui.QMainWindow):
+class Main(QMainWindow):
     def __init__(self, parent=None):
         super(Main, self).__init__(parent)
 
@@ -26,7 +26,7 @@ class Main(QtGui.QMainWindow):
         self.sets.open()
 
         # tworzenie stosu widokow
-        self.windows_c = QtGui.QStackedWidget()
+        self.windows_c = QStackedWidget()
         self.setCentralWidget(self.windows_c)
 
         # przechowywanie instancji klas przechowywujacych widgety poszczegolnych 'widokow'
@@ -43,7 +43,7 @@ class Main(QtGui.QMainWindow):
             self.windows[val.__class__.__name__] = {'instance': val, 'id': i}
 
         # ustawienie okna
-        self.setWindowIcon(QtGui.QIcon('image/app_ico.png'))
+        self.setWindowIcon(QIcon('image/app_ico.png'))
         self.setWindowTitle('Learner -- You just to learn_butt, and I will do the rest. ')
         self.resize(800, 600)
         self.center()
@@ -67,14 +67,14 @@ class Main(QtGui.QMainWindow):
     def center(self):
 
         qr = self.frameGeometry()
-        cp = QtGui.QDesktopWidget().availableGeometry().center()
+        cp = QDesktopWidget().availableGeometry().center()
         qr.moveCenter(cp)
         self.move(qr.topLeft())
 
 
 if __name__ == '__main__':
 
-    app = QtGui.QApplication([])
+    app = QApplication([])
     main = Main()
     main.show()
     app.exec_()
