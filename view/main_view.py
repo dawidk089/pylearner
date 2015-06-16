@@ -1,48 +1,35 @@
-# -*- coding: utf-8 -*-
+from PyQt4 import QtCore
+from PyQt4.QtGui import *
 
-from PyQt4 import QtGui, QtCore
 
-
-class MainWindow(QtGui.QWidget):
+class MainWindow(QWidget):
 
     def __init__(self, main):
         super(MainWindow, self).__init__()
         self.main = main
 
-
-        # layout declaration
-
-        self.hbox = QtGui.QHBoxLayout()
-        self.vbox = QtGui.QVBoxLayout()
-
-        self.hbox_butt = QtGui.QHBoxLayout()
-        self.vbox_butt = QtGui.QVBoxLayout()
-        
-        self.main_box = self.hbox
-
-        self.init_widget()
-        self.set_layout()
-        self.plug_buttons()
-        self.setLayout(self.main_box)
-
-    def init_widget(self):
-
-        # init Widget
+        # deklaracja widget'ow
         self.button = {
-            "learn": QtGui.QPushButton('Nauka indywidualna'),
-            "auto": QtGui.QPushButton('Nauka automatyczna'),
-            "base": QtGui.QPushButton(u'bazy słówek'),
-            "sets": QtGui.QPushButton('Ustawienia'),
-            "close": QtGui.QPushButton(u'Wyjście'),
+            "learn": QPushButton('Nauka indywidualna'),
+            "auto": QPushButton('Nauka automatyczna'),
+            "base": QPushButton(u'bazy słówek'),
+            "sets": QPushButton('Ustawienia'),
+            "close": QPushButton(u'Wyjście'),
             }
 
-        self.logo = QtGui.QLabel(self)
+        self.logo = QLabel(self)
 
-        # widget sets
+        # ustawianie widget'ow
         self.logo.resize(500, 250)
-        self.logo.setPixmap(QtGui.QPixmap("image/logo_orange-black.jpg").scaled(self.logo.size(), QtCore.Qt.KeepAspectRatio))
+        self.logo.setPixmap(QPixmap("image/logo_orange-black.jpg").scaled(self.logo.size(), QtCore.Qt.KeepAspectRatio))
 
-    def set_layout(self):
+        # ustawianie layout'ow
+        self.hbox = QHBoxLayout()
+        self.vbox = QVBoxLayout()
+
+        self.hbox_butt = QHBoxLayout()
+        self.vbox_butt = QVBoxLayout()
+
         self.vbox_butt.addWidget(self.button["learn"])
         self.vbox_butt.addWidget(self.button["auto"])
         self.vbox_butt.addWidget(self.button["base"])
@@ -63,31 +50,26 @@ class MainWindow(QtGui.QWidget):
         self.hbox.addLayout(self.vbox)
         self.hbox.addStretch(1)
 
-    # setting widgets
+        self.setLayout(self.hbox)
 
-    def plug_buttons(self):
+        # podlaczenie zdarzen
         self.button['learn'].clicked.connect(self.pool)
         self.button['auto'].clicked.connect(self.auto)
         self.button['base'].clicked.connect(self.base)
         self.button['sets'].clicked.connect(self.sets)
         self.button['close'].clicked.connect(QtCore.QCoreApplication.instance().quit)
 
-    # events
+    # definicja zdarzen
     def pool(self):
-        main_w_l.switch_window('PoolWindow')
+        self.main.switch_window('PoolWindow')
 
     def auto(self):
-        from main import Main
         print('auto')
 
     def sets(self):
-        from main import Main
-        window = Main.get().windows['SettingWindow']['id']
-        self.stacked_widget.setCurrentWidget(window)
+        self.main.switch_window('SettingWindow')
 
     def base(self):
-        from main import Main
-        window = Main.get().windows['BaseWindow']['id']
-        self.stacked_widget.setCurrentWidget(window)
+        self.main.switch_window('BaseWindow')
 
 

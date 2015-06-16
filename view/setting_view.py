@@ -1,68 +1,48 @@
-# -*- coding: utf-8 -*-
-
-from PyQt4 import QtGui
 from PyQt4.QtGui import *
-import re
-
-import random
-import time
-
-from model.data_storage import DataStorage
 
 
-class SettingWindow(QtGui.QWidget):
+class SettingWindow(QWidget):
 
-    def __init__(self, stacked_widget):
+    def __init__(self, main):
         super(SettingWindow, self).__init__()
+        self.main = main
 
-        self.stacked_widget = stacked_widget
-        
+        # deklaracja zmiennych pomocniczych
         self.default = {
             'wrong_combo_limit': 5,
             'point_limit': 3,
             'avr_time_response': 3000,
             'random_distance': 5,
         }
-        
-        # sets storage
-        self.sets = DataStorage('data/settings')
-        self.sets.open()
 
-        # labels
+        # deklaracja widget'ow
         self.header = QLabel('<h1><b>Ustawienia</b></h1>', self)
 
-        # editline
         self.wrong_combo_limit = QLineEdit(self)
         self.random_distance = QLineEdit(self)
         self.avr_time_response = QLineEdit(self)
         self.point_limit = QLineEdit(self)
 
-        # button
-        self.button = {}
+        self.button = {
+            "save": QPushButton('Zapisz', self),
+            "abort": QPushButton('Anuluj', self),
+            "defualt": QPushButton('Reset', self),
+            }
 
-        self.button["save"] = QPushButton('Zapisz', self)
-        self.button["abort"] = QPushButton('Anuluj', self)
-        self.button["defualt"] = QPushButton('Reset', self)
-
-        # sets
+        # ustawianie widget'ow
         self.wrong_combo_limit.setMaximumWidth(50)
         self.random_distance.setMaximumWidth(50)
         self.avr_time_response.setMaximumWidth(50)
         self.point_limit.setMaximumWidth(50)
 
+        # TODO sprawdzic zabezpieczenie ustawien przed usunieciem pliku
         # inicjalizacja jesli pusta
         if not self.sets.data:
             self.reset()
         else:
             self.set_editline()
 
-        self.initUI()
-
-    #inicjalizacja widget'ow i layout'u
-    def initUI(self):
-
-        # layout
-
+        # ustawianie layout'ow
         header_l = [
             ('stretch',),
             ('widget', self.header),
@@ -117,8 +97,10 @@ class SettingWindow(QtGui.QWidget):
         ]
         
         self.main_box = self.box('vertical', main_l)
+
+        self.setLayout(self.main_box)
         
-        #podpiecie przyciskow
+        # podlaczenie zdarzen
         slots = {
             'save': self.save,
             'defualt': self.reset,
@@ -126,17 +108,46 @@ class SettingWindow(QtGui.QWidget):
             }
 
         self.slot_conn(slots)
-        self.setLayout(self.main_box)
-        self.show()
 
-    #pomocnicza metoda do budowania layout'u
+    # definicja zdarzen
+    def save(self):
+        self.sets.data[0]['wrong_combo_limit'] = int(self.wrong_combo_limit.text())
+        self.sets.data[0]['point_limit'] = int(self.point_limit.text())
+        self.sets.data[0]['avr_time_response'] = int(self.avr_time_response.text())
+        self.sets.data[0]['random_distance'] = int(self.random_distance.text())
+        self.sets.save()
+        
+        self.main.switch_window('MainWindow')
+
+    def abort(self):
+        self.main.switch_window('MainWindow')
+        
+    def reset(self):
+        self.sets.data[0] = self.default
+        self.set_editline()
+
+    # metoda wspierajaca ustawianie biezacych wartosci w editline'ach
+    def set_editline(self):
+        self.wrong_combo_limit.setText(str(self.sets.data[0]['wrong_combo_limit']))
+        self.random_distance.setText(str(self.sets.data[0]['random_distance']))
+        self.avr_time_response.setText(str(self.sets.data[0]['avr_time_response']))
+        self.point_limit.setText(str(self.sets.data[0]['point_limit']))
+
+    # TODO podziedziczyc metode slot_conn po innej klasie
+    # definicja podpiec
+    def slot_conn(self, slots={}):
+        for key in slots:
+            self.button[key].clicked.connect(slots[key])
+
+    # TODO wrzucic metode box jako statyczna w main
+    # pomocnicza metoda do budowania layout'u
     def box(self, el_type, elems):
 
         if el_type == 'vertical':
-            box = QtGui.QVBoxLayout()
+            box = QVBoxLayout()
 
         elif el_type == 'horizontal':
-            box = QtGui.QHBoxLayout()
+            box = QHBoxLayout()
 
         for elem in elems:
             if elem[0] == 'widget':
@@ -147,33 +158,3 @@ class SettingWindow(QtGui.QWidget):
                 box.addStretch(1)
 
         return box
-
-    #definicje funkcji podpinanych do przyciskow
-    def save(self):
-        self.sets.data[0]['wrong_combo_limit'] = int(self.wrong_combo_limit.text())
-        self.sets.data[0]['point_limit'] = int(self.point_limit.text())
-        self.sets.data[0]['avr_time_response'] = int(self.avr_time_response.text())
-        self.sets.data[0]['random_distance'] = int(self.random_distance.text())
-        self.sets.save()
-        
-        self.stacked_widget.removeWidget(self.stacked_widget.currentWidget())
-
-    def abort(self):
-        self.stacked_widget.removeWidget(self.stacked_widget.currentWidget())
-        
-    def reset(self):
-        self.sets.data[0] = self.default
-        self.set_editline()
-        #$
-        print(self.sets.data[0])
-
-    # definicja podpiec
-    def slot_conn(self, slots={}):
-        for key in slots:
-            self.button[key].clicked.connect(slots[key])
-
-    def set_editline(self):
-        self.wrong_combo_limit.setText(str(self.sets.data[0]['wrong_combo_limit']))
-        self.random_distance.setText(str(self.sets.data[0]['random_distance']))
-        self.avr_time_response.setText(str(self.sets.data[0]['avr_time_response']))
-        self.point_limit.setText(str(self.sets.data[0]['point_limit']))

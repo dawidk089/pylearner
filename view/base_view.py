@@ -1,55 +1,45 @@
-# -*- coding: utf-8 -*-
-
-import sys
-from PyQt4 import QtGui, QtCore, Qt
-from PyQt4.QtCore import *
 from PyQt4.QtGui import *
-import re
 
 
-class BaseWindow(QtGui.QWidget):
+class BaseWindow(QWidget):
 
-    def __init__(self, stacked_widget, word_list):
+    def __init__(self, main):
         super(BaseWindow, self).__init__()
+        self.main = main
 
-        self.stacked_widget = stacked_widget
+        # deklaracja zmiennych pomocniczych
+        self.choosen_item = None
 
-        self.base_word_list = word_list
-        # print('base_word_list: ', self.base_word_list.get())
-
+        # deklaracja widget'ow
         self.header = QLabel(u'<h1><b>Główna baza słówek</b></h1>', self)
 
-        self.button = {}
-
-        self.button["add"] = QtGui.QPushButton('Dodaj', self)
-        self.button["import"] = QtGui.QPushButton('Importuj', self)
-        self.button["change"] = QtGui.QPushButton(u'Zmień', self)
-        self.button["delete"] = QtGui.QPushButton(u'Usuń', self)
-        self.button["cancel"] = QtGui.QPushButton('Anuluj', self)
-        self.button["done"] = QtGui.QPushButton('Gotowe', self)
-
-        # definicja listy
-        self.word_list = QListView()
-        self.word_list.setMinimumSize(600, 400)
-        self.list_model = QStandardItemModel(self.word_list)
-        for row in self.base_word_list.get():
-            self.list_model.appendRow(QStandardItem(row[0]+" = "+row[1]))
-        self.word_list.setModel(self.list_model)
-        self.word_list.clicked.connect(self.catch_item)
-        self.choosen_item = None
+        self.button = {
+            "add": QPushButton('Dodaj', self),
+            "import": QPushButton('Importuj', self),
+            "change": QPushButton(u'Zmień', self),
+            "delete": QPushButton(u'Usuń', self),
+            "cancel": QPushButton('Anuluj', self),
+            "done": QPushButton('Gotowe', self),
+            }
 
         self.que_editline = QLineEdit(self)
         self.ans_editline = QLineEdit(self)
+
+        self.word_list = QListView()
+
+        # ustawianie widget'ow
+        self.word_list.setMinimumSize(600, 400)
+
+        self.list_model = QStandardItemModel(self.word_list)
+        for row in self.base_word_list.get():
+            self.list_model.appendRow(QStandardItem(row[0]+" = "+row[1]))
+
+        self.word_list.setModel(self.list_model)
+
         self.que_editline.setMaximumWidth(200)
         self.ans_editline.setMaximumWidth(200)
 
-        self.initUI()
-
-    # inicjalizacja widget'ow i layout'u
-    def initUI(self):
-
-        # print('word list: ', self.word_list)
-        #layout step 1
+        # ustawianie layout'ow
         add_butt_l = [
             ('stretch',),
             ('widget', self.button['add']),
@@ -124,8 +114,12 @@ class BaseWindow(QtGui.QWidget):
 
         self.main_box = self.box('vertical', main_l)
 
-        # podpiecie przyciskow
-        slots = {
+        self.setLayout(self.main_box)
+
+        # podlaczenie zdarzen
+        self.word_list.clicked.connect(self.catch_item)
+
+        self.slots = {
             'add': self.add,
             'change': self.change,
             'import': self.imprt,
@@ -134,63 +128,10 @@ class BaseWindow(QtGui.QWidget):
             'done': self.done,
             }
 
-        self.slot_conn(slots)
-        self.setLayout(self.main_box)
-        self.show()
+        self.slot_conn(self.slots)
 
-    #pomocnicza metoda do budowania layout'u
-    def box(self, el_type, elems):
-
-        if el_type == 'vertical':
-            box = QtGui.QVBoxLayout()
-
-        elif el_type == 'horizontal':
-            box = QtGui.QHBoxLayout()
-
-        for elem in elems:
-            if elem[0] == 'widget':
-                box.addWidget(elem[1])
-            elif elem[0] == 'layout':
-                box.addLayout(elem[1])
-            elif elem[0] == 'stretch':
-                box.addStretch(1)
-
-        return box
-
-    # metoda pomocnicza do dodawania elementow do listy
-    def add_to_list(self, item_to_add):
-        self.list_model.appendRow(QStandardItem(item_to_add))
-
-    # definicje funkcji podpinanych do przyciskow
+    # definicja zdarzen
     def add(self):
-        self.add_word()
-
-    def change(self):
-        # print('change: ', self.choosen_item)
-        self.list_model.setItem(self.choosen_item, QStandardItem("makarena"))
-
-    def delete(self):
-        # print('delete: ', self.choosen_item)
-        self.list_model.removeRow(self.choosen_item)
-        self.base_word_list.remove(self.choosen_item)
-
-    def done(self):
-        self.base_word_list.save()
-        self.stacked_widget.removeWidget(self.stacked_widget.currentWidget())
-
-    def cancel(self):
-        self.base_word_list.reset()
-        self.stacked_widget.removeWidget(self.stacked_widget.currentWidget())
-
-    def imprt(self):
-        self.file_dialog()
-
-#   definicja podpiec
-    def slot_conn(self, slots={}):
-        for key in slots:
-            self.button[key].clicked.connect(slots[key])
-
-    def add_word(self):
         que = self.que_editline.text()
         ans = self.ans_editline.text()
         self.que_editline.setText("")
@@ -202,9 +143,25 @@ class BaseWindow(QtGui.QWidget):
                 self.base_word_list.add(word)
                 self.list_model.appendRow(QStandardItem(que+" = "+ans))
 
-    def file_dialog(self):
-        splitter = '='#self.left_l[8][1].text()
-        file = open(QtGui.QFileDialog(self).getOpenFileName()).read()
+    # TODO dodac funkcjonalnosc zmiany slowka w bazie
+    def change(self):
+        self.list_model.setItem(self.choosen_item, QStandardItem("makarena"))
+
+    def delete(self):
+        self.list_model.removeRow(self.choosen_item)
+        self.main.base_word_list.remove(self.choosen_item)
+
+    def done(self):
+        self.main.base_word_list.save()
+        self.main.switch_window('MainWindow')
+
+    def cancel(self):
+        self.base_word_list.reset()
+        self.main.switch_window('MainWindow')
+
+    def imprt(self):
+        splitter = '='
+        file = open(QFileDialog(self).getOpenFileName()).read()
 
         for row in file.split('\n'):
             if row != '':
@@ -213,21 +170,45 @@ class BaseWindow(QtGui.QWidget):
                     que = row.split(splitter)[0]
                     ans = row.split(splitter)[1]
                     word = [que, ans]
-                    # print('base word list before adding:\n', self.base_word_list.get())
-                    # print('..and adding word: ', word)
-                    if not self.base_word_list.search_if_is(word):
+                    if not self.main.base_word_list.search_if_is(word):
 
                         item = QStandardItem(que+" = "+ans)
                         self.list_model.appendRow(item)
-                        self.base_word_list.add(word)
+                        self.main.base_word_list.add(word)
 
+    # TODO podziedziczyc metode catch_item po innej klasie
     def catch_item(self):
         items = self.word_list.selectedIndexes()
         for item in items:
             self.choosen_item = item.row()
 
-#if __name__ == '__main__':
-#    app = QtGui.QApplication([])
-#    window = BaseWindow(None)
-#    window.show()
-#    app.exec_()
+    # TODO metode add_to_list wrzucic jako statyczna-pomocnicza lub podziedziczyc po innej klasie
+    # metoda pomocnicza do dodawania elementow do listy
+    def add_to_list(self, item_to_add):
+        self.list_model.appendRow(QStandardItem(item_to_add))
+
+    # TODO podziedziczyc metode slot_conn po innej klasie
+    # definicja podpiec
+    def slot_conn(self, slots={}):
+        for key in slots:
+            self.button[key].clicked.connect(slots[key])
+
+    # TODO wrzucic metode box jako statyczna w main
+    # pomocnicza metoda do budowania layout'u
+    def box(self, el_type, elems):
+
+        if el_type == 'vertical':
+            box = QVBoxLayout()
+
+        elif el_type == 'horizontal':
+            box = QHBoxLayout()
+
+        for elem in elems:
+            if elem[0] == 'widget':
+                box.addWidget(elem[1])
+            elif elem[0] == 'layout':
+                box.addLayout(elem[1])
+            elif elem[0] == 'stretch':
+                box.addStretch(1)
+
+        return box

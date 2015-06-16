@@ -1,23 +1,24 @@
-# -*- coding: utf-8 -*-
-
-from PyQt4 import QtGui
 from PyQt4.QtGui import *
-from view.learn_view import Learn
 
 
-class PoolWindow(QtGui.QWidget):
+class PoolWindow(QWidget):
 
     def __init__(self, main):
         super(PoolWindow, self).__init__()
         self.main = main
 
-    def init_widget(self):
+        # deklaracja zmiennych pomocniczych
+        self.choosen_item = None
+        self.amount_word = 0
 
+        # deklaracja widget'ow
         self.counter = QLabel(str(0), self)
+
         self.que_editline = QLineEdit(self)
         self.ans_editline = QLineEdit(self)
-        self.que_editline.setMaximumWidth(200)
-        self.ans_editline.setMaximumWidth(200)
+        self.split_line = QLineEdit(self)  # TODO zmienic nazwe split_line na split_editline
+
+        self.word_list = QListView()
 
         self.button = {
             "add": QPushButton('+', self),
@@ -28,39 +29,21 @@ class PoolWindow(QtGui.QWidget):
             'done': QPushButton('Gotowe', self),
         }
 
-        self.word_list = QListView()
+        # ustawianie widget'ow
+        self.que_editline.setMaximumWidth(200)
+        self.ans_editline.setMaximumWidth(200)
+
+        self.split_line.setText(' = ')  # TODO wstawic domyslna wartosc split_line w ustawienia
+
         self.list_model = QStandardItemModel(self.word_list)
-        self.split_line = QLineEdit(self)
-
-        self.choosen_item = None
-        self.amount_word = 0
-
-        # setting widgets
+        self.word_list.setMinimumSize(600, 400)
+        self.word_list.setModel(self.list_model)
 
         self.button["add"].setMaximumSize(20, 20)
         self.button["choose"].setMaximumSize(20, 20)
         self.button["import"].setMaximumSize(20, 20)
 
-        self.word_list.setMinimumSize(600, 400)
-        self.word_list.setModel(self.list_model)
-        self.word_list.clicked.connect(self.catch_item)
-
-        self.split_line.setText(' = ')
-
-        # podpiecie przyciskow
-        self.slots = {
-            'add': self.add,
-            'choose': self.choose,
-            'import': self.imprt,
-            'done': self.done,
-            'cancel': self.cancel,
-            'delete': self.delete,
-            }
-
-        # self.slot_conn(slots)
-
-    def set_layout(self):
-
+        # ustawianie layout'ow
         header = [
             ('stretch',),
             ('widget', QLabel(u'<h1><b>Nauka indywidualna</b></h1>', self)),
@@ -134,7 +117,7 @@ class PoolWindow(QtGui.QWidget):
         self.top_box = self.box('horizontal', header)
 
         bottom_l = [
-            ('layout', self.left_box),# TODO
+            ('layout', self.left_box),  # TODO poprawic layout left box (?)
             ('layout', self.right_box),
         ]
 
@@ -148,9 +131,22 @@ class PoolWindow(QtGui.QWidget):
         self.main_box = self.box('vertical', main_l)
 
         self.setLayout(self.main_box)
+
+        # podlaczenie zdarzen
+        self.word_list.clicked.connect(self.catch_item)
+
+        self.slots = {
+            'add': self.add,
+            'choose': self.choose,
+            'import': self.imprt,
+            'done': self.done,
+            'cancel': self.cancel,
+            'delete': self.delete,
+            }
+
         self.slot_conn(self.slots)
 
-    # definicje funkcji podpinanych do przyciskow
+    # definicja zdarzen
     def add(self):
         que = self.que_editline.text()
         ans = self.ans_editline.text()
@@ -158,21 +154,19 @@ class PoolWindow(QtGui.QWidget):
         self.ans_editline.setText("")
         if que != "" and ans != "":
             word = [que, ans]
-            if not self.session_word.search_if_is(word):
-                self.session_word.add(word)
+            if not self.main.session_word.search_if_is(word):
+                self.main.session_word.add(word)
                 self.list_model.appendRow(QStandardItem(que+' = '+ans))
                 self.amount_word += 1
                 self.counter.setText(str(self.amount_word))
 
     def choose(self):
-        from main import Main
-        window = Main.get().windows['ChooseBase']['id']
-        self.stacked_widget.setCurrentWidget(window)
+        self.main.switch_window('ChooseBase')
 
     def imprt(self):
         splitter = self.split_line.text()
         if splitter != '':
-            file = open(QtGui.QFileDialog(self).getOpenFileName()).read()
+            file = open(QFileDialog(self).getOpenFileName()).read()
             n = 0
             for row in file.split('\n'):
                 if row != '':
@@ -181,48 +175,50 @@ class PoolWindow(QtGui.QWidget):
                         que = row.split(splitter)[0]
                         ans = row.split(splitter)[1]
                         word = [que, ans]
-                        if not self.session_word.search_if_is(word):
+                        if not self.main.session_word.search_if_is(word):
                             n += 1
                             item = QStandardItem(que+" = "+ans)
                             self.list_model.appendRow(item)
-                            self.session_word.add(word)
+                            self.main.session_word.add(word)
 
             self.amount_word += n
             self.counter.setText(str(self.amount_word))
 
     def cancel(self):
-        self.stacked_widget.removeWidget(self.stacked_widget.currentWidget())
+        self.main.switch_window('MainWindow')
 
     def delete(self):
         if self.choosen_item is not None:
             self.list_model.removeRow(self.choosen_item)
-            self.session_word.remove(self.choosen_item)
+            self.main.session_word.remove(self.choosen_item)
             self.choosen_item = None
             self.amount_word -= 1
             self.counter.setText(str(self.amount_word))
 
     def done(self):
-        learn_window = Learn(self.stacked_widget, self.session_word)
-        self.stacked_widget.addWidget(learn_window)
-        self.stacked_widget.setCurrentWidget(learn_window)
+        self.main.switch_window('Learn')
 
+    # TODO metode add_to_list wrzucic jako statyczna-pomocnicza lub podziedziczyc po innej klasie
     # metoda pomocnicza do dodawania elementow do listy
     def add_to_list(self, item_to_add):
         self.list_model.appendRow(QStandardItem(item_to_add))
 
+    # TODO podziedziczyc metode catch_item po innej klasie
+    # zlapanie slowka po kliknieciu w nie i zaznaczeniu (w celu pozniejszej zmiany/pozniejszego usuniecia)
     def catch_item(self):
         items = self.word_list.selectedIndexes()
         for item in items:
             self.choosen_item = item.row()
 
     # pomocnicza metoda do budowania layout'u
+    # TODO wrzucic metode box jako statyczna w main
     def box(self, el_type, elems):
 
         if el_type == 'vertical':
-            box = QtGui.QVBoxLayout()
+            box = QVBoxLayout()
 
         elif el_type == 'horizontal':
-            box = QtGui.QHBoxLayout()
+            box = QHBoxLayout()
 
         for elem in elems:
             if elem[0] == 'widget':
@@ -234,7 +230,8 @@ class PoolWindow(QtGui.QWidget):
 
         return box
 
-    # definicja podpiec
+    # definicja podpiec przyciskow pod zdarzenie klikniecia
+    # TODO podziedziczyc metode slot_conn po innej klasie
     def slot_conn(self, slots={}):
         for key in slots:
             self.button[key].clicked.connect(slots[key])

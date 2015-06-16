@@ -1,40 +1,47 @@
-# -*- coding: utf-8 -*-
-
-from PyQt4 import QtGui
 from PyQt4.QtGui import *
 import re
 import random
 import time
 
 
-class Learn(QtGui.QWidget):
+class Learn(QWidget):
 
-    def __init__(self, stacked_widget, word_list):
+    def __init__(self, main):
         super(Learn, self).__init__()
+        self.main = main
 
-        # bedzie pobierane z ustawien
+        # deklaracja zmiennych pomocniczych
+        # TODO podpiac ustawienia z wczytanych ustawien z main zamiast definiowania na sztywno
         self.wrong_combo_limit = 5
         self.point_limit = 3
         self.avr_time_response = 3000
         self.max_speed_writing = 1060/60/1000 #TODO trzeba podpiac max speed writing
         self.random_distance = 5
 
-        self.stacked_widget = stacked_widget
-
-        # list definition
-        self.init_word_list = word_list
         self.eliminated_word_list = {}
-        self.init_list()
+        # TODO zmienna statyczna n do poprawy/sprawdzania
+        n = 0
+        for word in self.init_word_list.data:
+            words = len(word[0].split())
+            letters = len(max(word[0].split(), key=len))
+            self.eliminated_word_list[n] = {
+                'id': n,
+                'word': word,
+                'que': word[0],
+                'ans': word[1],
+                'points': 0,
+                'wrong_combo': 0,
+                'wrong_amount': 0,
+                'difficulty': letters/8,
+            }
+            n += 1
 
-        for key in self.eliminated_word_list:
-            word = self.eliminated_word_list[key]
-            key_parent = key
-            print(key)
-            for key in word:
-                print('\t', key, word[key])
-        #print('eliminated word list:\n', self.eliminated_word_list)
+        # zmienne wspierajace losowanie, przechpwywanie i sprawdzanie slowka
+        self.current_id_word = None
+        self.time = None
+        self.hard_word = None
 
-        # labels
+        # deklaracja widget'ow
         self.header = QLabel('<h1><b>Nauka</b></h1>', self)
         self.amount_not_learned = QLabel(str(0), self)
         self.progress = QLabel(str(0), self)
@@ -44,39 +51,21 @@ class Learn(QtGui.QWidget):
         self.count_time_off = QLabel('', self)
         self.status = QLabel('', self)
 
-        # editline
         self.ans_editline = QLineEdit(self)
         self.ans_editline.setMaximumWidth(200)
 
-        # button
-        self.button = {}
+        self.button = {
+            "ok": QPushButton('OK', self),
+            "abort": QPushButton('przerwij', self),
+            }
 
-        self.button["ok"] = QPushButton('OK', self)
-        self.button["abort"] = QPushButton('przerwij', self)
-
-        # sets
+        # ustawianie widget'ow
         self.amount_not_learned.setMaximumWidth(20)
         self.progress.setMaximumWidth(20)
         self.button['ok'].resize(self.button['ok'].sizeHint())
         self.que_line.setMinimumWidth(200)
-        self.ans_editline.returnPressed.connect(self.button['ok'].click)
 
-        #queries storage
-        self.current_id_word = None
-        self.time = None
-        self.hard_word = None
-
-        #pierwsze zapytanie
-        self.initUI()
-        self.set_que_word()
-        self.time = self.get_time()
-
-    #inicjalizacja widget'ow i layout'u
-    def initUI(self):
-
-        # layout
-
-        # preparing boxes
+        # ustawianie layout'ow
         header_l = [
             ('stretch',),
             ('widget', self.header),
@@ -142,7 +131,6 @@ class Learn(QtGui.QWidget):
 
         self.abort_box = self.box('horizontal', abort_l)
 
-        # folding boxes
         middle_l = [
             ('layout', self.header_box),
             ('stretch',),
@@ -168,36 +156,23 @@ class Learn(QtGui.QWidget):
 
         self.main_box = self.box('horizontal', main_l)
 
-        #podpiecie przyciskow
-        slots = {
+        self.setLayout(self.main_box)
+
+        # podlaczenie zdarzen
+        self.ans_editline.returnPressed.connect(self.button['ok'].click)
+
+        self.slots = {
             'ok': self.ok,
             'abort': self.abort,
             }
 
-        self.slot_conn(slots)
-        self.setLayout(self.main_box)
-        self.show()
+        self.slot_conn(self.slots)
 
-    #pomocnicza metoda do budowania layout'u
-    def box(self, el_type, elems):
+        # pierwsze zapytanie
+        self.set_que_word()
+        self.time = self.get_time()
 
-        if el_type == 'vertical':
-            box = QtGui.QVBoxLayout()
-
-        elif el_type == 'horizontal':
-            box = QtGui.QHBoxLayout()
-
-        for elem in elems:
-            if elem[0] == 'widget':
-                box.addWidget(elem[1])
-            elif elem[0] == 'layout':
-                box.addLayout(elem[1])
-            elif elem[0] == 'stretch':
-                box.addStretch(1)
-
-        return box
-
-    #definicje funkcji podpinanych do przyciskow
+    # definicja zdarzen
     def ok(self):
         # set time response
         self.time = self.get_time() - self.time
@@ -214,29 +189,33 @@ class Learn(QtGui.QWidget):
     def abort(self):
         self.stacked_widget.removeWidget(self.stacked_widget.currentWidget())
 
+    # TODO podziedziczyc metode slot_conn po innej klasie
     # definicja podpiec
     def slot_conn(self, slots={}):
         for key in slots:
             self.button[key].clicked.connect(slots[key])
 
-    # definicje funkcji pomocniczych do logiki 'nauki'
-    def init_list(self):
-        n = 0
-        for word in self.init_word_list.data:
-            words = len(word[0].split())
-            letters = len(max(word[0].split(), key=len))
-            self.eliminated_word_list[n] = {
-                'id': n,
-                'word': word,
-                'que': word[0],
-                'ans': word[1],
-                'points': 0,
-                'wrong_combo': 0,
-                'wrong_amount': 0,
-                'difficulty': letters/8,
-            }
-            n += 1
+    # TODO wrzucic metode box jako statyczna w main
+    # pomocnicza metoda do budowania layout'u
+    def box(self, el_type, elems):
 
+        if el_type == 'vertical':
+            box = QVBoxLayout()
+
+        elif el_type == 'horizontal':
+            box = QHBoxLayout()
+
+        for elem in elems:
+            if elem[0] == 'widget':
+                box.addWidget(elem[1])
+            elif elem[0] == 'layout':
+                box.addLayout(elem[1])
+            elif elem[0] == 'stretch':
+                box.addStretch(1)
+
+        return box
+
+    # TODO przeniesc funkcjonalnosc losowania do oddzielnej klasy
     def end_asking(self):
         # sprawdzanie czy osiagnieta ilosc  graniczna punktow dla slowka
         if self.eliminated_word_list[self.current_id_word]['points'] > self.point_limit:
