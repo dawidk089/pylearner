@@ -9,6 +9,7 @@ class DataStorage:
         self.data = []
         self.path = path_data
 
+    # TODO get do usuniecia
     def get(self):
         return self.data
 

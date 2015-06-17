@@ -83,20 +83,21 @@ class ChooseBase(QWidget):
 
     # definicja zdarzen
     def done(self):
+
         wordpool = self.main.windows['PoolWindow']['instance']
         wordpool_list = self.main.session_word
         wordpool_modellist = wordpool.list_model
         counter = wordpool.counter
         for item_nr in range(self.list_model.rowCount()):
             if self.list_model.item(item_nr).checkState() == 2:
-                word = self.main.base_word_list.data[item_nr]
+                word = self.main.main_base_word.data[item_nr]
                 que = word[0]
                 ans = word[1]
-                if not wordpool_list.data.search_if_is(word):
+                if not wordpool_list.search_if_is(word):
                     wordpool_list.add(word)
                     item = QStandardItem(que+" = "+ans)
                     wordpool_modellist.appendRow(item)
-        counter.setText(str(len(wordpool_list)))
+        counter.setText(str(len(wordpool_list.data)))
         self.main.switch_window('PoolWindow')
 
     def cancel(self):
@@ -108,6 +109,10 @@ class ChooseBase(QWidget):
             if self.list_model.item(item_nr).checkState() == 2:
                 n += 1
         self.amount_word.setText(str(n))
+
+    def reset_list(self):
+        for i in range(self.list_model.rowCount()):
+            self.list_model.item(i).setCheckState(False)
 
     # TODO metode add_to_list wrzucic jako statyczna-pomocnicza lub podziedziczyc po innej klasie
     # metoda pomocnicza do dodawania elementow do listy
