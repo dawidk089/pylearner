@@ -191,6 +191,9 @@ class PoolWindow(QWidget):
             self.counter.setText(str(len(self.main.session_word.data)))
 
     def done(self):
+        learn = self.main.windows['Learn']['instance']
+        learn.set_que_word()
+        learn.time = self.get_time()
         self.main.switch_window('Learn')
 
     # TODO metode add_to_list wrzucic jako statyczna-pomocnicza lub podziedziczyc po innej klasie

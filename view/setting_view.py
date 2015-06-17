@@ -38,7 +38,7 @@ class SettingWindow(QWidget):
 
         # TODO sprawdzic zabezpieczenie ustawien przed usunieciem pliku
         # inicjalizacja jesli pusta
-        if not self.sets.data:
+        if not self.main.sets.data:
             self.reset()
         else:
             self.set_editline()
@@ -112,11 +112,11 @@ class SettingWindow(QWidget):
 
     # definicja zdarzen
     def save(self):
-        self.sets.data[0]['wrong_combo_limit'] = int(self.wrong_combo_limit.text())
-        self.sets.data[0]['point_limit'] = int(self.point_limit.text())
-        self.sets.data[0]['avr_time_response'] = int(self.avr_time_response.text())
-        self.sets.data[0]['random_distance'] = int(self.random_distance.text())
-        self.sets.save()
+        self.main.sets.data[0]['wrong_combo_limit'] = int(self.wrong_combo_limit.text())
+        self.main.sets.data[0]['point_limit'] = int(self.point_limit.text())
+        self.main.sets.data[0]['avr_time_response'] = int(self.avr_time_response.text())
+        self.main.sets.data[0]['random_distance'] = int(self.random_distance.text())
+        self.main.sets.save()
         
         self.main.switch_window('MainWindow')
 
@@ -124,15 +124,15 @@ class SettingWindow(QWidget):
         self.main.switch_window('MainWindow')
         
     def reset(self):
-        self.sets.data[0] = self.default
+        self.main.sets.data[0] = self.default
         self.set_editline()
 
     # metoda wspierajaca ustawianie biezacych wartosci w editline'ach
     def set_editline(self):
-        self.wrong_combo_limit.setText(str(self.sets.data[0]['wrong_combo_limit']))
-        self.random_distance.setText(str(self.sets.data[0]['random_distance']))
-        self.avr_time_response.setText(str(self.sets.data[0]['avr_time_response']))
-        self.point_limit.setText(str(self.sets.data[0]['point_limit']))
+        self.wrong_combo_limit.setText(str(self.main.sets.data[0]['wrong_combo_limit']))
+        self.random_distance.setText(str(self.main.sets.data[0]['random_distance']))
+        self.avr_time_response.setText(str(self.main.sets.data[0]['avr_time_response']))
+        self.point_limit.setText(str(self.main.sets.data[0]['point_limit']))
 
     # TODO podziedziczyc metode slot_conn po innej klasie
     # definicja podpiec

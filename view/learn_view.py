@@ -22,7 +22,7 @@ class Learn(QWidget):
         self.eliminated_word_list = {}
         # TODO zmienna statyczna n do poprawy/sprawdzania
         n = 0
-        for word in self.init_word_list.data:
+        for word in self.main.session_word.data:
             words = len(word[0].split())
             letters = len(max(word[0].split(), key=len))
             self.eliminated_word_list[n] = {
@@ -170,8 +170,9 @@ class Learn(QWidget):
         self.slot_conn(self.slots)
 
         # pierwsze zapytanie
-        self.set_que_word()
-        self.time = self.get_time()
+        # tymczasowo przeniesione do wordpool
+        #self.set_que_word()
+        #self.time = self.get_time()
 
     # definicja zdarzen
     def ok(self):
