@@ -26,10 +26,13 @@ class BaseWindow(QWidget):
         self.que_editline = QLineEdit(self)
         self.ans_editline = QLineEdit(self)
 
+        self.new_que_editline = QLineEdit(self)
+        self.new_ans_editline = QLineEdit(self)
+
         self.word_list = QListView()
 
         # ustawianie widget'ow
-        self.word_list.setMinimumSize(600, 400)
+        self.word_list.setMinimumSize(600, 500)
 
         self.list_model = QStandardItemModel(self.word_list)
         for row in self.main.main_base_word.get():
@@ -56,11 +59,29 @@ class BaseWindow(QWidget):
             ('widget', self.ans_editline),
         ]
 
+        change_butt_l = [
+            ('stretch',),
+            ('widget', self.button['change']),
+        ]
+
+        change_que_l = [
+            ('widget', QLabel(u'słówko pytające', self)),
+            ('widget', self.new_que_editline),
+        ]
+
+        change_ans_l = [
+            ('widget', QLabel(u'słówko odpowiadające', self)),
+            ('widget', self.new_ans_editline),
+        ]
+
+
         self.add_butt_box = self.box('vertical', add_butt_l)
+        self.change_butt_box = self.box('vertical', change_butt_l)
         self.add_que_box = self.box('vertical', add_que_l)
         self.add_ans_box = self.box('vertical', add_ans_l)
+        self.change_que_box = self.box('vertical', change_que_l)
+        self.change_ans_box = self.box('vertical', change_ans_l)
 
-        #layout step 2
         header_l = [
             ('stretch',),
             ('widget', self.header),
@@ -80,7 +101,9 @@ class BaseWindow(QWidget):
         ]
 
         change_l = [
-            ('widget', self.button['change']),
+            ('layout', self.change_butt_box),
+            ('layout', self.change_que_box),
+            ('layout', self.change_ans_box),
             ('stretch',),
         ]
 
@@ -102,7 +125,6 @@ class BaseWindow(QWidget):
         self.delete_box = self.box('horizontal', delete_l)
         self.done_box = self.box('horizontal', done_l)
 
-        # layout step 3
         main_l = [
             ('layout', self.header_box),
             ('layout', self.add_box),
@@ -137,12 +159,15 @@ class BaseWindow(QWidget):
         ans = self.ans_editline.text()
         self.que_editline.setText("")
         self.ans_editline.setText("")
-
         if que != "" and ans != "":
             word = [que, ans]
             if not self.main.main_base_word.search_if_is(word):
                 self.main.main_base_word.add(word)
                 self.list_model.appendRow(QStandardItem(que+" = "+ans))
+            else:
+                self.main.statusBar().showMessage(u'Już dodane do bazy.', 3000)
+        else:
+            self.main.statusBar().showMessage(u'Uzupełnij formularz przed dodaniem.', 3000)
 
     # TODO dodac funkcjonalnosc zmiany slowka w bazie
     def change(self):
@@ -162,8 +187,11 @@ class BaseWindow(QWidget):
 
     def imprt(self):
         splitter = '='
-        file = open(QFileDialog(self).getOpenFileName()).read()
-
+        try:
+            file = open(QFileDialog(self).getOpenFileName()).read()
+        except UnicodeDecodeError:
+            self.main.statusBar().showMessage(u'Błędny format pliku!', 3000)
+            return
         for row in file.split('\n'):
             if row != '':
                 word = row.split(splitter)
@@ -176,6 +204,17 @@ class BaseWindow(QWidget):
                         item = QStandardItem(que+" = "+ans)
                         self.list_model.appendRow(item)
                         self.main.main_base_word.add(word)
+
+                    else:
+                            self.main.statusBar().showMessage(u'Niektóre słówka są już na liście...', 3000)
+                else:
+                    self.main.statusBar().showMessage(u'Istnieją linie w złym formacie...', 3000)
+            else:
+                self.main.statusBar().showMessage(u'Istnieją puste linie...', 3000)
+                """
+        else:
+            self.main.statusBar().showMessage(u'Brak znaku rozdzielającego!', 3000)
+            """
 
     # TODO podziedziczyc metode catch_item po innej klasie
     def catch_item(self):
