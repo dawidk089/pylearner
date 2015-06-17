@@ -31,10 +31,10 @@ class SettingWindow(QWidget):
             }
 
         # ustawianie widget'ow
-        self.wrong_combo_limit.setMaximumWidth(50)
-        self.random_distance.setMaximumWidth(50)
-        self.avr_time_response.setMaximumWidth(50)
-        self.point_limit.setMaximumWidth(50)
+        #self.wrong_combo_limit.setMaximumWidth(50)
+        #self.random_distance.setMaximumWidth(50)
+        #self.avr_time_response.setMaximumWidth(50)
+        #self.point_limit.setMaximumWidth(50)
 
         # TODO sprawdzic zabezpieczenie ustawien przed usunieciem pliku
         # inicjalizacja jesli pusta
@@ -121,6 +121,8 @@ class SettingWindow(QWidget):
         self.main.switch_window('MainWindow')
 
     def abort(self):
+        self.main.sets.reset()
+        self.set_editline()
         self.main.switch_window('MainWindow')
         
     def reset(self):

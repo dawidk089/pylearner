@@ -213,8 +213,13 @@ class BaseWindow(QWidget):
             self.main.statusBar().showMessage(u'Uzupełnij formularz przed dodaniem.', 3000)
 
     def delete(self):
-        self.list_model.removeRow(self.choosen_item_indx)
-        self.main.main_base_word.remove(self.choosen_item_indx)
+        if self.choosen_item:
+            self.list_model.removeRow(self.choosen_item_indx)
+            self.main.main_base_word.remove(self.choosen_item_indx)
+            self.choosen_item_indx = None
+            self.choosen_item = None
+        else:
+            self.main.statusBar().showMessage(u'Nie zaznaczono żadnego słówka.', 3000)
 
     def done(self):
         self.main.main_base_word.save()
