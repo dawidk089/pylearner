@@ -9,6 +9,7 @@ class BaseWindow(QWidget):
         self.main = main
 
         # deklaracja zmiennych pomocniczych
+        self.choosen_item_indx = None
         self.choosen_item = None
 
         # deklaracja widget'ow
@@ -25,9 +26,9 @@ class BaseWindow(QWidget):
 
         self.que_editline = QLineEdit(self)
         self.ans_editline = QLineEdit(self)
-
         self.new_que_editline = QLineEdit(self)
         self.new_ans_editline = QLineEdit(self)
+        self.split_editline = QLineEdit(self)
 
         self.word_list = QListView()
 
@@ -40,8 +41,13 @@ class BaseWindow(QWidget):
 
         self.word_list.setModel(self.list_model)
 
-        self.que_editline.setMaximumWidth(200)
-        self.ans_editline.setMaximumWidth(200)
+        self.que_editline.setFixedWidth(150)
+        self.ans_editline.setFixedWidth(150)
+        self.new_que_editline.setFixedWidth(150)
+        self.new_ans_editline.setFixedWidth(150)
+        self.split_editline.setFixedWidth(50)
+
+        self.split_editline.setText(' = ')
 
         # ustawianie layout'ow
         add_butt_l = [
@@ -97,6 +103,7 @@ class BaseWindow(QWidget):
 
         import_l = [
             ('widget', self.button['import']),
+            ('widget', self.split_editline),  # TODO now!
             ('stretch',),
         ]
 
@@ -108,7 +115,7 @@ class BaseWindow(QWidget):
         ]
 
         delete_l = [
-            ('widget', self.button['delete']),
+            ('widget', self.button['delete']),  # TODO now!
             ('stretch',),
         ]
 
@@ -125,13 +132,26 @@ class BaseWindow(QWidget):
         self.delete_box = self.box('horizontal', delete_l)
         self.done_box = self.box('horizontal', done_l)
 
-        main_l = [
-            ('layout', self.header_box),
+        left_l = [
             ('layout', self.add_box),
             ('layout', self.import_box),
             ('layout', self.change_box),
             ('layout', self.delete_box),
+            ('stretch',),
+        ]
+
+        self.left_box = self.box('vertical', left_l)
+
+        middle_l = [
+            ('layout', self.left_box),
             ('widget', self.word_list),
+        ]
+
+        self.middle_box = self.box('horizontal', middle_l)
+
+        main_l = [
+            ('layout', self.header_box),
+            ('layout', self.middle_box),
             ('layout', self.done_box),
         ]
 
@@ -171,7 +191,22 @@ class BaseWindow(QWidget):
 
     # TODO dodac funkcjonalnosc zmiany slowka w bazie
     def change(self):
-        self.list_model.setItem(self.choosen_item, QStandardItem("makarena"))
+        que = self.new_que_editline.text()
+        ans = self.new_ans_editline.text()
+        self.new_que_editline.setText("")
+        self.new_ans_editline.setText("")
+        if que != "" and ans != "":
+            if self.choosen_item:
+                word = [que, ans]
+                if not self.main.main_base_word.search_if_is(word):
+                    self.main.main_base_word.data[self.choosen_item_indx] = word
+                    self.choosen_item = QStandardItem(que+" = "+ans)
+                else:
+                    self.main.statusBar().showMessage(u'Słówko jest już w bazie.', 3000)
+            else:
+                self.main.statusBar().showMessage(u'Nie zaznaczono żadnego słówka.', 3000)
+        else:
+            self.main.statusBar().showMessage(u'Uzupełnij formularz przed dodaniem.', 3000)
 
     def delete(self):
         self.list_model.removeRow(self.choosen_item)
@@ -186,41 +221,47 @@ class BaseWindow(QWidget):
         self.main.switch_window('MainWindow')
 
     def imprt(self):
-        splitter = '='
-        try:
-            file = open(QFileDialog(self).getOpenFileName()).read()
-        except UnicodeDecodeError:
-            self.main.statusBar().showMessage(u'Błędny format pliku!', 3000)
-            return
-        for row in file.split('\n'):
-            if row != '':
-                word = row.split(splitter)
-                if len(word) == 2:
-                    que = row.split(splitter)[0]
-                    ans = row.split(splitter)[1]
-                    word = [que, ans]
-                    if not self.main.main_base_word.search_if_is(word):
+        splitter = self.split_editline.text()
+        if splitter != "":
+            try:
+                file = open(QFileDialog(self).getOpenFileName()).read()
+            except UnicodeDecodeError:
+                self.main.statusBar().showMessage(u'Błędny format pliku!', 3000)
+                return
+            for row in file.split('\n'):
+                if row != '':
+                    word = row.split(splitter)
+                    if len(word) == 2:
+                        que = row.split(splitter)[0]
+                        ans = row.split(splitter)[1]
+                        word = [que, ans]
+                        if not self.main.main_base_word.search_if_is(word):
 
-                        item = QStandardItem(que+" = "+ans)
-                        self.list_model.appendRow(item)
-                        self.main.main_base_word.add(word)
+                            item = QStandardItem(que+" = "+ans)
+                            self.list_model.appendRow(item)
+                            self.main.main_base_word.add(word)
 
+                        else:
+                                self.main.statusBar().showMessage(u'Niektóre słówka są już na liście...', 3000)
                     else:
-                            self.main.statusBar().showMessage(u'Niektóre słówka są już na liście...', 3000)
+                        self.main.statusBar().showMessage(u'Istnieją linie w złym formacie...', 3000)
                 else:
-                    self.main.statusBar().showMessage(u'Istnieją linie w złym formacie...', 3000)
-            else:
-                self.main.statusBar().showMessage(u'Istnieją puste linie...', 3000)
-                """
+                    self.main.statusBar().showMessage(u'Istnieją puste linie...', 3000)
         else:
             self.main.statusBar().showMessage(u'Brak znaku rozdzielającego!', 3000)
-            """
 
     # TODO podziedziczyc metode catch_item po innej klasie
     def catch_item(self):
         items = self.word_list.selectedIndexes()
         for item in items:
-            self.choosen_item = item.row()
+            self.choosen_item = item.row
+            self.choosen_item_indx = item.row()
+
+        que = self.main.main_base_word.data[self.choosen_item_indx][0]
+        ans = self.main.main_base_word.data[self.choosen_item_indx][1]
+
+        self.new_que_editline.setText(que)
+        self.new_ans_editline.setText(ans)
 
     # TODO metode add_to_list wrzucic jako statyczna-pomocnicza lub podziedziczyc po innej klasie
     # metoda pomocnicza do dodawania elementow do listy
