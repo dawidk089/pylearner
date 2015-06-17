@@ -36,8 +36,10 @@ class BaseWindow(QWidget):
         self.word_list.setMinimumSize(600, 500)
 
         self.list_model = QStandardItemModel(self.word_list)
+        """
         for row in self.main.main_base_word.get():
             self.list_model.appendRow(QStandardItem(row[0]+" = "+row[1]))
+        """
 
         self.word_list.setModel(self.list_model)
 
@@ -200,7 +202,9 @@ class BaseWindow(QWidget):
                 word = [que, ans]
                 if not self.main.main_base_word.search_if_is(word):
                     self.main.main_base_word.data[self.choosen_item_indx] = word
-                    self.choosen_item = QStandardItem(que+" = "+ans)
+                    #self.choosen_item = QStandardItem(que+" = "+ans)
+
+                    self.list_model.setItem(self.choosen_item_indx, QStandardItem(que+" = "+ans))
                 else:
                     self.main.statusBar().showMessage(u'Słówko jest już w bazie.', 3000)
             else:
@@ -209,8 +213,8 @@ class BaseWindow(QWidget):
             self.main.statusBar().showMessage(u'Uzupełnij formularz przed dodaniem.', 3000)
 
     def delete(self):
-        self.list_model.removeRow(self.choosen_item)
-        self.main.base_word_list.remove(self.choosen_item)
+        self.list_model.removeRow(self.choosen_item_indx)
+        self.main.main_base_word.remove(self.choosen_item_indx)
 
     def done(self):
         self.main.main_base_word.save()

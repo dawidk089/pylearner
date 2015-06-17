@@ -72,6 +72,11 @@ class MainWindow(QWidget):
         self.main.switch_window('SettingWindow')
 
     def base(self):
+        # tymczasowo dodanie odswiezanie
+        # TODO odswiezanie listy w BaseWindow
+        self.main.windows['BaseWindow']['instance'].list_model.clear()
+        for row in self.main.main_base_word.get():
+            self.main.windows['BaseWindow']['instance'].list_model.appendRow(QStandardItem(row[0]+" = "+row[1]))
         self.main.switch_window('BaseWindow')
 
 
