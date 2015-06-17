@@ -158,14 +158,23 @@ class PoolWindow(QWidget):
                 self.main.session_word.add(word)
                 self.list_model.appendRow(QStandardItem(que+' = '+ans))
                 self.counter.setText(str(len(self.main.session_word.data)))
+            else:
+                self.main.statusBar().showMessage(u'Już dodane do listy.', 3000)
+        else:
+            self.main.statusBar().showMessage(u'Uzupełnij formularz przed dodaniem.', 3000)
 
     def choose(self):
+        self.main.windows['ChooseBase']['instance'].reset_list()
         self.main.switch_window('ChooseBase')
 
     def imprt(self):
         splitter = self.split_line.text()
         if splitter != '':
-            file = open(QFileDialog(self).getOpenFileName()).read()
+            try:
+                file = open(QFileDialog(self).getOpenFileName()).read()
+            except UnicodeDecodeError:
+                self.main.statusBar().showMessage(u'Błędny format pliku!', 3000)
+                return
             for row in file.split('\n'):
                 if row != '':
                     word = row.split(splitter)
@@ -177,13 +186,24 @@ class PoolWindow(QWidget):
                             item = QStandardItem(que+" = "+ans)
                             self.list_model.appendRow(item)
                             self.main.session_word.add(word)
+                            print('session word lenght: ', len(self.main.session_word.data))
+                        else:
+                            self.main.statusBar().showMessage(u'Niektóre słówka są już na liście...', 3000)
+                    else:
+                        self.main.statusBar().showMessage(u'Istnieją linie w złym formacie...', 3000)
+                else:
+                    self.main.statusBar().showMessage(u'Istnieją puste linie...', 3000)
+        else:
+            self.main.statusBar().showMessage(u'Brak znaku rozdzielającego!', 3000)
 
-            self.counter.setText(str(len(self.main.session_word.data)))
+        self.counter.setText(str(len(self.main.session_word.data)))
 
     def cancel(self):
         self.main.switch_window('MainWindow')
 
     def delete(self):
+        if not self.main.session_word.data:
+            self.main.statusBar().showMessage(u'Nie ma już czego usuwać.', 3000)
         if self.choosen_item is not None:
             self.list_model.removeRow(self.choosen_item)
             self.main.session_word.remove(self.choosen_item)
@@ -191,6 +211,9 @@ class PoolWindow(QWidget):
             self.counter.setText(str(len(self.main.session_word.data)))
 
     def done(self):
+        if not self.main.session_word.data:
+            self.main.statusBar().showMessage(u'Nic nie wybrałeś!', 3000)
+            return
         learn = self.main.windows['Learn']['instance']
         learn.set_que_word()
         learn.time = self.get_time()

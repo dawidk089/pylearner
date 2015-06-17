@@ -140,8 +140,8 @@ class BaseWindow(QWidget):
 
         if que != "" and ans != "":
             word = [que, ans]
-            if not self.base_word_list.search_if_is(word):
-                self.base_word_list.add(word)
+            if not self.main.main_base_word.search_if_is(word):
+                self.main.main_base_word.add(word)
                 self.list_model.appendRow(QStandardItem(que+" = "+ans))
 
     # TODO dodac funkcjonalnosc zmiany slowka w bazie
@@ -153,11 +153,11 @@ class BaseWindow(QWidget):
         self.main.base_word_list.remove(self.choosen_item)
 
     def done(self):
-        self.main.base_word_list.save()
+        self.main.main_base_word.save()
         self.main.switch_window('MainWindow')
 
     def cancel(self):
-        self.base_word_list.reset()
+        self.main.main_base_word.reset()
         self.main.switch_window('MainWindow')
 
     def imprt(self):
@@ -171,11 +171,11 @@ class BaseWindow(QWidget):
                     que = row.split(splitter)[0]
                     ans = row.split(splitter)[1]
                     word = [que, ans]
-                    if not self.main.base_word_list.search_if_is(word):
+                    if not self.main.main_base_word.search_if_is(word):
 
                         item = QStandardItem(que+" = "+ans)
                         self.list_model.appendRow(item)
-                        self.main.base_word_list.add(word)
+                        self.main.main_base_word.add(word)
 
     # TODO podziedziczyc metode catch_item po innej klasie
     def catch_item(self):
