@@ -28,10 +28,10 @@ class ChooseBase(QWidget):
         self.word_list.setMinimumSize(600, 400)
 
         self.list_model = QStandardItemModel(self.word_list)
-        for row in self.main.main_base_word.get():
-            item = QStandardItem(row[0]+" = "+row[1])
-            item.setCheckable(True)
-            self.list_model.appendRow(item)
+        #for row in self.main.main_base_word.get():
+        #   item = QStandardItem(row[0]+" = "+row[1])
+        #    item.setCheckable(True)
+        #    self.list_model.appendRow(item)
 
         self.word_list.setModel(self.list_model)
 
@@ -111,8 +111,14 @@ class ChooseBase(QWidget):
         self.amount_word.setText(str(n))
 
     def reset_list(self):
-        for i in range(self.list_model.rowCount()):
-            self.list_model.item(i).setCheckState(False)
+        self.list_model.clear()
+        for row in self.main.main_base_word.get():
+            item = QStandardItem(row[0]+" = "+row[1])
+            item.setCheckable(True)
+            self.list_model.appendRow(item)
+
+        #for i in range(self.list_model.rowCount()):
+        #    self.list_model.item(i).setCheckState(False)
 
     # TODO metode add_to_list wrzucic jako statyczna-pomocnicza lub podziedziczyc po innej klasie
     # metoda pomocnicza do dodawania elementow do listy

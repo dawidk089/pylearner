@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from PyQt4.QtGui import *
+from learner.learner import Learner
 import re
 import random
 import time
@@ -10,6 +11,14 @@ class Learn(QWidget):
     def __init__(self, main):
         super(Learn, self).__init__()
         self.main = main
+
+        self.learner = Learner(
+            self.main.session_word.data, self.main.sets.data
+        )
+
+        self.init_amount_word = len(self.learner.eliminated_list)
+
+        """
 
         # deklaracja zmiennych pomocniczych
         # TODO podpiac ustawienia z wczytanych ustawien z main zamiast definiowania na sztywno
@@ -41,6 +50,8 @@ class Learn(QWidget):
         self.current_id_word = None
         self.time = None
         self.hard_word = None
+
+        """
 
         # deklaracja widget'ow
         self.header = QLabel('<h1><b>Nauka</b></h1>', self)
@@ -174,22 +185,31 @@ class Learn(QWidget):
         #self.set_que_word()
         #self.time = self.get_time()
 
+    def init_learn(self):
+        self.amount_not_learned.setText(str(len(self.learner.eliminated_list)))
+        self.progress.setText(str(self.progress))
+        self.que_line.setText(self.learner.question())
+        self.learner.start_time()
+
     # definicja zdarzen
     def ok(self):
-        # set time response
-        self.time = self.get_time() - self.time
+        self.learner.stop_time()
         answer = self.ans_editline.text()
+        self.learner.check_answer(answer)
         self.ans_editline.setText('')
         self.your_ans_line.setText(answer)
-        self.correct_ans_line.setText(self.eliminated_word_list[self.current_id_word]['ans'])
+        self.correct_ans_line.setText(self.learner.correct_answer())
         self.check_ans(answer)
-        if self.end_asking():
-            return
+        if self.check_end():
+            self.main.switch_window('MainWindow')
         # next question
-        self.set_que_word(self.hard_word)
+        self.amount_not_learned.setText(str(len(self.learner.eliminated_list)))
+        self.progress.setText(str(self.progress))
+        self.que_line.setText(self.learner.question())
+        self.learner.start_time()
 
     def abort(self):
-        self.stacked_widget.removeWidget(self.stacked_widget.currentWidget())
+        self.main.switch_window('MainWindow')
 
     # TODO podziedziczyc metode slot_conn po innej klasie
     # definicja podpiec
@@ -217,6 +237,7 @@ class Learn(QWidget):
 
         return box
 
+"""
     # TODO przeniesc funkcjonalnosc losowania do oddzielnej klasy
     def end_asking(self):
         # sprawdzanie czy osiagnieta ilosc  graniczna punktow dla slowka
@@ -284,7 +305,7 @@ class Learn(QWidget):
         print('current word:', self.current_id_word)
 
 
-def weighted_choice(weights):
+def weighted_random(weights):
     totals = []
     running_total = 0
 
@@ -305,7 +326,4 @@ def list_from_dict_list(dict_list, dict_key):
     return tab
 
 
-def fix_word(l):
-    whitespace = re.compile("\s*(?P<word>[A-Z]?(\s*[a-z\'])*[.|...|...?|?|!|?!]*)\s*$")
-    m = whitespace.match(l)
-    return bool(m) if not m else m.group('word')
+"""

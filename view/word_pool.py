@@ -186,7 +186,7 @@ class PoolWindow(QWidget):
                             item = QStandardItem(que+" = "+ans)
                             self.list_model.appendRow(item)
                             self.main.session_word.add(word)
-                            print('session word lenght: ', len(self.main.session_word.data))
+                            #print('session word lenght: ', len(self.main.session_word.data))
                         else:
                             self.main.statusBar().showMessage(u'Niektóre słówka są już na liście...', 3000)
                     else:
@@ -214,9 +214,10 @@ class PoolWindow(QWidget):
         if not self.main.session_word.data:
             self.main.statusBar().showMessage(u'Nic nie wybrałeś!', 3000)
             return
-        learn = self.main.windows['Learn']['instance']
-        learn.set_que_word()
-        learn.time = self.get_time()
+        self.main.windows['Learn']['instance'].init_learn()
+        #learn = self.main.windows['Learn']['instance']
+        #learn.set_que_word()
+        #learn.time = self.get_time()
         self.main.switch_window('Learn')
 
     # TODO metode add_to_list wrzucic jako statyczna-pomocnicza lub podziedziczyc po innej klasie

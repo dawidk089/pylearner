@@ -54,7 +54,7 @@ class Main(QMainWindow):
 
     # wsparcie przelaczania 'widokow'
     def switch_window(self, name):
-        print('przelaczanie na widok: ', name, self.windows[name])
+        #print('przelaczanie na widok: ', name, self.windows[name])
         next = self.windows[name]
         current = self.windows_c.currentWidget()
         self.windows_c.removeWidget(current)
@@ -62,7 +62,7 @@ class Main(QMainWindow):
         self.windows_c.setCurrentIndex(next['id'])
         next['instance'].show()
 
-        print('id now:', self.windows_c.currentIndex())
+        #print('id now:', self.windows_c.currentIndex())
 
     # wsparcie wysrodkowania okna
     def center(self):
