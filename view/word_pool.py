@@ -164,8 +164,7 @@ class PoolWindow(QWidget):
             self.main.statusBar().showMessage(u'Uzupełnij formularz przed dodaniem.', 3000)
 
     def choose(self):
-        self.main.windows['ChooseBase']['instance'].reset_list()
-        self.main.switch_window('ChooseBase')
+        self.main.switch_window('Base')
 
     def imprt(self):
         splitter = self.split_line.text()
@@ -199,7 +198,7 @@ class PoolWindow(QWidget):
         self.counter.setText(str(len(self.main.session_word.data)))
 
     def cancel(self):
-        self.main.switch_window('MainWindow')
+        self.main.switch_window('Main')
 
     def delete(self):
         if not self.main.session_word.data:
@@ -214,10 +213,6 @@ class PoolWindow(QWidget):
         if not self.main.session_word.data:
             self.main.statusBar().showMessage(u'Nic nie wybrałeś!', 3000)
             return
-        self.main.windows['Learn']['instance'].init_learn()
-        #learn = self.main.windows['Learn']['instance']
-        #learn.set_que_word()
-        #learn.time = self.get_time()
         self.main.switch_window('Learn')
 
     # TODO metode add_to_list wrzucic jako statyczna-pomocnicza lub podziedziczyc po innej klasie

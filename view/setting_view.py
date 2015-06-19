@@ -118,12 +118,12 @@ class SettingWindow(QWidget):
         self.main.sets.data[0]['random_distance'] = int(self.random_distance.text())
         self.main.sets.save()
         
-        self.main.switch_window('MainWindow')
+        self.main.switch_window('Main')
 
     def abort(self):
         self.main.sets.reset()
         self.set_editline()
-        self.main.switch_window('MainWindow')
+        self.main.switch_window('Main')
         
     def reset(self):
         self.main.sets.data[0] = self.default

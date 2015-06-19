@@ -63,20 +63,15 @@ class MainWindow(QWidget):
 
     # definicja zdarzen
     def pool(self):
-        self.main.switch_window('PoolWindow')
+        self.main.switch_window('Pool')
 
     def auto(self):
         print('auto')
 
     def sets(self):
-        self.main.switch_window('SettingWindow')
+        self.main.switch_window('Setting')
 
     def base(self):
-        # tymczasowo dodane odswiezanie
-        # TODO odswiezanie listy w BaseWindow
-        self.main.windows['BaseWindow']['instance'].list_model.clear()
-        for row in self.main.main_base_word.get():
-            self.main.windows['BaseWindow']['instance'].list_model.appendRow(QStandardItem(row[0]+" = "+row[1]))
-        self.main.switch_window('BaseWindow')
+        self.main.switch_window('Base')
 
 

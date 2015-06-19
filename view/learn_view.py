@@ -201,7 +201,7 @@ class Learn(QWidget):
         self.correct_ans_line.setText(self.learner.correct_answer())
         self.check_ans(answer)
         if self.check_end():
-            self.main.switch_window('MainWindow')
+            self.main.switch_window('Main')
         # next question
         self.amount_not_learned.setText(str(len(self.learner.eliminated_list)))
         self.progress.setText(str(self.progress))
@@ -209,7 +209,7 @@ class Learn(QWidget):
         self.learner.start_time()
 
     def abort(self):
-        self.main.switch_window('MainWindow')
+        self.main.switch_window('Main')
 
     # TODO podziedziczyc metode slot_conn po innej klasie
     # definicja podpiec

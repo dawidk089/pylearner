@@ -12,7 +12,7 @@ class BaseWindow(QWidget):
         self.choosen_item_indx = None
         self.choosen_item = None
 
-        # deklaracja widget'ow
+        # deklaracja widget'owWindow
         self.header = QLabel(u'<h1><b>Główna baza słówek</b></h1>', self)
 
         self.button = {
@@ -223,11 +223,11 @@ class BaseWindow(QWidget):
 
     def done(self):
         self.main.main_base_word.save()
-        self.main.switch_window('MainWindow')
+        self.main.switch_window('Main')
 
     def cancel(self):
         self.main.main_base_word.reset()
-        self.main.switch_window('MainWindow')
+        self.main.switch_window('Main')
 
     def imprt(self):
         splitter = self.split_editline.text()
