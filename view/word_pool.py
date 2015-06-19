@@ -2,6 +2,7 @@
 from PyQt4.QtGui import *
 
 
+# TODO dodac przycisk reset
 class PoolWindow(QWidget):
 
     def __init__(self, main):

@@ -18,45 +18,10 @@ class Learn(QWidget):
 
         self.init_amount_word = len(self.learner.eliminated_list)
 
-        """
-
-        # deklaracja zmiennych pomocniczych
-        # TODO podpiac ustawienia z wczytanych ustawien z main zamiast definiowania na sztywno
-        self.wrong_combo_limit = 5
-        self.point_limit = 3
-        self.avr_time_response = 3000
-        self.max_speed_writing = 1060/60/1000 #TODO trzeba podpiac max speed writing
-        self.random_distance = 5
-
-        self.eliminated_word_list = {}
-        # TODO zmienna statyczna n do poprawy/sprawdzania
-        n = 0
-        for word in self.main.session_word.data:
-            words = len(word[0].split())
-            letters = len(max(word[0].split(), key=len))
-            self.eliminated_word_list[n] = {
-                'id': n,
-                'word': word,
-                'que': word[0],
-                'ans': word[1],
-                'points': 0,
-                'wrong_combo': 0,
-                'wrong_amount': 0,
-                'difficulty': letters/8,
-            }
-            n += 1
-
-        # zmienne wspierajace losowanie, przechpwywanie i sprawdzanie slowka
-        self.current_id_word = None
-        self.time = None
-        self.hard_word = None
-
-        """
-
         # deklaracja widget'ow
         self.header = QLabel('<h1><b>Nauka</b></h1>', self)
         self.amount_not_learned = QLabel(str(0), self)
-        self.progress = QLabel(str(0), self)
+        self.progress = QLabel(str(0)+'%', self)
         self.que_line = QLabel('', self)
         self.your_ans_line = QLabel('', self)
         self.correct_ans_line = QLabel('', self)
@@ -76,6 +41,8 @@ class Learn(QWidget):
         self.progress.setMaximumWidth(20)
         self.button['ok'].resize(self.button['ok'].sizeHint())
         self.que_line.setMinimumWidth(200)
+
+        self.init_learn()
 
         # ustawianie layout'ow
         header_l = [
@@ -187,24 +154,32 @@ class Learn(QWidget):
 
     def init_learn(self):
         self.amount_not_learned.setText(str(len(self.learner.eliminated_list)))
-        self.progress.setText(str(self.progress))
         self.que_line.setText(self.learner.question())
         self.learner.start_time()
 
     # definicja zdarzen
     def ok(self):
+        # obsluzenie odpowiedzi
         self.learner.stop_time()
         answer = self.ans_editline.text()
-        self.learner.check_answer(answer)
+        valid = self.learner.check_answer(answer)
         self.ans_editline.setText('')
         self.your_ans_line.setText(answer)
+        # TODO ustawic kolorki odpowiedzi
         self.correct_ans_line.setText(self.learner.correct_answer())
-        self.check_ans(answer)
-        if self.check_end():
+        #self.check_ans(answer)
+        if self.learner.check_end():
+            # TODO zrobic messagebox zakonczenia nauki
             self.main.switch_window('Main')
-        # next question
-        self.amount_not_learned.setText(str(len(self.learner.eliminated_list)))
-        self.progress.setText(str(self.progress))
+            return
+
+        # nastepne pytanie
+        not_learned = len(self.learner.eliminated_list)
+        self.amount_not_learned.setText(str(not_learned))
+        all_word = len(self.main.session_word.data)
+        learned = all_word - not_learned
+        print('progress: ', learned, '(', not_learned, ')/', all_word, '; ', valid, sep='')
+        self.progress.setText(str(learned/all_word))
         self.que_line.setText(self.learner.question())
         self.learner.start_time()
 
@@ -236,94 +211,3 @@ class Learn(QWidget):
                 box.addStretch(1)
 
         return box
-
-"""
-    # TODO przeniesc funkcjonalnosc losowania do oddzielnej klasy
-    def end_asking(self):
-        # sprawdzanie czy osiagnieta ilosc  graniczna punktow dla slowka
-        if self.eliminated_word_list[self.current_id_word]['points'] > self.point_limit:
-            del self.eliminated_word_list[self.current_id_word]
-
-        if not self.eliminated_word_list and self.hard_word is None:
-            print('wszystkie slowka sa nauczone')
-            self.stacked_widget.removeWidget(self.stacked_widget.currentWidget())
-            self.stacked_widget.removeWidget(self.stacked_widget.currentWidget())
-            return True
-
-    def ask(self):
-        # setting que word
-        self.set_que_word(self.hard_word)
-
-
-    def get_time(self):
-        return int(round(time.time() * 1000))
-
-    def check_ans(self, answer):
-        correct = fix_word(
-            self.eliminated_word_list[self.current_id_word]['ans']
-        )
-        word = self.eliminated_word_list[self.current_id_word]
-        your = fix_word(answer)
-        if correct == your:
-            #set color word answer
-            self.your_ans_line.setStyleSheet("QLabel { color : green; }")
-
-            # points proportial for average time response
-            #TODO to fix depends on asking state
-            word['points'] += self.avr_time_response/self.time
-            word['wrong_combo'] = 0
-            self.hard_word = None
-
-        else:
-            if your == '':
-                self.your_ans_line.setText('zrezygnowano')
-                self.your_ans_line.setStyleSheet("QLabel { color : orange; }")
-            else:
-                self.your_ans_line.setStyleSheet("QLabel { color : red; }")
-            word['wrong_combo'] += 1
-            word['wrong_amount'] += 1
-            # checking for hard word
-            if word['wrong_combo'] > self.wrong_combo_limit:
-                self.hard_word = self.current_id_word # tu juz wiem ze jest
-
-        #$ debugger printing eliminated list
-        print('eliminated word list:')
-        for key in self.eliminated_word_list:
-            word = self.eliminated_word_list[key]
-            key_parent = key
-
-    def set_que_word(self, word_id=None):
-        if word_id is not None:
-            self.current_id_word = word_id
-        else:
-            #TODO create special random asking
-            word = random.choice(self.eliminated_word_list)
-            self.current_id_word = word['id']
-        self.time = self.get_time()
-        self.que_line.setText(self.eliminated_word_list[self.current_id_word]['que'])
-        #$ printing cuurent random word
-        print('current word:', self.current_id_word)
-
-
-def weighted_random(weights):
-    totals = []
-    running_total = 0
-
-    for w in weights:
-        running_total += w
-        totals.append(running_total)
-
-    rnd = random.random() * running_total
-    for i, total in enumerate(totals):
-        if rnd < total:
-            return i
-
-
-def list_from_dict_list(dict_list, dict_key):
-    tab = []
-    for value in dict_list:
-        tab.append(value[dict_key])
-    return tab
-
-
-"""
