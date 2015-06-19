@@ -17,6 +17,7 @@ class PoolWindow(QWidget):
         self.que_editline = QLineEdit(self)
         self.ans_editline = QLineEdit(self)
         self.split_line = QLineEdit(self)  # TODO zmienic nazwe split_line na split_editline
+        # TODO dodac ilosc znakow spliter'a obok split_line
 
         self.word_list = QListView()
 
@@ -38,6 +39,14 @@ class PoolWindow(QWidget):
         self.list_model = QStandardItemModel(self.word_list)
         self.word_list.setMinimumSize(600, 400)
         self.word_list.setModel(self.list_model)
+
+        # ladowanie listy z sesji
+        for row in self.main.session_word.get():
+            item = QStandardItem(row[0]+" = "+row[1])
+            #item.setCheckable(True)
+            self.list_model.appendRow(item)
+        self.counter.setText(str(len(self.main.session_word.data)))
+
 
         self.button["add"].setMaximumSize(20, 20)
         self.button["choose"].setMaximumSize(20, 20)
@@ -162,10 +171,12 @@ class PoolWindow(QWidget):
                 self.main.statusBar().showMessage(u'Już dodane do listy.', 3000)
         else:
             self.main.statusBar().showMessage(u'Uzupełnij formularz przed dodaniem.', 3000)
+        # TODO podpiac enter pod przycisk add z answer editline, przelaczanie kursora do question editline
 
     def choose(self):
-        self.main.switch_window('Base')
+        self.main.switch_window('Choose')
 
+    # TODO zabezpieczyc anuluj w QFileDialog
     def imprt(self):
         splitter = self.split_line.text()
         if splitter != '':

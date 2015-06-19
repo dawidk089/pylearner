@@ -83,21 +83,19 @@ class ChooseBase(QWidget):
 
     # definicja zdarzen
     def done(self):
-
+        session = self.main.session_word
         #wordpool = self.main.windows['PoolWindow']['instance']
         #wordpool_list = self.main.session_word
         #wordpool_modellist = wordpool.list_model
         #counter = wordpool.counter
-        #for item_nr in range(self.list_model.rowCount()):
-        #    if self.list_model.item(item_nr).checkState() == 2:
-        #        word = self.main.main_base_word.data[item_nr]
-        #        que = word[0]
-        #        ans = word[1]
-        #        if not wordpool_list.search_if_is(word):
-        #            wordpool_list.add(word)
-        #            item = QStandardItem(que+" = "+ans)
-        #            wordpool_modellist.appendRow(item)
-        #counter.setText(str(len(wordpool_list.data)))
+        for item_nr in range(self.list_model.rowCount()):
+            if self.list_model.item(item_nr).checkState() == 2:
+                word = self.main.main_base_word.data[item_nr]
+                #que = word[0]
+                #ans = word[1]
+                if not session.search_if_is(word):
+                    session.add(word)
+        print('session: ', self.main.session_word.data)
         self.main.switch_window('Pool')
 
     def cancel(self):

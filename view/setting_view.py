@@ -38,10 +38,10 @@ class SettingWindow(QWidget):
 
         # TODO sprawdzic zabezpieczenie ustawien przed usunieciem pliku
         # inicjalizacja jesli pusta
-        if not self.main.sets.data:
-            self.reset()
-        else:
-            self.set_editline()
+        #if not self.main.sets.data:
+        #    self.reset()
+        #else:
+        self.set_editline()
 
         # ustawianie layout'ow
         header_l = [

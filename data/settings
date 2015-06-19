@@ -1,1 +1,1 @@
-[{"wrong_combo_limit": 5, "avr_time_response": 3000, "random_distance": 5, "point_limit": 3}]
+[{"point_limit": 3, "avr_time_response": 3000, "wrong_combo_limit": 5, "random_distance": 5}]
