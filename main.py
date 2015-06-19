@@ -31,17 +31,14 @@ class Main(QMainWindow):
         self.setCentralWidget(self.windows_c)
 
         # przechowywanie instancji klas przechowywujacych widgety poszczegolnych 'widokow'
-        self.windows = {}
-
-        for i, val in enumerate([
-            MainWindow(self),
-            PoolWindow(self),
-            ChooseBase(self),
-            BaseWindow(self),
-            SettingWindow(self),
-            Learn(self)
-        ]):
-            self.windows[val.__class__.__name__] = {'instance': val, 'id': i}
+        self.windows = {
+            'Main': MainWindow,
+            'Pool': PoolWindow,
+            'Choose': ChooseBase,
+            'Base': BaseWindow,
+            'Setting': SettingWindow,
+            'Learn': Learn,
+            }
 
         # ustawienie okna
         self.setWindowIcon(QIcon('image/app_ico.png'))
@@ -49,20 +46,12 @@ class Main(QMainWindow):
         self.resize(800, 600)
         self.center()
 
-        # przelaczenie na glowny widok okna
-        self.switch_window('MainWindow')
-
     # wsparcie przelaczania 'widokow'
     def switch_window(self, name):
-        #print('przelaczanie na widok: ', name, self.windows[name])
-        next = self.windows[name]
-        current = self.windows_c.currentWidget()
-        self.windows_c.removeWidget(current)
-        self.windows_c.addWidget(next['instance'])
-        self.windows_c.setCurrentIndex(next['id'])
-        next['instance'].show()
-
-        #print('id now:', self.windows_c.currentIndex())
+        window = self.windows[name](self)
+        while self.windows_c.count() > 0:
+            self.windows_c.removeWidget(self.windows_c.currentWidget())
+        self.windows_c.addWidget(window)
 
     # wsparcie wysrodkowania okna
     def center(self):
@@ -76,8 +65,11 @@ class Main(QMainWindow):
 if __name__ == '__main__':
 
     app = QApplication([])
+
     main = Main()
+    main.switch_window('Main')
     main.show()
+
     app.exec_()
 
 
