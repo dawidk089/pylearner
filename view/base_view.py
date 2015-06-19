@@ -104,7 +104,7 @@ class BaseWindow(QWidget):
 
         import_l = [
             ('widget', self.button['import']),
-            ('widget', self.split_editline),  # TODO now!
+            ('widget', self.split_editline),
             ('stretch',),
         ]
 
@@ -116,7 +116,7 @@ class BaseWindow(QWidget):
         ]
 
         delete_l = [
-            ('widget', self.button['delete']),  # TODO now!
+            ('widget', self.button['delete']),
             ('stretch',),
         ]
 
@@ -190,7 +190,6 @@ class BaseWindow(QWidget):
         else:
             self.main.statusBar().showMessage(u'Uzupełnij formularz przed dodaniem.', 3000)
 
-    # TODO dodac funkcjonalnosc zmiany slowka w bazie
     def change(self):
         que = self.new_que_editline.text()
         ans = self.new_ans_editline.text()

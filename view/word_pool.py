@@ -53,6 +53,9 @@ class PoolWindow(QWidget):
         self.button["choose"].setMaximumSize(20, 20)
         self.button["import"].setMaximumSize(20, 20)
 
+        self.split_line.setMaximumWidth(200)
+        #self.left_box.
+
         # ustawianie layout'ow
         header = [
             ('stretch',),
@@ -127,8 +130,10 @@ class PoolWindow(QWidget):
         self.top_box = self.box('horizontal', header)
 
         bottom_l = [
-            ('layout', self.left_box),  # TODO poprawic layout left box (?)
+            ('stretch',),
+            ('layout', self.left_box),
             ('layout', self.right_box),
+            ('stretch',),
         ]
 
         self.bottom_box = self.box('horizontal', bottom_l)
@@ -186,6 +191,8 @@ class PoolWindow(QWidget):
             except UnicodeDecodeError:
                 self.main.statusBar().showMessage(u'Błędny format pliku!', 3000)
                 return
+            if not file:
+                return
             for row in file.split('\n'):
                 if row != '':
                     word = row.split(splitter)
@@ -197,7 +204,6 @@ class PoolWindow(QWidget):
                             item = QStandardItem(que+" = "+ans)
                             self.list_model.appendRow(item)
                             self.main.session_word.add(word)
-                            #print('session word lenght: ', len(self.main.session_word.data))
                         else:
                             self.main.statusBar().showMessage(u'Niektóre słówka są już na liście...', 3000)
                     else:

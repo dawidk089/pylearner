@@ -2,7 +2,6 @@
 from PyQt4.QtGui import *
 
 
-# TODO poprawic logistyke prechowywania listy slowek przed dodaniem do session_word
 class ChooseBase(QWidget):
 
     def __init__(self, main):
