@@ -14,6 +14,7 @@ class SettingWindow(QWidget):
             'point_limit': 3,
             'avr_time_response': 3000,
             'random_distance': 5,
+            'splitter': ' = ',
         }
 
         # deklaracja widget'ow
@@ -23,6 +24,7 @@ class SettingWindow(QWidget):
         self.random_distance = QLineEdit(self)
         self.avr_time_response = QLineEdit(self)
         self.point_limit = QLineEdit(self)
+        self.splitter = QLineEdit(self)
 
         self.button = {
             "save": QPushButton('Zapisz', self),
@@ -57,6 +59,7 @@ class SettingWindow(QWidget):
             ('widget', QLabel(u'próg punktowy dla słówka', self)),
             ('widget', QLabel(u'limit błędnych odpowiedzi', self)),
             ('widget', QLabel(u'średni czas odpowiedzi', self)),
+            ('widget', QLabel(u'znaki rozdzielające', self)),
         ]
 
         self.labels_box = self.box('vertical', labels_l)
@@ -66,6 +69,7 @@ class SettingWindow(QWidget):
             ('widget', self.point_limit),
             ('widget', self.wrong_combo_limit),
             ('widget', self.avr_time_response),
+            ('widget', self.splitter),
         ]
 
         self.editlines_box = self.box('vertical', editlines_l)
@@ -116,6 +120,7 @@ class SettingWindow(QWidget):
         self.main.sets.data[0]['point_limit'] = int(self.point_limit.text())
         self.main.sets.data[0]['avr_time_response'] = int(self.avr_time_response.text())
         self.main.sets.data[0]['random_distance'] = int(self.random_distance.text())
+        self.main.sets.data[0]['splitter'] = self.splitter.text()
         self.main.sets.save()
         
         self.main.switch_window('Main')
@@ -135,6 +140,7 @@ class SettingWindow(QWidget):
         self.random_distance.setText(str(self.main.sets.data[0]['random_distance']))
         self.avr_time_response.setText(str(self.main.sets.data[0]['avr_time_response']))
         self.point_limit.setText(str(self.main.sets.data[0]['point_limit']))
+        self.splitter.setText(str(self.main.sets.data[0]['splitter']))
 
     # TODO podziedziczyc metode slot_conn po innej klasie
     # definicja podpiec

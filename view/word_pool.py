@@ -20,6 +20,8 @@ class PoolWindow(QWidget):
         self.split_line = QLineEdit(self)  # TODO zmienic nazwe split_line na split_editline
         # TODO dodac ilosc znakow spliter'a obok split_line
 
+        self.split_counter = QLabel('')
+
         self.word_list = QListView()
 
         self.button = {
@@ -28,6 +30,7 @@ class PoolWindow(QWidget):
             "import": QPushButton('+', self),
             "cancel": QPushButton('Anuluj', self),
             "delete": QPushButton(u'Usuń', self),
+            "reset": QPushButton(u'Resetuj', self),
             'done': QPushButton('Gotowe', self),
         }
 
@@ -35,7 +38,7 @@ class PoolWindow(QWidget):
         self.que_editline.setMaximumWidth(200)
         self.ans_editline.setMaximumWidth(200)
 
-        self.split_line.setText(' = ')  # TODO wstawic domyslna wartosc split_line w ustawienia
+        self.split_line.setText(self.main.sets.data[0]['splitter'])  # TODO wstawic domyslna wartosc split_line w ustawienia
 
         self.list_model = QStandardItemModel(self.word_list)
         self.word_list.setMinimumSize(600, 400)
@@ -54,7 +57,7 @@ class PoolWindow(QWidget):
         self.button["import"].setMaximumSize(20, 20)
 
         self.split_line.setMaximumWidth(200)
-        #self.left_box.
+        self.split_counter.setText(u"ilość znaków: "+str(len(self.split_line.text())))
 
         # ustawianie layout'ow
         header = [
@@ -95,6 +98,16 @@ class PoolWindow(QWidget):
             ('stretch',),
         ]
 
+        reset_l = [
+            ('widget', self.button['reset']),
+            ('stretch',),
+        ]
+
+        split_l = [
+            ('widget', self.split_line),
+            ('widget', self.split_counter),
+        ]
+
         self.add_box = self.box('horizontal', add_butt)
         self.chs_box = self.box('horizontal', chs_butt)
         self.impt_box = self.box('horizontal', impt_butt)
@@ -102,6 +115,8 @@ class PoolWindow(QWidget):
         self.w_amount_box = self.box('horizontal', w_amount_l)
         self.cancel_box = self.box('horizontal', cancel_l)
         self.delete_box = self.box('horizontal', delete_l)
+        self.reset_box = self.box('horizontal', reset_l)
+        self.split_box = self.box('vertical', split_l)
 
         left_l = [
             ('widget', QLabel(u'słówko pytające', self)),
@@ -111,9 +126,10 @@ class PoolWindow(QWidget):
             ('layout', self.add_box),
             ('layout', self.chs_box),
             ('layout', self.impt_box),
-            ('widget', QLabel(u'znak rozdzielający', self)),
-            ('widget', self.split_line),
+            ('widget', QLabel(u'znaki rozdzielające', self)),
+            ('layout', self.split_box),
             ('layout', self.delete_box),
+            ('layout', self.reset_box),
             ('stretch',),
         ]
 
@@ -149,6 +165,7 @@ class PoolWindow(QWidget):
 
         # podlaczenie zdarzen
         self.word_list.clicked.connect(self.catch_item)
+        self.split_line.editingFinished.connect(self.count)
 
         self.slots = {
             'add': self.add,
@@ -157,6 +174,7 @@ class PoolWindow(QWidget):
             'done': self.done,
             'cancel': self.cancel,
             'delete': self.delete,
+            'reset': self.reset,
             }
 
         self.slot_conn(self.slots)
@@ -187,13 +205,15 @@ class PoolWindow(QWidget):
         splitter = self.split_line.text()
         if splitter != '':
             try:
-                file = open(QFileDialog(self).getOpenFileName()).read()
+                file = open(QFileDialog(self).getOpenFileName())
             except UnicodeDecodeError:
                 self.main.statusBar().showMessage(u'Błędny format pliku!', 3000)
                 return
             if not file:
                 return
-            for row in file.split('\n'):
+            else:
+                text = file.read()
+            for row in text.split('\n'):
                 if row != '':
                     word = row.split(splitter)
                     if len(word) == 2:
@@ -227,11 +247,21 @@ class PoolWindow(QWidget):
             self.choosen_item = None
             self.counter.setText(str(len(self.main.session_word.data)))
 
+    def reset(self):
+        print('reset')
+        self.main.session_word.clear()
+        self.list_model.clear()
+        print('reset done')
+
     def done(self):
         if not self.main.session_word.data:
             self.main.statusBar().showMessage(u'Nic nie wybrałeś!', 3000)
             return
         self.main.switch_window('Learn')
+
+    def count(self):
+        self.split_counter.setText(u"ilość znaków: "+str(len(self.split_line.text())))
+
 
     # TODO metode add_to_list wrzucic jako statyczna-pomocnicza lub podziedziczyc po innej klasie
     # metoda pomocnicza do dodawania elementow do listy

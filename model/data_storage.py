@@ -29,6 +29,10 @@ class DataStorage:
         self.data = []
         self.open()
 
+    def clear(self):
+        self.data = []
+        self.save()
+
     def search_if_is(self, element):
         if element in self.data:
             return True

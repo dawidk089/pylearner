@@ -1,9 +1,7 @@
 # -*- coding: utf-8 -*-
 from PyQt4.QtGui import *
 from learner.learner import Learner
-import re
-import random
-import time
+from wykres.activity import MyDynamicMplCanvas
 
 
 class Learn(QWidget):
@@ -36,9 +34,11 @@ class Learn(QWidget):
             "abort": QPushButton('przerwij', self),
             }
 
+        self.chart = MyDynamicMplCanvas(self, width=10, height=2, dpi=100)
+
         # ustawianie widget'ow
-        self.amount_not_learned.setMaximumWidth(20)
-        self.progress.setMaximumWidth(20)
+        self.amount_not_learned.setMaximumWidth(30)
+        self.progress.setMaximumWidth(30)
         self.button['ok'].resize(self.button['ok'].sizeHint())
         self.que_line.setMinimumWidth(200)
 
@@ -96,12 +96,13 @@ class Learn(QWidget):
 
         self.ans_box = self.box('horizontal', ans_l)
 
-        countoff_l = [
-            ('widget', QLabel(u'szacowany czas do końca')),
-            ('widget', self.count_time_off),
+        chart_l = [
+            ('widget', QLabel('Aktywność odpowiedzi')),
+            ('widget', self.chart),
+
         ]
 
-        self.countoff_box = self.box('horizontal', countoff_l)
+        self.chart_box = self.box('vertical', chart_l)
 
         abort_l = [
             ('stretch',),
@@ -118,22 +119,35 @@ class Learn(QWidget):
             ('widget', self.que_line),
             ('layout', self.ans_editline_box),
             ('layout', self.ans_box),
+            """
             ('stretch',),
-            ('layout', self.countoff_box),
+            ('layout', self.chart_box),
             ('widget', self.status),
             ('stretch',),
             ('layout', self.abort_box),
+            """
         ]
 
         self.middle_box = self.box('vertical', middle_l)
 
-        main_l = [
+        top_l = [
             ('stretch',),
             ('layout', self.middle_box),
             ('stretch',),
         ]
 
-        self.main_box = self.box('horizontal', main_l)
+        self.top_box = self.box('horizontal', top_l)
+
+        main_l = [
+            ('stretch',),
+            ('layout', self.top_box),
+            ('stretch',),
+            ('layout', self.chart_box),
+            ('stretch',),
+            ('layout', self.abort_box),
+        ]
+
+        self.main_box = self.box('vertical', main_l)
 
         self.setLayout(self.main_box)
 
@@ -154,7 +168,7 @@ class Learn(QWidget):
 
     def init_learn(self):
         self.amount_not_learned.setText(str(len(self.learner.eliminated_list)))
-        self.que_line.setText(self.learner.question())
+        self.que_line.setText('<b>'+self.learner.question()+'</b>')
         self.learner.start_time()
 
     # definicja zdarzen
@@ -165,12 +179,32 @@ class Learn(QWidget):
         valid = self.learner.check_answer(answer)
         self.ans_editline.setText('')
         self.your_ans_line.setText(answer)
-        # TODO ustawic kolorki odpowiedzi
+
+        if answer == '':
+            self.your_ans_line.setText('zrezygnowano...')
+            self.your_ans_line.setStyleSheet("QLabel { color : orange; }")
+        else:
+            self.chart.update_figure(self.learner.norm_time())
+            if valid:
+                self.your_ans_line.setStyleSheet("QLabel { color : green; }")
+            elif not valid:
+                self.your_ans_line.setStyleSheet("QLabel { color : red; }")
+
         self.correct_ans_line.setText(self.learner.correct_answer())
+        self.correct_ans_line.setStyleSheet("QLabel { color : blue; }")
+
+        #self.chart.update_figure(self.learner.norm_time())
+        #self.chart.update_figure(self.learner.norm_time())
+
         #self.check_ans(answer)
         if self.learner.check_end():
-            # TODO zrobic messagebox zakonczenia nauki
             self.main.switch_window('Main')
+            reply = QMessageBox()
+            reply.addButton(QMessageBox.Ok)
+            reply.setWindowTitle('Koniec :)')
+            reply.setText(u'Skończyłeś się uczyć.')
+            reply.setInformativeText(u'Umiesz już wszystko!')
+            reply.exec()
             return
 
         # nastepne pytanie
@@ -178,9 +212,8 @@ class Learn(QWidget):
         self.amount_not_learned.setText(str(not_learned))
         all_word = len(self.main.session_word.data)
         learned = all_word - not_learned
-        print('progress: ', learned, '(', not_learned, ')/', all_word, '; ', valid, sep='')
-        self.progress.setText(str(learned/all_word))
-        self.que_line.setText(self.learner.question())
+        self.progress.setText(str(learned/all_word*100))
+        self.que_line.setText('<b>'+self.learner.question()+'</b>')
         self.learner.start_time()
 
     def abort(self):

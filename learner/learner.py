@@ -11,8 +11,8 @@ class Learner:
 
         self.settings = settings[0]
         self.init_list = word_list
-        print('init word: ', self.init_list)
 
+        self.counter = 0
         self.eliminated_list = {}
         for indx, word in enumerate(self.init_list):
             letters = len(max(word[0].split(), key=len))
@@ -25,6 +25,7 @@ class Learner:
                 'wrong_combo': 0,
                 'wrong_amount': 0,
                 'difficulty': letters/8,
+                'counter': None,
             }
         print('eliminated list:\n', self.eliminated_list)
 
@@ -50,8 +51,20 @@ class Learner:
             for key in self.eliminated_list:
                 weights.append(self.eliminated_list[key]['difficulty'])
                 ids.append(self.eliminated_list[key]['id'])
-            ind = weighted_random(weights)
-            print('wylosowano', ind, ', z listy slowek', len(self.eliminated_list), 'elementowej')
+            self.counter += 1
+            ind = None
+            while True:
+                ind = weighted_random(weights)
+                self.current_id = ids[ind]
+                if not self.eliminated_list[self.current_id]['counter']:
+                    break
+                b1 = self.counter - self.eliminated_list[self.current_id]['counter'] < self.settings['random_distance']
+                b2 = len(self.eliminated_list) > self.settings['random_distance']
+                if b1 and b2:
+                    continue
+                else:
+                    self.eliminated_list[ind]['counter'] = self.counter
+                    break
             self.current_id = ids[ind]
             return self.eliminated_list[self.current_id]['que']
 
@@ -59,14 +72,12 @@ class Learner:
         current = self.eliminated_list[self.current_id]
         if fix_word(answer) == fix_word(current['ans']):
             # dobra odpowiedz
-            print('dobra odpowiedz')
-            current['points'] += self.time/self.settings['avr_time_response']
+            current['points'] += self.time/self.settings['avr_time_response']*current['difficulty']
             current['wrong_combo'] = 0
             self.hard_id = None
             return True
         else:
             # zla odpowiedz
-            print('zla odpowiedz')
             current['wrong_combo'] += 1
             current['wrong_amount'] += 1
             return False
@@ -84,10 +95,12 @@ class Learner:
             if not self.eliminated_list:
                 del self
                 return True
-        print(current)
 
     def correct_answer(self):
         return self.eliminated_list[self.current_id]['ans']
+
+    def norm_time(self):
+        return self.time * self.eliminated_list[self.current_id]['difficulty']
 
 
 def fix_word(l):
